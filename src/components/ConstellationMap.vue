@@ -12,6 +12,12 @@ const RX = 34
 const RY = 31
 
 const selected = ref<ThreadId>(threads[0]!.id)
+const touched = ref(false)
+
+function pick(id: ThreadId) {
+  selected.value = id
+  touched.value = true
+}
 
 const nodes = computed(() =>
   threads.map((t) => {
@@ -86,14 +92,17 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
           :class="[`node--${n.placement}`, { active: n.id === selected }]"
           :style="{ left: n.x + '%', top: n.y + '%' }"
           :aria-pressed="n.id === selected"
-          @click="selected = n.id"
-          @mouseenter="selected = n.id"
-          @focus="selected = n.id"
+          @click="pick(n.id)"
+          @focus="pick(n.id)"
         >
           <span class="node-dot" aria-hidden="true"></span>
           <span class="node-label">{{ n.label }}</span>
         </button>
       </div>
+
+      <p class="field-hint" :class="{ faded: touched }" aria-hidden="true">
+        Select a thread
+      </p>
     </div>
 
     <!-- Stacked index: same threads, source of truth on narrow screens -->
@@ -103,10 +112,15 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
         :key="t.id"
         class="stack-item"
         :aria-pressed="t.id === selected"
-        @click="selected = t.id"
+        @click="pick(t.id)"
       >
-        <span class="stack-label">{{ t.label }}</span>
-        <span class="stack-line">{{ t.line }}</span>
+        <span class="stack-text">
+          <span class="stack-label">{{ t.label }}</span>
+          <span class="stack-line">{{ t.line }}</span>
+        </span>
+        <span class="stack-mark" aria-hidden="true">
+          {{ t.id === selected ? 'Tracing below' : 'Trace' }}
+        </span>
       </button>
     </div>
 
@@ -118,12 +132,15 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
       :aria-label="`Trail for ${active.label}`"
     >
       <header class="trail-head">
-        <p class="eyebrow">Thread</p>
+        <p class="trail-cue">
+          <span class="trail-cue-mark" aria-hidden="true"></span>
+          Tracing this thread
+        </p>
         <h3>{{ active.label }}</h3>
         <p class="trail-blurb measure">{{ active.blurb }}</p>
       </header>
 
-      <div class="trail-grid">
+      <div class="trail-grid" :key="selected">
         <div v-if="trail.projects.length" class="trail-col">
           <p class="col-title">In the Workbench</p>
           <ul>
@@ -193,7 +210,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 }
 
 .map {
-  margin-top: clamp(2rem, 5vw, 4rem);
+  margin-top: clamp(1.25rem, 3vw, 2.25rem);
 }
 
 /* ---------- base / narrow: stacked index is the truth ---------- */
@@ -207,17 +224,27 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 }
 .stack-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   text-align: left;
-  padding: 1.15rem 0.25rem;
+  padding: 1.05rem 0.4rem 1.05rem 0.9rem;
   background: none;
   border: 0;
   border-bottom: 1px solid var(--color-hairline);
   cursor: pointer;
   font: inherit;
   color: var(--color-ink);
-  transition: background 0.16s var(--ease-out-quint);
+  transition: background 0.18s var(--ease-out-quint);
+}
+.stack-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.stack-item:hover {
+  background: oklch(0.922 0.022 135 / 0.5);
 }
 .stack-item[aria-pressed='true'] {
   background: var(--color-sage);
@@ -233,16 +260,50 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   font-size: var(--text-sm);
   color: var(--color-ink-soft);
 }
+.stack-mark {
+  flex: none;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-faint);
+}
+.stack-mark::after {
+  content: ' \203A';
+}
+.stack-item[aria-pressed='true'] .stack-mark {
+  color: var(--color-moss-deep);
+}
+.stack-item[aria-pressed='true'] .stack-mark::after {
+  content: ' \2193';
+}
 
 /* ---------- trail (all sizes) ---------- */
 .trail {
-  margin-top: clamp(2rem, 5vw, 4rem);
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-hairline);
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: 1.75rem;
+  border-top: 2px solid var(--color-moss);
+}
+.trail-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-moss-deep);
+}
+.trail-cue-mark {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid var(--color-moss);
+  border-radius: 99px;
+  background: var(--color-moss);
 }
 .trail-head h3 {
   font-size: var(--text-2xl);
-  margin: 0.3rem 0 0;
+  margin: 0.45rem 0 0;
 }
 .trail-blurb {
   margin: 0.9rem 0 0;
@@ -305,8 +366,34 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 1.7 / 1;
-    margin: 1rem 0 0;
+    aspect-ratio: 2.5 / 1;
+    max-height: 24rem;
+    margin: 0.5rem 0 0;
+  }
+  .field-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 0.5rem;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    transition: opacity 0.4s var(--ease-out-quint);
+  }
+  .field-hint::before {
+    content: '';
+    display: inline-block;
+    width: 1.5rem;
+    height: 1px;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    background: var(--color-moss);
+  }
+  .field-hint.faded {
+    opacity: 0;
   }
 
   .wires {
@@ -426,6 +513,11 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   .node:hover .node-dot,
   .node:focus-visible .node-dot {
     border-color: var(--color-moss);
+    transform: scale(1.22);
+  }
+  .node:hover .node-label,
+  .node:focus-visible .node-label {
+    color: var(--color-ink);
   }
   .node.active .node-dot {
     background: var(--color-moss);
@@ -434,6 +526,46 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   }
   .node.active .node-label {
     color: var(--color-ink);
+    font-weight: 700;
+  }
+  /* Ring on the selected node ties it to the trail below */
+  .node.active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid var(--color-moss);
+    border-radius: 99px;
+    opacity: 0.5;
+    pointer-events: none;
+    animation: node-ring 0.5s var(--ease-out-quint) both;
+  }
+  @keyframes node-ring {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+  }
+}
+
+/* Receipts re-animate on each thread change so the cause is felt */
+.trail-grid {
+  animation: trail-in 0.42s var(--ease-out-quint) both;
+}
+@keyframes trail-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

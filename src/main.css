@@ -8,6 +8,7 @@
 
 @theme {
   --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Hanken Grotesk', ui-sans-serif, sans-serif;
   --font-serif: 'Source Serif 4', Iowan Old Style, Georgia, serif;
 
   /* Ground & ink — never pure white, never pure black */
@@ -66,6 +67,12 @@
     scroll-behavior: smooth;
   }
 
+  #app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
   body {
     margin: 0;
     background-color: var(--color-paper);
@@ -103,6 +110,11 @@
     line-height: 1.1;
     color: var(--color-ink);
     text-wrap: balance;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    letter-spacing: -0.026em;
   }
 
   p {

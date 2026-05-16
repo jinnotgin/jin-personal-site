@@ -21,13 +21,11 @@ const counts = computed(() => {
 <template>
   <div class="shell">
     <header class="page-head">
-      <p class="eyebrow">Workbench</p>
       <h1>Things built, grouped by why.</h1>
       <p class="lede">
-        Not a portfolio of finished objects. A workbench: {{ counts.total }}
-        projects across five intents, {{ counts.active }} still running. Most
-        are the same move repeated, notice a friction, build the small system
-        around it.
+        {{ counts.total }} projects across five intents, {{ counts.active }}
+        still running. Most are the same move repeated: notice a friction,
+        build the small system around it.
       </p>
     </header>
 

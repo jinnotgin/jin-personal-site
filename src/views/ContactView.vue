@@ -26,7 +26,6 @@ const channels = [
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <p class="eyebrow">Contact</p>
       <h1>Three plain ways through.</h1>
       <p class="lede">
         If you are weighing whether to work together, email is the honest

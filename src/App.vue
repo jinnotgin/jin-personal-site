@@ -19,6 +19,6 @@ import SiteFooter from '@/components/SiteFooter.vue'
 <style scoped>
 main {
   outline: none;
-  min-height: 60vh;
+  flex: 1 0 auto;
 }
 </style>

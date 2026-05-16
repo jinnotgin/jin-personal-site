@@ -6,7 +6,6 @@ import { threadById } from '@/data/threads'
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <p class="eyebrow">Journey</p>
       <h1>Less a ladder. More the terrain worked in.</h1>
       <p class="lede">
         The dates matter less than the through-line: noticing friction in
