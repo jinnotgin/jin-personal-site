@@ -8,8 +8,8 @@ import type { ThreadId } from '@/data/types'
 
 const CX = 50
 const CY = 50
-const RX = 38
-const RY = 30
+const RX = 34
+const RY = 31
 
 const selected = ref<ThreadId>(threads[0]!.id)
 
@@ -20,6 +20,7 @@ const nodes = computed(() =>
       ...t,
       x: CX + RX * Math.cos(rad),
       y: CY + RY * Math.sin(rad),
+      placement: labelPlacement(CX + RX * Math.cos(rad), CY + RY * Math.sin(rad)),
     }
   }),
 )
@@ -42,6 +43,12 @@ function curve(x: number, y: number): string {
   const mx = (CX + x) / 2
   const my = (CY + y) / 2 - 7
   return `M ${CX} ${CY} Q ${mx} ${my} ${x} ${y}`
+}
+
+function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'left' {
+  if (y < CY - 18) return 'top'
+  if (y > CY + 18) return 'bottom'
+  return x > CX ? 'right' : 'left'
 }
 </script>
 
@@ -76,7 +83,7 @@ function curve(x: number, y: number): string {
           v-for="n in nodes"
           :key="n.id"
           class="node"
-          :class="{ active: n.id === selected }"
+          :class="[`node--${n.placement}`, { active: n.id === selected }]"
           :style="{ left: n.x + '%', top: n.y + '%' }"
           :aria-pressed="n.id === selected"
           @click="selected = n.id"
@@ -331,6 +338,13 @@ function curve(x: number, y: number): string {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 0.35rem 0.65rem 0.45rem;
+    background: radial-gradient(
+      ellipse at center,
+      var(--color-paper) 0%,
+      var(--color-paper) 62%,
+      oklch(0.968 0.013 95 / 0) 100%
+    );
   }
   .centre-name {
     font-size: clamp(2.6rem, 4vw, 3.8rem);
@@ -354,11 +368,10 @@ function curve(x: number, y: number): string {
   .node {
     position: absolute;
     transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.55rem;
-    width: 10rem;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
     background: none;
     border: 0;
     cursor: pointer;
@@ -378,10 +391,37 @@ function curve(x: number, y: number): string {
       transform 0.3s var(--ease-out-quint);
   }
   .node-label {
+    position: absolute;
+    max-width: 13rem;
+    white-space: nowrap;
+    background: var(--color-paper);
+    box-shadow: 0 0 0 0.35rem var(--color-paper);
     font-size: var(--text-sm);
     font-weight: 600;
     line-height: 1.3;
     transition: color 0.2s var(--ease-out-quint);
+  }
+  .node--top .node-label {
+    bottom: calc(100% + 0.7rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .node--right .node-label {
+    top: 50%;
+    left: calc(100% + 0.95rem);
+    transform: translateY(-50%);
+    text-align: left;
+  }
+  .node--bottom .node-label {
+    top: calc(100% + 0.7rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .node--left .node-label {
+    top: 50%;
+    right: calc(100% + 0.95rem);
+    transform: translateY(-50%);
+    text-align: right;
   }
   .node:hover .node-dot,
   .node:focus-visible .node-dot {

@@ -1,0 +1,25 @@
+{
+  "id": "02c882ee",
+  "phase": "agent_error",
+  "pageUrl": "/",
+  "sourceFile": null,
+  "expectedVariants": 3,
+  "arrivedVariants": 0,
+  "visibleVariant": 0,
+  "paramValues": {},
+  "pendingEventSeq": null,
+  "pendingEvent": null,
+  "deliveryLease": null,
+  "checkpointRevision": 1,
+  "activeOwner": "45df0090",
+  "sourceMarkers": {},
+  "fallbackMode": null,
+  "annotationArtifacts": [],
+  "diagnostics": [
+    {
+      "error": "agent_error",
+      "message": "Superseded by newer generate request"
+    }
+  ],
+  "updatedAt": "2026-05-16T07:50:47.619Z"
+}

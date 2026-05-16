@@ -16,29 +16,40 @@ watch(
 
 <template>
   <header class="site-header">
-    <div class="bar">
+    <div
+      class="bar"
+      style="padding-top: calc(var(--p-density, 0.9) * 0.78rem); padding-bottom: calc(var(--p-density, 0.9) * 0.78rem)"
+    >
       <RouterLink to="/" class="wordmark" aria-label="Jin — home">
         Jin<span class="dot" aria-hidden="true"></span>
       </RouterLink>
 
+      <p
+        class="role"
+        style="margin: 0 auto 0 0; padding: 0; max-width: none; white-space: nowrap; overflow: visible"
+      >
+        {{ site.role }}
+      </p>
+
       <button
         class="menu-toggle"
         :aria-expanded="open"
-        aria-controls="primary-nav"
+        aria-controls="primary-nav-v3"
         @click="open = !open"
       >
         {{ open ? 'Close' : 'Menu' }}
       </button>
 
       <nav
-        id="primary-nav"
+        id="primary-nav-v3"
         class="nav"
         :class="{ 'is-open': open }"
         aria-label="Primary"
+        style="margin-left: 0; gap: calc(var(--p-density, 0.9) * 1.05rem)"
       >
         <RouterLink
           v-for="item in nav"
-          :key="item.to"
+          :key="`v3-${item.to}`"
           :to="item.to"
           class="nav-link"
           :class="{ exact: item.to === '/' }"
@@ -47,7 +58,6 @@ watch(
         </RouterLink>
       </nav>
     </div>
-    <p class="role">{{ site.role }}</p>
   </header>
 </template>
 

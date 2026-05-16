@@ -9,12 +9,47 @@ const latest = listPosts().slice(0, 3)
 <template>
   <div class="shell home">
     <section class="intro">
-      <p class="eyebrow">Now · {{ site.nowUpdated }}</p>
-      <p class="positioning measure">{{ site.positioning }}</p>
+      <div class="intro-copy">
+        <p class="eyebrow">Now · {{ site.nowUpdated }}</p>
+        <p class="positioning measure">
+          I track emerging shifts, then build with them to understand what they
+          change. Right now, that means AI.
+        </p>
+      </div>
+
+      <figure class="portrait">
+        <img
+          src="/img/jin-portrait-800.jpg"
+          srcset="
+            /img/jin-portrait-800.jpg   800w,
+            /img/jin-portrait-1400.jpg 1400w
+          "
+          sizes="(min-width: 760px) 24rem, calc(100vw - 2.5rem)"
+          alt="Jin outdoors, smiling in a denim shirt."
+        />
+      </figure>
+
       <ol class="now">
-        <li v-for="(item, i) in site.now" :key="i">
-          <span class="now-index">{{ String(i + 1).padStart(2, '0') }}</span>
-          <span>{{ item }}</span>
+        <li>
+          <span class="now-index">01</span>
+          <span>
+            Examining how AI changes the way software products are delivered,
+            from discovery to shipping and iteration.
+          </span>
+        </li>
+        <li>
+          <span class="now-index">02</span>
+          <span>
+            Prototyping AI-enabled product features to see where they help
+            users, where they confuse them, and what trust requires.
+          </span>
+        </li>
+        <li>
+          <span class="now-index">03</span>
+          <span>
+            Sharing what I’m learning through notes, prototypes, and working
+            models.
+          </span>
         </li>
       </ol>
     </section>
@@ -55,6 +90,13 @@ const latest = listPosts().slice(0, 3)
 
 <style scoped>
 .intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.75rem, 5vw, 3rem);
+  align-items: end;
+  max-width: 72rem;
+}
+.intro-copy {
   max-width: 60rem;
 }
 .positioning {
@@ -65,9 +107,23 @@ const latest = listPosts().slice(0, 3)
   margin: 1.1rem 0 0;
   color: var(--color-ink);
 }
+.portrait {
+  margin: 0;
+  width: min(100%, 32rem);
+}
+.portrait img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 48%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-hairline);
+  filter: saturate(0.9) contrast(0.96);
+}
 .now {
   list-style: none;
-  margin: 2.5rem 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
   gap: 1rem;
@@ -90,6 +146,29 @@ const latest = listPosts().slice(0, 3)
   font-weight: 700;
   color: var(--color-moss);
   padding-top: 0.35rem;
+}
+
+@media (min-width: 760px) {
+  .intro {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+  .intro-copy,
+  .now {
+    grid-column: 1;
+  }
+  .portrait {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 100%;
+    align-self: stretch;
+  }
+  .portrait img {
+    height: 100%;
+    min-height: 26rem;
+    aspect-ratio: auto;
+    object-position: 54% 50%;
+  }
 }
 
 .map-intro {
