@@ -25,7 +25,6 @@ const groups = computed(() =>
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <p class="eyebrow">Shelf</p>
       <h1>What is shaping the thinking.</h1>
       <p class="lede">
         The most personal page here. Not a reading list to look smart, the

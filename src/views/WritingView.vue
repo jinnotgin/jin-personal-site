@@ -18,7 +18,6 @@ const shown = computed(() =>
     <div class="banner" aria-hidden="true"></div>
 
     <header class="page-head">
-      <p class="eyebrow">Writing</p>
       <h1>Notes, mostly about systems that have to keep working.</h1>
       <p class="lede">
         Closer to a working notebook than a blog. Show the workings, link the
