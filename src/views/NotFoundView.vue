@@ -3,14 +3,13 @@
 <template>
   <div class="shell shell--reading nf">
     <p class="eyebrow">404</p>
-    <h1>That thread does not connect to anything.</h1>
+    <h1>This page doesn't exist.</h1>
     <p class="lede">
-      The page you asked for is not on the map. Nothing here is broken on
-      purpose; the link just leads nowhere.
+      The link you followed leads nowhere. Try one of these instead.
     </p>
     <nav class="ways">
-      <RouterLink to="/" class="link">The map</RouterLink>
-      <RouterLink to="/workbench" class="link">Workbench</RouterLink>
+      <RouterLink to="/" class="link">Home</RouterLink>
+      <RouterLink to="/tools" class="link">Tools</RouterLink>
       <RouterLink to="/writing" class="link">Writing</RouterLink>
     </nav>
   </div>

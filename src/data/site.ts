@@ -24,8 +24,8 @@ export const site = {
 
 export const nav = [
   { to: '/', label: 'Now' },
-  { to: '/workbench', label: 'Workbench' },
   { to: '/writing', label: 'Writing' },
+  { to: '/tools', label: 'Tools' },
   { to: '/journey', label: 'Journey' },
   { to: '/shelf', label: 'Shelf' },
   { to: '/contact', label: 'Contact' },

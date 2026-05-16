@@ -8,9 +8,9 @@ const year = new Date().getFullYear()
     <div class="motif" aria-hidden="true"></div>
     <div class="inner">
       <div class="lead">
-        <p class="line">A working map of what I build, and why.</p>
+        <p class="line">Projects, writing, and the thinking behind them.</p>
         <p class="sub">
-          {{ site.formalName }} · the threads, and the work behind each.
+          {{ site.formalName }} · built and written over the years.
         </p>
       </div>
       <nav class="links" aria-label="Elsewhere">

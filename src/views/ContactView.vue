@@ -26,10 +26,10 @@ const channels = [
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <h1>Three plain ways through.</h1>
+      <h1>Get in touch.</h1>
       <p class="lede">
-        If you are weighing whether to work together, email is the honest
-        channel. Tell me the friction you are looking at.
+        If something here resonates, reach out. Always glad to start a
+        conversation, no agenda needed.
       </p>
     </header>
 

@@ -18,10 +18,10 @@ const shown = computed(() =>
     <div class="banner" aria-hidden="true"></div>
 
     <header class="page-head">
-      <h1>Notes, mostly about systems that have to keep working.</h1>
+      <h1>Notes on building systems that have to keep working.</h1>
       <p class="lede">
-        Closer to a working notebook than a blog. Show the workings, link the
-        receipts, no polish tax.
+        Working notes, not polished essays. I show how things were built, and
+        why.
       </p>
     </header>
 

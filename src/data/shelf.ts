@@ -27,7 +27,7 @@ export const shelf: ShelfItem[] = [
   {
     kind: 'person',
     title: 'Simon Willison',
-    note: 'The bar for writing usefully in public: show the work, link the receipts, no polish tax.',
+    note: 'The bar for writing usefully in public: show the work, link the sources, skip the polish.',
   },
   {
     kind: 'person',

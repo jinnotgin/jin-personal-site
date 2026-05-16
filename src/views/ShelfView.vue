@@ -25,10 +25,9 @@ const groups = computed(() =>
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <h1>What is shaping the thinking.</h1>
+      <h1>What has given me new perspectives.</h1>
       <p class="lede">
-        The most personal page here. Not a reading list to look smart, the
-        few things the work actually leans on.
+        A short list of things that have changed how I think.
       </p>
     </header>
 

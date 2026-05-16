@@ -21,11 +21,11 @@ const counts = computed(() => {
 <template>
   <div class="shell">
     <header class="page-head">
-      <h1>Things built, grouped by why.</h1>
+      <h1>Projects, grouped by why I built them.</h1>
       <p class="lede">
-        {{ counts.total }} projects across five intents, {{ counts.active }}
-        still running. Most are the same move repeated: notice a friction,
-        build the small system around it.
+        {{ counts.total }} projects in five areas, {{ counts.active }} still
+        active. Most started the same way: I noticed a friction and built a
+        small system to remove it.
       </p>
     </header>
 
@@ -43,7 +43,7 @@ const counts = computed(() => {
 
         <ul class="rows">
           <li v-for="p in g.items" :key="p.slug">
-            <RouterLink :to="`/workbench/${p.slug}`" class="row">
+            <RouterLink :to="`/tools/${p.slug}`" class="row">
               <span class="row-name">{{ p.name }}</span>
               <span class="row-intent">{{ p.intent }}</span>
               <span class="row-meta">

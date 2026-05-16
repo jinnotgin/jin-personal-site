@@ -71,7 +71,7 @@ const latest = listPosts().slice(0, 3)
                 /img/jin-portrait-800.jpg   800w,
                 /img/jin-portrait-1400.jpg 1400w
               "
-              sizes="(min-width: 760px) 20rem, calc(100vw - 2.5rem)"
+              sizes="(min-width: 760px) 20.5rem, calc(100vw - 2.5rem)"
               alt="Jin outdoors, smiling in a denim shirt."
             />
           </figure>
@@ -179,7 +179,7 @@ const latest = listPosts().slice(0, 3)
   list-style: none;
   margin: 0;
   padding: 0;
-  max-width: 54ch;
+  max-width: 62ch;
   display: flex;
   flex-direction: column;
 }
@@ -270,7 +270,7 @@ const latest = listPosts().slice(0, 3)
   background: var(--color-moss-deep);
   border-radius: var(--radius-md);
   overflow: hidden;
-  width: min(100%, 18rem);
+  width: min(100%, 20.5rem);
   align-self: start;
 }
 .hero-portrait::after {
@@ -325,7 +325,7 @@ const latest = listPosts().slice(0, 3)
 
 @media (min-width: 760px) {
   .hero-body {
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20.5rem);
     gap: clamp(2.5rem, 6vw, 4.5rem);
   }
   .hero-portrait {

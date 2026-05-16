@@ -10,16 +10,24 @@ const router = createRouter({
       meta: { title: 'Jin — Applied innovation, shaping digital and human systems' },
     },
     {
-      path: '/workbench',
-      name: 'workbench',
+      path: '/tools',
+      name: 'tools',
       component: () => import('@/views/WorkbenchView.vue'),
-      meta: { title: 'Workbench — Jin' },
+      meta: { title: 'Tools — Jin' },
+    },
+    {
+      path: '/tools/:slug',
+      name: 'project',
+      component: () => import('@/views/ProjectView.vue'),
+      meta: { title: 'Tools — Jin' },
+    },
+    {
+      path: '/workbench',
+      redirect: '/tools',
     },
     {
       path: '/workbench/:slug',
-      name: 'project',
-      component: () => import('@/views/ProjectView.vue'),
-      meta: { title: 'Workbench — Jin' },
+      redirect: (to) => `/tools/${to.params.slug}`,
     },
     {
       path: '/writing',

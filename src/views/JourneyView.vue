@@ -6,11 +6,10 @@ import { threadById } from '@/data/threads'
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <h1>Less a ladder. More the terrain worked in.</h1>
+      <h1>How the work has changed over time.</h1>
       <p class="lede">
-        The dates matter less than the through-line: noticing friction in
-        systems, technical and human, and building or facilitating the thing
-        that removes it.
+        The dates matter less than the pattern: spotting friction in systems,
+        technical and human, then building or facilitating what removes it.
       </p>
     </header>
 

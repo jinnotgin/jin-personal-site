@@ -142,10 +142,10 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 
       <div class="trail-grid" :key="selected">
         <div v-if="trail.projects.length" class="trail-col">
-          <p class="col-title">In the Workbench</p>
+          <p class="col-title">Tools</p>
           <ul>
             <li v-for="p in trail.projects" :key="p.slug">
-              <RouterLink :to="`/workbench/${p.slug}`" class="trail-link">
+              <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
                 {{ p.name }}
               </RouterLink>
               <span class="status" :class="`status--${p.status}`">{{
