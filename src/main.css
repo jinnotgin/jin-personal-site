@@ -233,15 +233,10 @@
   .status--active {
     color: var(--color-moss-deep);
   }
-  .status--experiment {
-    color: var(--color-clay);
-  }
-  .status--archived,
-  .status--discontinued {
+  .status--archived {
     color: var(--color-ink-faint);
   }
-  .status--archived::before,
-  .status--discontinued::before {
+  .status--archived::before {
     background: transparent;
     border: 1.5px solid currentColor;
   }

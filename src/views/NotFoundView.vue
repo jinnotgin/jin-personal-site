@@ -9,7 +9,7 @@
     </p>
     <nav class="ways">
       <RouterLink to="/" class="link">Home</RouterLink>
-      <RouterLink to="/tools" class="link">Tools</RouterLink>
+      <RouterLink to="/tools" class="link">Projects</RouterLink>
       <RouterLink to="/writing" class="link">Writing</RouterLink>
     </nav>
   </div>

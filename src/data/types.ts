@@ -1,8 +1,13 @@
-export type ProjectStatus = 'active' | 'experiment' | 'archived' | 'discontinued'
+export type ProjectStatus = 'active' | 'archived'
 
 export interface ProjectLink {
   label: string
   href: string
+}
+
+export interface ProjectImage {
+  src: string
+  alt: string
 }
 
 export interface Project {
@@ -23,11 +28,12 @@ export interface Project {
   trace?: string
   stack: string[]
   links?: ProjectLink[]
+  images?: ProjectImage[]
 }
 
 export type ThreadId =
   | 'applied-ai'
-  | 'public-life'
+  | 'public-platforms'
   | 'signals'
   | 'homegrown'
   | 'human'

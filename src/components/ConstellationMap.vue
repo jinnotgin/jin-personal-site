@@ -35,10 +35,13 @@ const active = computed(() => threads.find((t) => t.id === selected.value)!)
 
 const trail = computed(() => {
   const t = active.value
+  const projects = t.projects
+    .map((s) => projectBySlug(s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p))
+
   return {
-    projects: t.projects
-      .map((s) => projectBySlug(s))
-      .filter((p): p is NonNullable<typeof p> => Boolean(p)),
+    activeProjects: projects.filter((p) => p.status === 'active'),
+    archivedProjects: projects.filter((p) => p.status === 'archived'),
     writing: postsBySlugs(t.writing),
     journey: journey.filter((j) => t.journey.includes(j.id)),
     external: t.external ?? [],
@@ -141,17 +144,14 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
       </header>
 
       <div class="trail-grid" :key="selected">
-        <div v-if="trail.projects.length" class="trail-col">
-          <p class="col-title">Tools</p>
+        <div v-if="trail.journey.length" class="trail-col">
+          <p class="col-title">In the Journey</p>
           <ul>
-            <li v-for="p in trail.projects" :key="p.slug">
-              <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
-                {{ p.name }}
-              </RouterLink>
-              <span class="status" :class="`status--${p.status}`">{{
-                p.status
-              }}</span>
-              <span class="trail-note">{{ p.intent }}</span>
+            <li v-for="j in trail.journey" :key="j.id">
+              <RouterLink to="/journey" class="trail-link">{{
+                j.role
+              }}</RouterLink>
+              <span class="trail-note">{{ j.period }} · {{ j.org }}</span>
             </li>
           </ul>
         </div>
@@ -168,16 +168,38 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
           </ul>
         </div>
 
-        <div v-if="trail.journey.length" class="trail-col">
-          <p class="col-title">In the Journey</p>
-          <ul>
-            <li v-for="j in trail.journey" :key="j.id">
-              <RouterLink to="/journey" class="trail-link">{{
-                j.role
-              }}</RouterLink>
-              <span class="trail-note">{{ j.period }} · {{ j.org }}</span>
+        <div
+          v-if="trail.activeProjects.length || trail.archivedProjects.length"
+          class="trail-col"
+        >
+          <p class="col-title">Projects and tools</p>
+          <ul v-if="trail.activeProjects.length">
+            <li v-for="p in trail.activeProjects" :key="p.slug">
+              <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
+                {{ p.name }}
+              </RouterLink>
+              <span class="trail-note">{{ p.intent }}</span>
             </li>
           </ul>
+
+          <details
+            v-if="trail.archivedProjects.length"
+            class="archive-drawer"
+            :class="{ 'archive-drawer--with-active': trail.activeProjects.length }"
+          >
+            <summary>
+              {{ trail.archivedProjects.length }} archived
+              {{ trail.archivedProjects.length === 1 ? 'project' : 'projects' }}
+            </summary>
+            <ul>
+              <li v-for="p in trail.archivedProjects" :key="p.slug">
+                <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
+                  {{ p.name }}
+                </RouterLink>
+                <span class="trail-note">{{ p.intent }}</span>
+              </li>
+            </ul>
+          </details>
         </div>
 
         <div v-if="trail.external.length" class="trail-col">
@@ -353,8 +375,26 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   color: var(--color-ink-faint);
   line-height: 1.5;
 }
-.trail-col .status {
-  font-size: 0.72rem;
+.archive-drawer {
+  margin-top: 0;
+}
+.archive-drawer--with-active {
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-hairline);
+}
+.archive-drawer summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--color-ink-faint);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.archive-drawer summary:hover {
+  color: var(--color-moss-deep);
+}
+.archive-drawer ul {
+  margin-top: 1rem;
 }
 
 /* ---------- wide: the constellation appears ---------- */

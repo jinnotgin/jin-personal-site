@@ -63,15 +63,25 @@ const latest = listPosts().slice(0, 3)
           </div>
 
           <figure class="hero-portrait">
-            <img
-              src="/img/jin-portrait-800.jpg"
-              srcset="
-                /img/jin-portrait-800.jpg   800w,
-                /img/jin-portrait-1400.jpg 1400w
-              "
-              sizes="(min-width: 760px) 20.5rem, calc(100vw - 2.5rem)"
-              alt="Jin outdoors, smiling in a denim shirt."
-            />
+            <picture>
+              <source
+                media="(max-width: 759px)"
+                srcset="
+                  /img/jin-portrait-square-800.jpg   800w,
+                  /img/jin-portrait-square-1200.jpg 1200w
+                "
+                sizes="min(15rem, 62vw)"
+              />
+              <img
+                src="/img/jin-portrait-800.jpg"
+                srcset="
+                  /img/jin-portrait-800.jpg   800w,
+                  /img/jin-portrait-1400.jpg 1400w
+                "
+                sizes="(min-width: 760px) 20.5rem, min(15rem, 62vw)"
+                alt="Jin outdoors, smiling in a denim shirt."
+              />
+            </picture>
           </figure>
         </div>
       </div>
@@ -79,10 +89,10 @@ const latest = listPosts().slice(0, 3)
 
     <div class="shell home-rest">
       <section class="map-lead">
-        <h2>The threads I keep returning to</h2>
+        <h2>The patterns I keep returning to</h2>
         <p class="map-instruction">
           <span class="map-instruction-mark" aria-hidden="true"></span>
-          Pick a thread below to see the writing and experiments behind it.
+          Pick a thread below to see the writing and projects behind it.
         </p>
       </section>
 
@@ -141,10 +151,7 @@ const latest = listPosts().slice(0, 3)
   animation: hero-rise 0.9s var(--ease-out-expo) 0.08s both;
 }
 .hero-copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(1.4rem, 3vw, 2rem);
+  display: contents;
   min-width: 0;
 }
 
@@ -179,6 +186,7 @@ const latest = listPosts().slice(0, 3)
   max-width: 62ch;
   display: flex;
   flex-direction: column;
+  order: 3;
 }
 .spine-move {
   display: grid;
@@ -269,8 +277,9 @@ const latest = listPosts().slice(0, 3)
   background: var(--color-moss-deep);
   border-radius: var(--radius-md);
   overflow: hidden;
-  width: min(100%, 20.5rem);
+  width: min(15rem, 62vw);
   align-self: start;
+  order: 2;
 }
 .hero-portrait::after {
   content: '';
@@ -291,9 +300,9 @@ const latest = listPosts().slice(0, 3)
 .hero-portrait img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1;
   object-fit: cover;
-  object-position: 54% 46%;
+  object-position: 50% 42%;
   filter: saturate(0.72) brightness(1.04) contrast(0.99);
   transition: filter 0.55s var(--ease-out-quint);
 }
@@ -327,9 +336,19 @@ const latest = listPosts().slice(0, 3)
     grid-template-columns: minmax(0, 1fr) minmax(15rem, 20.5rem);
     gap: clamp(2.5rem, 6vw, 4.5rem);
   }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.4rem, 3vw, 2rem);
+  }
+  .hero-spine {
+    order: initial;
+  }
   .hero-portrait {
     width: 100%;
     align-self: stretch;
+    order: initial;
   }
   .hero-portrait img {
     height: 100%;

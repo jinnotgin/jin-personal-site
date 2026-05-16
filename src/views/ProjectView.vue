@@ -22,7 +22,7 @@ const siblings = computed(() =>
 
 <template>
   <div class="shell shell--reading" v-if="project">
-    <RouterLink to="/tools" class="back">← Tools</RouterLink>
+    <RouterLink to="/tools" class="back">← Projects</RouterLink>
 
     <header class="head">
       <p class="eyebrow">
@@ -37,6 +37,12 @@ const siblings = computed(() =>
         {{ project.status }}
       </p>
     </header>
+
+    <div v-if="project.images?.length" class="project-images">
+      <figure v-for="image in project.images" :key="image.src">
+        <img :src="image.src" :alt="image.alt" loading="lazy" />
+      </figure>
+    </div>
 
     <div class="archaeology">
       <section>
@@ -131,6 +137,23 @@ const siblings = computed(() =>
   font-weight: 500;
   color: var(--color-ink-soft);
   line-height: 1.4;
+}
+.project-images {
+  margin-top: 2.4rem;
+  display: grid;
+  gap: 1rem;
+}
+.project-images figure {
+  margin: 0;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.project-images img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .archaeology {
   margin-top: 3rem;

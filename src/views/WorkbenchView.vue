@@ -21,11 +21,11 @@ const counts = computed(() => {
 <template>
   <div class="shell">
     <header class="page-head">
-      <h1>Projects, grouped by why I built them.</h1>
+      <h1>Projects and tools, grouped by why they existed.</h1>
       <p class="lede">
-        {{ counts.total }} projects in five areas, {{ counts.active }} still
-        active. Most started the same way: I noticed a friction and built a
-        small system to remove it.
+        {{ counts.total }} projects, {{ counts.active }} still
+        active. Some are tools you can inspect; some are written case studies
+        from work that cannot be publicly demoed.
       </p>
     </header>
 

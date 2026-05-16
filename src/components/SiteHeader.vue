@@ -45,7 +45,6 @@ watch(
         class="nav"
         :class="{ 'is-open': open }"
         aria-label="Primary"
-        style="margin-left: 0; gap: calc(var(--p-density, 0.9) * 1.05rem)"
       >
         <RouterLink
           v-for="item in nav"
@@ -103,7 +102,7 @@ watch(
 }
 .nav {
   display: flex;
-  gap: 1.6rem;
+  gap: clamp(1.55rem, 2vw, 2.15rem);
   margin-left: auto;
 }
 .nav-link {
@@ -138,6 +137,9 @@ watch(
 }
 
 @media (max-width: 720px) {
+  .role {
+    display: none;
+  }
   .menu-toggle {
     display: inline-block;
   }

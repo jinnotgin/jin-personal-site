@@ -13,13 +13,13 @@ const router = createRouter({
       path: '/tools',
       name: 'tools',
       component: () => import('@/views/WorkbenchView.vue'),
-      meta: { title: 'Tools — Jin' },
+      meta: { title: 'Projects — Jin' },
     },
     {
       path: '/tools/:slug',
       name: 'project',
       component: () => import('@/views/ProjectView.vue'),
-      meta: { title: 'Tools — Jin' },
+      meta: { title: 'Projects — Jin' },
     },
     {
       path: '/workbench',

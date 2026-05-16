@@ -8,7 +8,7 @@ status: published
 category: Maker notes
 ---
 
-If you line up the projects in Tools, most of them are the same move repeated. Notice a friction that everyone has quietly accepted. Build the smallest system that removes it. Stop there.
+If you line up the projects, most of them are the same move repeated. Notice a friction that everyone has quietly accepted. Build the smallest system that removes it. Stop there.
 
 Now In Singapore was that. FavEats was that. Nearly was that. The Smart Mirror was that, in hardware.
 

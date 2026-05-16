@@ -33,7 +33,7 @@ Avoid generic portfolio hero sections, LinkedIn reformatted into cards, overblow
 ## Information Architecture
 
 - Now: current focus, applied innovation, PromptPal, AI adoption, organisational learning.
-- Workbench: projects and experiments, grouped by intent.
+- Workbench: projects and written case studies, grouped by intent.
 - Writing: Markdown posts with list and detail routes.
 - Journey: career timeline and older context.
 - Shelf: books, people, references, places, and ideas shaping Jin's thinking.
@@ -43,11 +43,11 @@ Avoid generic portfolio hero sections, LinkedIn reformatted into cards, overblow
 
 The homepage should be an interactive but calm systems map of recurring threads:
 
-- Applied AI & tooling: PromptPal context, Rootstock, Bifrost Claude caching plugin, RAG, agents, and prototyping work.
-- Public-life utilities: Now In Singapore, FavEats, Singapore/location/data tools.
-- Signals & sensemaking: CoinGossip, analytics, scraping, trend detection, social sentiment.
-- Homegrown systems: Alastair, Smart Mirror, The Resistance, automation, DIY work.
-- Human systems: facilitation, teams, stakeholder alignment, dignity in work.
+- Applied AI in practice: PromptPal, PromptPal Transcribe, Bifrost Claude caching plugin, RAG, agents, voice-model experiments, AI-assisted research, and prototyping work.
+- Public platforms: SkillsFuture Mid-Career Training Allowance, Student Learning Space, policy-to-product translation, public service delivery, and platform architecture.
+- Sensemaking tools: Skills Framework Explorer, Now In Singapore, CoinGossip, analytics, scraping, categorisation, trend detection, and social sentiment.
+- Commercial workflows: Relatus, JT Concierge, KPMG audit tooling, BMW Vantage, MINDEF purchase-order tracking, NCS deployment automation, and enterprise operational tools.
+- Personal builds: FavEats, Alastair, Smart Mirror, The Resistance, Nearly, TimeMoo, DIY work, and self-initiated utility projects.
 
 Each thread should lead to writing, work history, project entries, or external links. Metrics and credentials should appear inside relevant trails, not as a loud top-level proof strip.
 
@@ -72,7 +72,7 @@ Project entries should support:
 - Why it existed
 - What system or friction it responded to
 - What was built
-- Status: active, archived, discontinued, experiment
+- Status: active, archived
 - Links to live site, GitHub, or source material when available
 - Optional image from old portfolio assets
 
@@ -88,9 +88,9 @@ Seed project groups from the old portfolio and GitHub:
 - Relatus
 - TimeMoo
 - JT Concierge
-- Rootstock
 - Bifrost Claude default caching plugin
-- OpenAI/Ollama adapter experiments
+- TestForge
+- Pete
 
 ## Interaction Model
 

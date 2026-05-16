@@ -1,44 +1,89 @@
 import type { JourneyEntry } from './types'
 
 /**
- * Career timeline and older context. Less a ladder, more the terrain
- * Jin has worked in. Replace orgs and dates with real ones.
+ * Career timeline and older context. These are evidence for the thread map,
+ * including work that cannot be shown as a public tool.
  */
 export const journey: JourneyEntry[] = [
   {
-    id: 'applied-innovation',
-    period: '2023 — now',
-    role: 'Applied innovation',
-    org: 'Independent & embedded',
+    id: 'applied-innovation-lead',
+    period: 'Jun 2023 — now',
+    role: 'Applied Innovation Lead, Corporate Strategy & AI',
+    org: 'Singapore',
     summary:
-      'Putting GenAI into real workflows and helping organisations adopt it without losing judgement. Equal parts building the tooling and facilitating the change around it.',
-    threads: ['applied-ai', 'human'],
+      'Designed, built, and operate PromptPal, an internal Generative AI product that gives staff access to LLMs while preserving data confidentiality and contractual data residency. The work sits inside Corporate Strategy alongside AI readiness, organisational change, responsible adoption, and hands-on validation of emerging capabilities such as RAG, agents, voice-model interactions, AI-assisted research, and AI-generated specifications.',
+    threads: ['applied-ai'],
   },
   {
-    id: 'product-systems',
-    period: '2019 — 2023',
-    role: 'Product & platform',
-    org: 'Product teams',
+    id: 'training-allowance-system',
+    period: 'Mar 2024 — Oct 2025',
+    role: 'Product Co-Lead, SkillsFuture Training Allowance System',
+    org: 'SSG, WSG, GovTech',
     summary:
-      'Shaping platform systems and the practices around them. Learned that most product problems are coordination problems wearing a technical costume.',
-    threads: ['public-life', 'human'],
+      'Co-led product development of the SkillsFuture Training Allowance System, a national platform serving mid-career Singaporeans. Owned upstream discovery, authored the Scope of Work, facilitated the MVP workshop, established gating criteria, and carried that understanding into delivery with designers, developers, QA, and agency stakeholders. The hardest work was aligning policy requirements that pulled features in different directions, then reframing decisions around citizen outcomes and reusable platform architecture.',
+    threads: ['public-platforms'],
   },
   {
-    id: 'signals',
-    period: '2020 — 2022',
-    role: 'Data & sensemaking',
-    org: 'Side and applied work',
+    id: 'student-learning-space',
+    period: 'Mar 2020 — May 2023',
+    role: 'Product Co-Lead, MOE Student Learning Space',
+    org: 'MOE',
     summary:
-      'Scraping, analytics, and trend detection. Built CoinGossip and Relatus; left with a durable distrust of single metrics.',
+      'Shaped features for Singapore’s national online learning platform during a period when it became critical infrastructure for continuity of learning. Progressed from senior contributor to team lead, built shared practices in behaviour-driven specification, partnered closely with UX/UI and technical leads, and used structured scenarios to reduce ambiguity between policy intent, design behaviour, development, and QA.',
+    threads: ['public-platforms'],
+  },
+  {
+    id: 'digital-village-developer',
+    period: 'Oct 2019 — Mar 2020',
+    role: 'Full Stack Developer',
+    org: 'KPMG Singapore - Digital Village',
+    summary:
+      'Built iOS and Android mobile applications for BMW Vantage, a blockchain-based rewards programme by BMW South Korea, using React Native, Ethereum, and Node.js microservices. Also prototyped an Expo mobile app that could dynamically update its visual system from InVision Design System Manager tokens, an early exploration into reusable design consistency across products.',
+    threads: ['human'],
+  },
+  {
+    id: 'audit-modernisation',
+    period: 'Jul 2018 — Dec 2019',
+    role: 'Associate Product Manager',
+    org: 'KPMG Singapore - Digital Village',
+    summary:
+      'Worked on modernising KPMG Audit’s legacy enterprise software, replacing end-of-life systems with bespoke tools for budgeting, resourcing, and performance tracking across the audit engagement lifecycle. The work joined product intent, stakeholder needs, design thinking, and agile delivery in a complex enterprise environment.',
+    threads: ['human'],
+  },
+  {
+    id: 'forensic-analytics',
+    period: 'May 2017 — Jul 2017',
+    role: 'Summer Internship, Forensic Services and Digital Village',
+    org: 'KPMG Singapore',
+    summary:
+      'Analysed employee working environments to estimate true working hours and identify potential lost revenue. Built ETL and automation scripts over SQL data sources including Oracle and SAP, designed Tableau visualisations, and supported anomaly detection work for clients.',
     threads: ['signals'],
   },
   {
-    id: 'maker-years',
-    period: '2017 — 2020',
-    role: 'Maker & builder',
-    org: 'Workshop',
+    id: 'mindef-procurement',
+    period: 'May 2013 — Apr 2014',
+    role: 'Procurement Controller',
+    org: 'Ministry of Defence Singapore',
     summary:
-      'A run of small public utilities and home systems: Now In Singapore, FavEats, Smart Mirror, Alastair. The habit of noticing friction and building the small system around it formed here.',
-    threads: ['public-life', 'homegrown'],
+      'Built an Excel VBA purchase-order tracking system for ammunition transfers, vehicle purchases, and military camp maintenance work. Automated report generation around those business processes, an early version of the pattern that would keep returning: remove manual coordination work with a small, legible system.',
+    threads: ['human'],
+  },
+  {
+    id: 'ncs-deployment',
+    period: 'Dec 2011 — Mar 2012',
+    role: 'Deployment Engineer',
+    org: 'NCS Group',
+    summary:
+      'Performed software and hardware upgrades for MOE schools and used robotic process automation to reduce manual intervention in upgrade workflows. The work was short, but it formed an early instinct for deployment repeatability and operational tooling.',
+    threads: ['human'],
+  },
+  {
+    id: 'signals-and-research',
+    period: '2018 — now',
+    role: 'Side projects in signals and research',
+    org: 'Independent',
+    summary:
+      'Built and maintained tools that turn scattered information into more inspectable surfaces: CoinGossip for crypto attention and sentiment, Now In Singapore for event discovery, and Skills Framework Explorer for navigating a complex national skills taxonomy.',
+    threads: ['signals'],
   },
 ]
