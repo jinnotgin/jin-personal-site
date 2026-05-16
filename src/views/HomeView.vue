@@ -15,7 +15,7 @@ const latest = listPosts().slice(0, 3)
         <div class="hero-body">
           <div class="hero-copy">
             <h1 class="hero-statement">
-              I track emerging shifts, then build with them.
+              I track emerging shifts, then build to understand them.
               <span class="hero-turn"
                 >Right now, that means <span class="hero-anchor">AI.</span></span
               >
@@ -81,11 +81,10 @@ const latest = listPosts().slice(0, 3)
 
     <div class="shell home-rest">
       <section class="map-lead">
-        <h2>The threads I keep returning to, and where each one led.</h2>
+        <h2>The threads I keep returning to</h2>
         <p class="map-instruction">
           <span class="map-instruction-mark" aria-hidden="true"></span>
-          Pick a thread below. The work, writing, and roles behind it appear
-          right after it.
+          Pick a thread below to see the writing and experiments behind it.
         </p>
       </section>
 
@@ -153,12 +152,12 @@ const latest = listPosts().slice(0, 3)
 
 .hero-statement {
   font-family: var(--font-display);
-  font-size: clamp(2.3rem, 1.4rem + 3.4vw, 4.2rem);
+  font-size: clamp(2.15rem, 1.35rem + 3.05vw, 3.85rem);
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.026em;
   color: var(--color-forest-ink);
-  max-width: 18ch;
+  max-width: 24ch;
   margin: 0;
   text-wrap: balance;
 }
@@ -185,7 +184,7 @@ const latest = listPosts().slice(0, 3)
 }
 .spine-move {
   display: grid;
-  grid-template-columns: 2.4rem 1fr;
+  grid-template-columns: 2.8rem 1fr;
   column-gap: clamp(0.9rem, 2vw, 1.4rem);
   padding: clamp(0.85rem, 2vw, 1.15rem) 0;
   border-top: 1px solid oklch(0.93 0.016 100 / 0.13);
@@ -198,10 +197,12 @@ const latest = listPosts().slice(0, 3)
 }
 .spine-index {
   grid-column: 1;
+  justify-self: start;
+  padding-top: 0.42rem;
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.14em;
-  line-height: 1.5;
+  line-height: 1;
   color: oklch(0.74 0.03 130 / 0.55);
   transition: color 0.4s var(--ease-out-quint);
 }
