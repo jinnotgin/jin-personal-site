@@ -8,9 +8,9 @@ const year = new Date().getFullYear()
     <div class="motif" aria-hidden="true"></div>
     <div class="inner">
       <div class="lead">
-        <p class="line">Projects, writing, and the thinking behind them.</p>
+        <p class="line">Things I’ve built, written, and learnt from.</p>
         <p class="sub">
-          {{ site.formalName }} · built and written over the years.
+          A working archive across product, AI, organisations, and change.
         </p>
       </div>
       <nav class="links" aria-label="Elsewhere">
@@ -27,7 +27,7 @@ const year = new Date().getFullYear()
       </nav>
     </div>
     <p class="colophon">
-      © {{ year }} {{ site.name }} · Built as a workshop, not a brochure.
+      © {{ year }} {{ site.name }}
     </p>
   </footer>
 </template>

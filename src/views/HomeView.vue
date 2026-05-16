@@ -10,8 +10,6 @@ const latest = listPosts().slice(0, 3)
   <div class="home">
     <section class="hero">
       <div class="hero-inner shell">
-        <p class="hero-kicker">Now, {{ site.nowUpdated }}</p>
-
         <div class="hero-body">
           <div class="hero-copy">
             <h1 class="hero-statement">
@@ -30,8 +28,8 @@ const latest = listPosts().slice(0, 3)
                 </p>
                 <p class="spine-more">
                   <span
-                    >Right now: where AI is actually changing how products get
-                    made.</span
+                    >Where AI changes how products are made, and what products
+                    can do.</span
                   >
                 </p>
               </li>
@@ -43,8 +41,8 @@ const latest = listPosts().slice(0, 3)
                 </p>
                 <p class="spine-more">
                   <span
-                    >Working models in the open that test an idea
-                    cheaply.</span
+                    >What those shifts do to teams, organisations, and digital
+                    systems.</span
                   >
                 </p>
               </li>
@@ -56,8 +54,8 @@ const latest = listPosts().slice(0, 3)
                 </p>
                 <p class="spine-more">
                   <span
-                    >Adopting change without losing judgement, dignity, or
-                    institutional memory.</span
+                    >Which trade-offs, unintended consequences, and strategic
+                    bets matter.</span
                   >
                 </p>
               </li>
@@ -185,7 +183,7 @@ const latest = listPosts().slice(0, 3)
 .spine-move {
   display: grid;
   grid-template-columns: 2.8rem 1fr;
-  column-gap: clamp(0.9rem, 2vw, 1.4rem);
+  column-gap: clamp(0.75rem, 1.5vw, 1.05rem);
   padding: clamp(0.85rem, 2vw, 1.15rem) 0;
   border-top: 1px solid oklch(0.93 0.016 100 / 0.13);
   outline: none;
@@ -199,11 +197,11 @@ const latest = listPosts().slice(0, 3)
   grid-column: 1;
   justify-self: start;
   padding-top: 0.42rem;
-  font-size: var(--text-xs);
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: 700;
   letter-spacing: 0.14em;
   line-height: 1;
-  color: oklch(0.74 0.03 130 / 0.55);
+  color: oklch(0.74 0.03 130 / 0.66);
   transition: color 0.4s var(--ease-out-quint);
 }
 .spine-line {

@@ -23,7 +23,7 @@ export const site = {
 }
 
 export const nav = [
-  { to: '/', label: 'Now' },
+  { to: '/', label: 'About' },
   { to: '/writing', label: 'Writing' },
   { to: '/tools', label: 'Tools' },
   { to: '/journey', label: 'Journey' },
