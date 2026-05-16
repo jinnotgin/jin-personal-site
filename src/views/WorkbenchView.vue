@@ -1,0 +1,141 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { projects } from '@/data/workbench'
+import { threads } from '@/data/threads'
+
+const groups = computed(() =>
+  threads
+    .map((t) => ({
+      thread: t,
+      items: projects.filter((p) => p.thread === t.id),
+    }))
+    .filter((g) => g.items.length),
+)
+
+const counts = computed(() => {
+  const active = projects.filter((p) => p.status === 'active').length
+  return { total: projects.length, active }
+})
+</script>
+
+<template>
+  <div class="shell">
+    <header class="page-head">
+      <p class="eyebrow">Workbench</p>
+      <h1>Things built, grouped by why.</h1>
+      <p class="lede">
+        Not a portfolio of finished objects. A workbench: {{ counts.total }}
+        projects across five intents, {{ counts.active }} still running. Most
+        are the same move repeated, notice a friction, build the small system
+        around it.
+      </p>
+    </header>
+
+    <div class="groups">
+      <section
+        v-for="g in groups"
+        :key="g.thread.id"
+        class="group"
+        :aria-label="g.thread.label"
+      >
+        <div class="group-head">
+          <h2>{{ g.thread.label }}</h2>
+          <p>{{ g.thread.line }}</p>
+        </div>
+
+        <ul class="rows">
+          <li v-for="p in g.items" :key="p.slug">
+            <RouterLink :to="`/workbench/${p.slug}`" class="row">
+              <span class="row-name">{{ p.name }}</span>
+              <span class="row-intent">{{ p.intent }}</span>
+              <span class="row-meta">
+                <span class="status" :class="`status--${p.status}`">{{
+                  p.status
+                }}</span>
+                <span class="row-year">{{ p.year }}</span>
+              </span>
+            </RouterLink>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.groups {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem);
+}
+.group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--color-ink);
+}
+.group-head h2 {
+  font-size: var(--text-2xl);
+}
+.group-head p {
+  font-size: var(--text-sm);
+  color: var(--color-ink-faint);
+  margin: 0;
+}
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rows li {
+  border-bottom: 1px solid var(--color-hairline);
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr auto;
+  align-items: baseline;
+  gap: 0.4rem 2rem;
+  padding: 1.35rem 0.5rem;
+  text-decoration: none;
+  color: var(--color-ink);
+  transition: background 0.18s var(--ease-out-quint);
+}
+.row:hover {
+  background: var(--color-sage);
+}
+.row-name {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+.row:hover .row-name {
+  color: var(--color-moss-deep);
+}
+.row-intent {
+  color: var(--color-ink-soft);
+  font-size: var(--text-base);
+}
+.row-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-self: end;
+  white-space: nowrap;
+}
+.row-year {
+  font-size: var(--text-sm);
+  color: var(--color-ink-faint);
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding: 1.25rem 0.25rem;
+  }
+  .row-meta {
+    justify-self: start;
+    margin-top: 0.3rem;
+  }
+}
+</style>
