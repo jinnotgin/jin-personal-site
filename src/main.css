@@ -1,1 +1,354 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* ============================================================
+   Jin — design system
+   Committed green palette on warm paper. OKLCH throughout.
+   Braun / Nomos restraint: precise hierarchy, calm surfaces.
+   ============================================================ */
+
+@theme {
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Iowan Old Style, Georgia, serif;
+
+  /* Ground & ink — never pure white, never pure black */
+  --color-paper: oklch(0.968 0.013 95);
+  --color-paper-raised: oklch(0.948 0.017 118);
+  --color-sage: oklch(0.922 0.022 135);
+  --color-sage-deep: oklch(0.886 0.026 138);
+  --color-hairline: oklch(0.852 0.02 132);
+
+  --color-ink: oklch(0.3 0.022 155);
+  --color-ink-soft: oklch(0.452 0.021 154);
+  --color-ink-faint: oklch(0.572 0.019 150);
+
+  /* Committed greens */
+  --color-moss: oklch(0.52 0.087 150);
+  --color-moss-deep: oklch(0.424 0.078 152);
+  --color-forest: oklch(0.302 0.038 158);
+  --color-forest-ink: oklch(0.93 0.016 100);
+  --color-forest-soft: oklch(0.74 0.03 130);
+
+  /* Signals */
+  --color-river: oklch(0.52 0.078 222);
+  --color-river-deep: oklch(0.438 0.072 224);
+  --color-signal: oklch(0.7 0.088 122);
+  --color-clay: oklch(0.582 0.082 52);
+
+  /* Fluid type scale — ratio ≥ 1.25 */
+  --text-xs: 0.78rem;
+  --text-sm: 0.88rem;
+  --text-base: 1.02rem;
+  --text-lg: clamp(1.12rem, 1.06rem + 0.3vw, 1.28rem);
+  --text-xl: clamp(1.35rem, 1.22rem + 0.65vw, 1.7rem);
+  --text-2xl: clamp(1.72rem, 1.45rem + 1.3vw, 2.4rem);
+  --text-3xl: clamp(2.2rem, 1.7rem + 2.5vw, 3.4rem);
+  --text-4xl: clamp(2.7rem, 1.9rem + 4vw, 4.9rem);
+  --text-5xl: clamp(3.2rem, 2rem + 6vw, 6.8rem);
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --shadow-lift: 0 1px 2px oklch(0.302 0.038 158 / 0.05),
+    0 8px 26px oklch(0.302 0.038 158 / 0.07);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.62;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Faint paper grain — atmosphere without an image dependency */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: radial-gradient(
+        oklch(0.302 0.038 158 / 0.025) 1px,
+        transparent 1px
+      );
+    background-size: 4px 4px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+    letter-spacing: -0.018em;
+    line-height: 1.1;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: from-font;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-moss);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: oklch(0.52 0.087 150 / 0.22);
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-sage-deep);
+    border: 3px solid var(--color-paper);
+    border-radius: 99px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page shell — consistent gutters and width across views */
+  .shell {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3.5rem);
+  }
+  .shell--reading {
+    max-width: 46rem;
+  }
+  .page-head {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .page-head h1 {
+    font-size: var(--text-4xl);
+    margin: 0.4rem 0 0;
+  }
+  .page-head .lede {
+    margin: 1.1rem 0 0;
+    font-size: var(--text-lg);
+    color: var(--color-ink-soft);
+    max-width: 56ch;
+  }
+
+  /* Shared editorial measure */
+  .measure {
+    max-width: 68ch;
+  }
+  .measure-wide {
+    max-width: 74ch;
+  }
+
+  /* Small tracked label — used sparingly, not as section grammar */
+  .eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  /* Quiet inline link for prose and trails */
+  .link {
+    color: var(--color-river-deep);
+    text-decoration: underline;
+    text-decoration-color: oklch(0.52 0.078 222 / 0.4);
+    transition: text-decoration-color 0.18s var(--ease-out-quint);
+  }
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Status pills — never color-alone, always a word */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-soft);
+  }
+  .status::before {
+    content: '';
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 99px;
+    background: currentColor;
+  }
+  .status--active {
+    color: var(--color-moss-deep);
+  }
+  .status--experiment {
+    color: var(--color-clay);
+  }
+  .status--archived,
+  .status--discontinued {
+    color: var(--color-ink-faint);
+  }
+  .status--archived::before,
+  .status--discontinued::before {
+    background: transparent;
+    border: 1.5px solid currentColor;
+  }
+
+  /* Long-form Markdown article styling */
+  .prose {
+    color: var(--color-ink);
+    font-size: clamp(1.04rem, 1rem + 0.2vw, 1.16rem);
+    line-height: 1.74;
+  }
+  .prose > * + * {
+    margin-top: 1.15em;
+  }
+  .prose h2 {
+    font-size: var(--text-xl);
+    margin-top: 2.4em;
+    margin-bottom: 0.2em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .prose h3 {
+    font-size: var(--text-lg);
+    margin-top: 1.9em;
+  }
+  .prose a {
+    color: var(--color-river-deep);
+    text-decoration: underline;
+    text-decoration-color: oklch(0.52 0.078 222 / 0.4);
+  }
+  .prose a:hover {
+    text-decoration-color: currentColor;
+  }
+  .prose strong {
+    font-weight: 700;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.3em;
+  }
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+  .prose li::marker {
+    color: var(--color-moss);
+  }
+  .prose blockquote {
+    margin-left: 0;
+    padding: 0.2em 0 0.2em 1.4em;
+    border-left: 2px solid var(--color-moss);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.08em;
+    color: var(--color-ink-soft);
+  }
+  .prose code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.86em;
+    background: var(--color-sage);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sm);
+  }
+  .prose pre {
+    background: var(--color-forest);
+    color: var(--color-forest-ink);
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+  .prose pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--color-hairline);
+    margin: 2.4em 0;
+  }
+
+  /* The serif italic is reserved for human / reflective notes only */
+  .note-serif {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-ink-soft);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    background: var(--color-forest);
+    color: var(--color-forest-ink);
+    border-radius: var(--radius-md);
+    transform: translateY(-150%);
+    transition: transform 0.2s var(--ease-out-quint);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .page-enter-active {
+    transition:
+      opacity 0.4s var(--ease-out-quint),
+      filter 0.4s var(--ease-out-quint);
+  }
+  .page-leave-active {
+    transition: opacity 0.18s ease;
+  }
+  .page-enter-from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  .page-leave-to {
+    opacity: 0;
+  }
+}
