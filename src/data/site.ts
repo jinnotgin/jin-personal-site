@@ -13,11 +13,11 @@ export const site = {
   ],
   nowUpdated: 'May 2026',
   contact: {
-    email: 'jinn.services@gmail.com',
+    email: 'hey@jinn.me',
     links: [
-      { label: 'Email', href: 'mailto:jinn.services@gmail.com' },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/' },
-      { label: 'GitHub', href: 'https://github.com/' },
+      { label: 'Email', href: 'mailto:hey@jinn.me' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jin-sg/' },
+      { label: 'GitHub', href: 'https://github.com/jinnotgin' },
     ],
   },
 }

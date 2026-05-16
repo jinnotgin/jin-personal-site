@@ -129,6 +129,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 
     <!-- The trail: evidence for the selected thread -->
     <div
+      :key="selected"
       class="trail"
       role="region"
       aria-live="polite"
@@ -302,13 +303,25 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 /* ---------- trail (all sizes) ---------- */
 .trail {
   margin-top: clamp(1.5rem, 4vw, 2.5rem);
-  padding-top: 1.75rem;
+  padding-top: clamp(2.2rem, 4vw, 2.8rem);
   border-top: 2px solid var(--color-moss);
+  position: relative;
+}
+.trail::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: min(18rem, 48vw);
+  height: 2px;
+  background: var(--color-moss-deep);
+  transform-origin: left center;
+  animation: trail-rule-in 0.72s var(--ease-out-expo) both;
 }
 .trail-cue {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.75rem;
   margin: 0;
   font-size: var(--text-xs);
   font-weight: 600;
@@ -317,23 +330,23 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   color: var(--color-moss-deep);
 }
 .trail-cue-mark {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 0.95rem;
+  height: 0.95rem;
   border: 2px solid var(--color-moss);
   border-radius: 99px;
   background: var(--color-moss);
 }
 .trail-head h3 {
   font-size: var(--text-2xl);
-  margin: 0.45rem 0 0;
+  margin: 0.7rem 0 0;
 }
 .trail-blurb {
-  margin: 0.9rem 0 0;
+  margin: 1.1rem 0 0;
   color: var(--color-ink-soft);
   font-size: var(--text-lg);
 }
 .trail-grid {
-  margin-top: 2.25rem;
+  margin-top: clamp(2.75rem, 5vw, 3.6rem);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   gap: 2rem 2.5rem;
@@ -361,14 +374,17 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   gap: 0.25rem;
 }
 .trail-link {
+  display: inline;
   font-weight: 600;
   color: var(--color-river-deep);
-  text-decoration: none;
-  width: fit-content;
-  border-bottom: 1.5px solid oklch(0.52 0.078 222 / 0.35);
+  text-decoration-line: underline;
+  text-decoration-color: oklch(0.52 0.078 222 / 0.38);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.24em;
+  transition: text-decoration-color 0.18s var(--ease-out-quint);
 }
 .trail-link:hover {
-  border-bottom-color: currentColor;
+  text-decoration-color: currentColor;
 }
 .trail-note {
   font-size: var(--text-sm);
@@ -472,15 +488,33 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     transform: translate(-50%, -50%);
     display: grid;
     place-items: center;
-    width: 1.35rem;
-    height: 1.35rem;
+    width: min(22rem, 32vw);
+    height: 5.5rem;
     background: none;
     border: 0;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font: inherit;
     color: var(--color-ink-soft);
+    touch-action: manipulation;
+  }
+  .node--right {
+    width: min(35rem, 42vw);
+    transform: translate(-28%, -50%);
+  }
+  .node--left {
+    width: min(35rem, 42vw);
+    transform: translate(-72%, -50%);
+  }
+  .node--top,
+  .node--bottom {
+    height: 7.6rem;
   }
   .node-dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 14px;
     height: 14px;
     border-radius: 99px;
@@ -504,31 +538,37 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     transition: color 0.2s var(--ease-out-quint);
   }
   .node--top .node-label {
-    bottom: calc(100% + 0.7rem);
+    bottom: calc(50% + 1.55rem);
     left: 50%;
     transform: translateX(-50%);
   }
   .node--right .node-label {
     top: 50%;
-    left: calc(100% + 0.95rem);
+    left: calc(28% + 2rem);
     transform: translateY(-50%);
     text-align: left;
   }
   .node--bottom .node-label {
-    top: calc(100% + 0.7rem);
+    top: calc(50% + 1.55rem);
     left: 50%;
     transform: translateX(-50%);
   }
   .node--left .node-label {
     top: 50%;
-    right: calc(100% + 0.95rem);
+    right: calc(28% + 2rem);
     transform: translateY(-50%);
     text-align: right;
+  }
+  .node--right .node-dot {
+    left: 28%;
+  }
+  .node--left .node-dot {
+    left: 72%;
   }
   .node:hover .node-dot,
   .node:focus-visible .node-dot {
     border-color: var(--color-moss);
-    transform: scale(1.22);
+    transform: translate(-50%, -50%) scale(1.22);
   }
   .node:hover .node-label,
   .node:focus-visible .node-label {
@@ -537,7 +577,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   .node.active .node-dot {
     background: var(--color-moss);
     border-color: var(--color-moss);
-    transform: scale(1.18);
+    transform: translate(-50%, -50%) scale(1.18);
   }
   .node.active .node-label {
     color: var(--color-ink);
@@ -546,9 +586,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 
   /* Resting invitation: unpicked dots breathe so the map reads as touchable
      without an imperative. Stops once the visitor has engaged. */
-  .node-dot {
-    position: relative;
-  }
   .node.inviting .node-dot::after {
     content: '';
     position: absolute;
@@ -584,13 +621,36 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 }
 
 /* Receipts re-animate on each thread change so the cause is felt */
+.trail-head {
+  animation: trail-head-in 0.56s var(--ease-out-expo) both;
+}
 .trail-grid {
-  animation: trail-in 0.42s var(--ease-out-quint) both;
+  animation: trail-in 0.64s 0.08s var(--ease-out-expo) both;
+}
+@keyframes trail-rule-in {
+  from {
+    opacity: 0.45;
+    transform: scaleX(0.08);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+@keyframes trail-head-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.9rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes trail-in {
   from {
     opacity: 0;
-    transform: translateY(0.6rem);
+    transform: translateY(1.2rem);
   }
   to {
     opacity: 1;

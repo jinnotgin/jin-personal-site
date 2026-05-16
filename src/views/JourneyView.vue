@@ -6,10 +6,11 @@ import { threadById } from '@/data/threads'
 <template>
   <div class="shell shell--reading">
     <header class="page-head">
-      <h1>How the work has changed over time.</h1>
+      <h1>My journey so far.</h1>
       <p class="lede">
-        The dates matter less than the pattern: spotting friction in systems,
-        technical and human, then building or facilitating what removes it.
+        I started by building small tools around problems I could see in front
+        of me. Over time, the work grew into larger products, public platforms,
+        AI adoption, and the human side of getting change to actually stick.
       </p>
     </header>
 

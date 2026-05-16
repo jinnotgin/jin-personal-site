@@ -10,7 +10,7 @@ const year = new Date().getFullYear()
       <div class="lead">
         <p class="line">Things I’ve built, written, and learnt from.</p>
         <p class="sub">
-          A working archive across product, AI, organisations, and change.
+          My working archive across product, AI, organisations, and change.
         </p>
       </div>
       <nav class="links" aria-label="Elsewhere">

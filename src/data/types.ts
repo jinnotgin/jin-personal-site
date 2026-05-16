@@ -81,5 +81,6 @@ export interface ShelfItem {
   kind: 'book' | 'person' | 'place' | 'idea'
   title: string
   by?: string
+  href: string
   note: string
 }

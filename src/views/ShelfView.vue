@@ -3,11 +3,11 @@ import { computed } from 'vue'
 import { shelf } from '@/data/shelf'
 import type { ShelfItem } from '@/data/types'
 
-const order: ShelfItem['kind'][] = ['book', 'idea', 'person', 'place']
+const order: ShelfItem['kind'][] = ['book', 'person', 'idea', 'place']
 const labels: Record<ShelfItem['kind'], string> = {
   book: 'Books',
   idea: 'Ideas I keep using',
-  person: 'People I read',
+  person: 'People I learn from',
   place: 'Places',
 }
 
@@ -36,11 +36,13 @@ const groups = computed(() =>
         <h2>{{ g.label }}</h2>
         <ul>
           <li v-for="(item, i) in g.items" :key="i">
-            <p class="title">
-              {{ item.title }}
-              <span v-if="item.by" class="by">— {{ item.by }}</span>
-            </p>
-            <p class="note note-serif">{{ item.note }}</p>
+            <a class="shelf-link" :href="item.href" target="_blank" rel="noreferrer">
+              <span class="title">
+                {{ item.title }}
+                <span v-if="item.by" class="by">— {{ item.by }}</span>
+              </span>
+              <span class="note note-serif">{{ item.note }}</span>
+            </a>
           </li>
         </ul>
       </section>
@@ -64,19 +66,41 @@ ul {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 1.6rem;
+  gap: 0.35rem;
+}
+.shelf-link {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.05rem 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 180ms var(--ease-out-quint),
+    color 180ms var(--ease-out-quint);
+}
+.shelf-link:hover {
+  background: var(--color-sage);
+}
+.shelf-link:focus-visible {
+  outline: 2px solid var(--color-moss);
+  outline-offset: 3px;
 }
 .title {
   margin: 0;
   font-size: var(--text-lg);
   font-weight: 700;
+  color: var(--color-ink);
+}
+.shelf-link:hover .title {
+  color: var(--color-moss-deep);
 }
 .by {
   font-weight: 400;
   color: var(--color-ink-faint);
 }
 .note {
-  margin: 0.35rem 0 0;
+  margin: 0;
   font-size: var(--text-lg);
   line-height: 1.55;
   color: var(--color-clay);
