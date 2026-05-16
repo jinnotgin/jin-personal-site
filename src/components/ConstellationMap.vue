@@ -89,7 +89,10 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
           v-for="n in nodes"
           :key="n.id"
           class="node"
-          :class="[`node--${n.placement}`, { active: n.id === selected }]"
+          :class="[
+            `node--${n.placement}`,
+            { active: n.id === selected, inviting: !touched && n.id !== selected },
+          ]"
           :style="{ left: n.x + '%', top: n.y + '%' }"
           :aria-pressed="n.id === selected"
           @click="pick(n.id)"
@@ -100,9 +103,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
         </button>
       </div>
 
-      <p class="field-hint" :class="{ faded: touched }" aria-hidden="true">
-        Select a thread
-      </p>
+      <p class="field-hint" aria-hidden="true">Five recurring threads</p>
     </div>
 
     <!-- Stacked index: same threads, source of truth on narrow screens -->
@@ -381,7 +382,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-ink-faint);
-    transition: opacity 0.4s var(--ease-out-quint);
   }
   .field-hint::before {
     content: '';
@@ -391,9 +391,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     margin-right: 0.6rem;
     vertical-align: middle;
     background: var(--color-moss);
-  }
-  .field-hint.faded {
-    opacity: 0;
   }
 
   .wires {
@@ -425,11 +422,11 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 0.35rem 0.65rem 0.45rem;
+    padding: 0.45rem 2.6rem 0.55rem;
     background: radial-gradient(
       ellipse at center,
       var(--color-paper) 0%,
-      var(--color-paper) 62%,
+      var(--color-paper) 68%,
       oklch(0.968 0.013 95 / 0) 100%
     );
   }
@@ -528,27 +525,41 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     color: var(--color-ink);
     font-weight: 700;
   }
-  /* Ring on the selected node ties it to the trail below */
-  .node.active::after {
+
+  /* Resting invitation: unpicked dots breathe so the map reads as touchable
+     without an imperative. Stops once the visitor has engaged. */
+  .node-dot {
+    position: relative;
+  }
+  .node.inviting .node-dot::after {
     content: '';
     position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 2.1rem;
-    height: 2.1rem;
-    border: 1px solid var(--color-moss);
+    inset: -5px;
     border-radius: 99px;
-    opacity: 0.5;
+    border: 1px solid var(--color-moss);
     pointer-events: none;
-    animation: node-ring 0.5s var(--ease-out-quint) both;
+    animation: node-invite 3s var(--ease-out-quint) infinite;
   }
-  @keyframes node-ring {
-    from {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    to {
+  @keyframes node-invite {
+    0% {
       opacity: 0.5;
+      transform: scale(0.6);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.3);
+    }
+  }
+  .node:hover .node-dot::after,
+  .node:focus-visible .node-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .node.inviting .node-dot::after {
+      animation: none;
+      opacity: 0.35;
       transform: scale(1);
     }
   }

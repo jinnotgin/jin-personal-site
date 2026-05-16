@@ -20,11 +20,48 @@ const latest = listPosts().slice(0, 3)
                 >Right now, that means <span class="hero-anchor">AI.</span></span
               >
             </h1>
-            <p class="hero-threads">
-              Examining how AI changes the way products get delivered,
-              prototyping where it helps users and where it loses their trust,
-              and sharing what I learn as notes and working models.
-            </p>
+
+            <ol class="hero-spine">
+              <li class="spine-move" tabindex="0">
+                <span class="spine-index" aria-hidden="true">01</span>
+                <p class="spine-line">
+                  <span class="spine-verb">Track</span> emerging shifts early,
+                  while they are still ambiguous.
+                </p>
+                <p class="spine-more">
+                  <span
+                    >Right now: where AI is actually changing how products get
+                    made.</span
+                  >
+                </p>
+              </li>
+              <li class="spine-move" tabindex="0">
+                <span class="spine-index" aria-hidden="true">02</span>
+                <p class="spine-line">
+                  <span class="spine-verb">Build</span> tools and prototypes
+                  with them, to learn what they really change.
+                </p>
+                <p class="spine-more">
+                  <span
+                    >Working models in the open that test an idea
+                    cheaply.</span
+                  >
+                </p>
+              </li>
+              <li class="spine-move" tabindex="0">
+                <span class="spine-index" aria-hidden="true">03</span>
+                <p class="spine-line">
+                  <span class="spine-verb">Understand</span> their second and
+                  third order effects on teams and organisations.
+                </p>
+                <p class="spine-more">
+                  <span
+                    >Adopting change without losing judgement, dignity, or
+                    institutional memory.</span
+                  >
+                </p>
+              </li>
+            </ol>
           </div>
 
           <figure class="hero-portrait">
@@ -138,12 +175,94 @@ const latest = listPosts().slice(0, 3)
   color: var(--color-signal);
 }
 
-.hero-threads {
+.hero-spine {
+  list-style: none;
   margin: 0;
-  max-width: 52ch;
+  padding: 0;
+  max-width: 54ch;
+  display: flex;
+  flex-direction: column;
+}
+.spine-move {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  column-gap: clamp(0.9rem, 2vw, 1.4rem);
+  padding: clamp(0.85rem, 2vw, 1.15rem) 0;
+  border-top: 1px solid oklch(0.93 0.016 100 / 0.13);
+  outline: none;
+  cursor: default;
+}
+.spine-move:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.spine-index {
+  grid-column: 1;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  color: oklch(0.74 0.03 130 / 0.55);
+  transition: color 0.4s var(--ease-out-quint);
+}
+.spine-line {
+  grid-column: 2;
+  margin: 0;
   font-size: var(--text-lg);
-  line-height: 1.55;
-  color: oklch(0.93 0.016 100 / 0.78);
+  line-height: 1.5;
+  color: oklch(0.93 0.016 100 / 0.82);
+  text-wrap: pretty;
+}
+.spine-verb {
+  font-family: var(--font-display);
+  font-size: 1.18em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-signal);
+}
+.spine-more {
+  grid-column: 2;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.5s var(--ease-out-expo),
+    opacity 0.4s var(--ease-out-quint);
+}
+.spine-more > span {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  padding-left: 1.3rem;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-forest-soft);
+}
+.spine-more > span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-signal);
+}
+.spine-move:hover .spine-more,
+.spine-move:focus-visible .spine-more {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 0.55rem;
+}
+.spine-move:hover .spine-index,
+.spine-move:focus-visible .spine-index {
+  color: var(--color-signal);
+}
+.spine-move:focus-visible {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px oklch(0.7 0.088 122 / 0.55);
 }
 
 .hero-portrait {
@@ -154,14 +273,54 @@ const latest = listPosts().slice(0, 3)
   width: min(100%, 18rem);
   align-self: start;
 }
+.hero-portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    205deg,
+    oklch(0.302 0.038 158 / 0.12),
+    oklch(0.424 0.078 152 / 0.32)
+  );
+  opacity: 1;
+  transition: opacity 0.55s var(--ease-out-quint);
+  pointer-events: none;
+}
+.hero-portrait {
+  position: relative;
+}
 .hero-portrait img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: 54% 46%;
-  mix-blend-mode: multiply;
-  filter: grayscale(1) brightness(1.18) contrast(1.05);
+  filter: saturate(0.72) brightness(1.04) contrast(0.99);
+  transition: filter 0.55s var(--ease-out-quint);
+}
+.hero-portrait:hover img,
+.hero-portrait:focus-within img {
+  filter: saturate(1) brightness(1) contrast(1);
+}
+.hero-portrait:hover::after,
+.hero-portrait:focus-within::after {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .spine-more {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 0.55rem;
+  }
+}
+@media (hover: none) {
+  .hero-portrait img {
+    filter: none;
+  }
+  .hero-portrait::after {
+    opacity: 0;
+  }
 }
 
 @media (min-width: 760px) {
