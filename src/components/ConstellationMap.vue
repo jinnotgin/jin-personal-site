@@ -103,7 +103,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
         </button>
       </div>
 
-      <p class="field-hint" aria-hidden="true">Five recurring threads</p>
     </div>
 
     <!-- Stacked index: same threads, source of truth on narrow screens -->
@@ -370,27 +369,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     aspect-ratio: 2.5 / 1;
     max-height: 24rem;
     margin: 0.5rem 0 0;
-  }
-  .field-hint {
-    position: absolute;
-    left: 50%;
-    bottom: 0.5rem;
-    transform: translateX(-50%);
-    margin: 0;
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-ink-faint);
-  }
-  .field-hint::before {
-    content: '';
-    display: inline-block;
-    width: 1.5rem;
-    height: 1px;
-    margin-right: 0.6rem;
-    vertical-align: middle;
-    background: var(--color-moss);
   }
 
   .wires {
