@@ -105,9 +105,14 @@ Handle embedded media as follows:
   the user so they can decide whether to host it locally.
 - **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not
   remove or shorten them.
-- **Videos**: embedded videos (YouTube, Vimeo, etc.) can't be rendered directly
-  in Markdown — convert to a linked thumbnail or a plain link with a note, and
-  flag each one to the user so they can decide how to handle it.
+- **Videos**: YouTube (and similar) can be embedded directly using an iframe in
+  the Markdown body:
+  ```html
+  <iframe src="https://www.youtube-nocookie.com/embed/{VIDEO_ID}" title="{title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  ```
+  Extract the video ID from the URL (e.g. `watch?v=ABC123` → `ABC123`) and use
+  the `youtube-nocookie.com/embed/` form. For non-YouTube videos that can't be
+  iframed, fall back to a plain link and flag it to the user.
 
 ---
 
