@@ -82,7 +82,10 @@ function buildProject(raw: string): Project {
   return {
     slug: String(data.slug ?? ''),
     name: String(data.name ?? ''),
-    thread: String(data.thread ?? '') as ThreadId,
+    threads: (Array.isArray(data.thread)
+      ? data.thread
+      : data.thread ? [String(data.thread)] : []
+    ) as ThreadId[],
     year: String(data.year ?? ''),
     status: (data.status === 'active' ? 'active' : 'archived') as ProjectStatus,
     intent: String(data.intent ?? ''),
@@ -124,4 +127,8 @@ export const projects: ProjectMeta[] = listProjects()
 
 export function projectBySlug(slug: string): ProjectMeta | undefined {
   return projects.find((p) => p.slug === slug)
+}
+
+export function projectsByThread(threadId: string): ProjectMeta[] {
+  return projects.filter((p) => p.threads.includes(threadId as ThreadId))
 }

@@ -81,6 +81,10 @@ export function postsBySlugs(slugs: string[]): PostMeta[] {
     .filter((p): p is Post => Boolean(p))
 }
 
+export function postsByThread(threadId: string): PostMeta[] {
+  return allPosts.filter((p) => p.tags.includes(threadId))
+}
+
 export const categories = Array.from(
   new Set(allPosts.map((p) => p.category)),
 )

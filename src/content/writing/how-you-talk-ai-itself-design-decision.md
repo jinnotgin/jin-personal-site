@@ -3,7 +3,7 @@ slug: how-you-talk-ai-itself-design-decision
 title: How you talk to AI is itself a design decision
 date: 2026-05-06
 excerpt: Spec-driven prompting and iterative prompting are both design choices. The useful question is where the quality judgment lives: in a contract you can define upfront, or in feedback you only get once something exists.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/how-you-talk-ai-itself-design-decision-jin-lin-iz6gc

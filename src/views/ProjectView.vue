@@ -8,13 +8,13 @@ import { threadById } from '@/data/threads'
 const route = useRoute()
 const project = computed(() => getProject(String(route.params.slug)))
 const thread = computed(() =>
-  project.value ? threadById(project.value.thread) : undefined,
+  project.value ? threadById(project.value.threads[0]!) : undefined,
 )
 const siblings = computed(() =>
   project.value
     ? projects.filter(
         (p) =>
-          p.thread === project.value!.thread &&
+          p.threads.some((t) => project.value!.threads.includes(t)) &&
           p.slug !== project.value!.slug,
       )
     : [],

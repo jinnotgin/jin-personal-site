@@ -3,7 +3,7 @@ slug: five-levels-ai-first-software-team
 title: Five levels of AI in software teams (and why the hardest part isn't the AI)
 date: 2026-03-12
 excerpt: A practical ladder for how software teams change as AI takes on more of the work, from removing boilerplate to surfacing what humans should pay attention to next.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/five-levels-ai-first-software-team-jin-lin-pejjc

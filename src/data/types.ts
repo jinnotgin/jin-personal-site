@@ -13,7 +13,7 @@ export interface ProjectImage {
 export interface ProjectMeta {
   slug: string
   name: string
-  thread: ThreadId
+  threads: ThreadId[]
   year: string
   status: ProjectStatus
   /** One-line statement of what it is. */
@@ -43,8 +43,6 @@ export interface Thread {
   blurb: string
   /** Angle in degrees around the identity centre, 0 = right, 270 = top. */
   angle: number
-  projects: string[]
-  writing: string[]
   journey: string[]
   external?: ProjectLink[]
 }

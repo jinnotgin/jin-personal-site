@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { projectBySlug, projects } from '@/data/workbench'
+import { projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
-import { byMostRecentProject } from '@/lib/projects'
+import { byMostRecentProject, projectsByThread } from '@/lib/projects'
 
 const groups = computed(() =>
   threads
     .map((t) => ({
       thread: t,
-      items: t.projects
-        .map((slug) => projectBySlug(slug))
-        .filter((p) => p !== undefined)
-        .sort(byMostRecentProject),
+      items: projectsByThread(t.id).sort(byMostRecentProject),
     }))
     .filter((g) => g.items.length),
 )

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { threads } from '@/data/threads'
-import { projectBySlug } from '@/data/workbench'
-import { byMostRecentProject } from '@/lib/projects'
-import { postsBySlugs, slugifyCategory } from '@/lib/markdown'
+import { byMostRecentProject, projectsByThread } from '@/lib/projects'
+import { postsByThread, slugifyCategory } from '@/lib/markdown'
 import { journey } from '@/data/journey'
 import type { ThreadId } from '@/data/types'
 
@@ -216,14 +215,9 @@ const active = computed(() => threads.find((t) => t.id === selected.value)!)
 
 const trail = computed(() => {
   const t = active.value
-  const projects = t.projects
-    .map((s) => projectBySlug(s))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p))
-    .sort(byMostRecentProject)
-
   return {
-    projects,
-    writing: postsBySlugs(t.writing),
+    projects: projectsByThread(t.id).sort(byMostRecentProject),
+    writing: postsByThread(t.id),
     journey: journey.filter((j) => t.journey.includes(j.id)),
     external: t.external ?? [],
   }

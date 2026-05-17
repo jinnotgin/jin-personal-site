@@ -3,7 +3,7 @@ slug: thinking-you-cant-get-back-hidden-cost-ai
 title: The thinking you can't get back (and the hidden cost of AI)
 date: 2026-03-19
 excerpt: Every level of AI assistance removes work from humans. The hidden question is which parts of that work were also building judgment, memory, and understanding.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/thinking-you-cant-get-back-hidden-cost-ai-jin-lin-fkm0c

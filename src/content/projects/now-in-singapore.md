@@ -1,7 +1,7 @@
 ---
 slug: now-in-singapore
 name: Now In Singapore
-thread: signals
+thread: [applied-ai, signals]
 year: 2024–now
 status: active
 intent: A curated pulse-check on what is happening across Singapore right now.

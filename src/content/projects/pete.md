@@ -1,7 +1,7 @@
 ---
 slug: pete
 name: Pete
-thread: signals
+thread: applied-ai
 year: 2024
 status: archived
 intent: An internal RAG knowledge guide for finding answers across company and project documentation.

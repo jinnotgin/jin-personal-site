@@ -3,7 +3,7 @@ slug: why-ai-features-need-proving-before-ship-demos-arent-enough
 title: Why AI features need proving before they ship (and why demos aren't enough)
 date: 2026-03-02
 excerpt: A demo proves that an AI feature can look convincing once. Shipping requires stronger evidence: whether it works repeatedly, under real load, for the people expected to rely on it.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/why-ai-features-need-proving-before-ship-demos-arent-enough-jin-lin-figjc

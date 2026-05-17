@@ -3,7 +3,7 @@ slug: finding-the-unwritten-context-in-code-and-documentation
 title: Finding the Unwritten Context in Code and Documentation
 date: 2026-02-24
 excerpt: Your AI agent can read your entire codebase — but can it read what your team never wrote down? Here's what that blind spot actually costs you.
-tags: [ai, llm, agents, context, coding]
+tags: [ai, llm, agents, context, coding, applied-ai]
 status: published
 category: AI in practice
 ---

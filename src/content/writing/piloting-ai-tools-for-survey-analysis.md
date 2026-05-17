@@ -3,7 +3,7 @@ slug: piloting-ai-tools-for-survey-analysis
 title: Piloting AI Tools for Research Survey Analysis (and what went wrong)
 date: 2025-12-28
 excerpt: With the boom of AI products & startups, it's easy to lose track of what makes them unique from one another.
-tags: [ai, llm, research, survey-analysis, workflow, tooling]
+tags: [ai, llm, research, survey-analysis, workflow, tooling, applied-ai, signals]
 status: published
 category: AI in practice
 ---

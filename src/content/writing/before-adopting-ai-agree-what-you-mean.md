@@ -3,7 +3,7 @@ slug: before-adopting-ai-agree-what-you-mean
 title: Before adopting AI, agree on what you mean by AI
 date: 2026-04-02
 excerpt: Adopting AI is too broad to be useful as a directive. Teams need sharper language before they can make sensible decisions about tools, risks, workflows, and ownership.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/before-adopting-ai-agree-what-you-mean-jin-lin-evq6c

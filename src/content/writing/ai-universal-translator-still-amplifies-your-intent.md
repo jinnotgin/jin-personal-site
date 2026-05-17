@@ -3,7 +3,7 @@ slug: ai-universal-translator-still-amplifies-your-intent
 title: AI is a universal translator, but it still amplifies your intent
 date: 2026-05-02
 excerpt: AI compresses the distance between intent and working software. That makes small tools worth building, but it also makes unclear intent show up faster and louder.
-tags: [ai, linkedin, software, product]
+tags: [ai, linkedin, software, product, applied-ai]
 status: published
 category: AI in practice
 source: https://www.linkedin.com/pulse/ai-universal-translator-still-amplifies-your-intent-jin-lin-l9b9c

@@ -1,7 +1,7 @@
 ---
 slug: testforge
 name: TestForge AI
-thread: signals
+thread: applied-ai
 year: 2023
 status: archived
 intent: A Google AI Trailblazers prototype for generating software test scenarios from requirements.

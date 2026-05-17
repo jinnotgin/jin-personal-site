@@ -13,24 +13,6 @@ export const threads: Thread[] = [
     blurb:
       'AI work here starts from real constraints: confidential data, uneven adoption, messy files, cost, latency, and the cognitive and intent debt these tools can create. The pattern is turning model capability into something usable, inspectable, and safe enough for actual work.',
     angle: 270,
-    projects: [
-      'promptpal',
-      'promptpal-transcribe',
-      'now-in-singapore',
-      'testforge',
-      'pete',
-    ],
-    writing: [
-      'how-you-talk-ai-itself-design-decision',
-      'ai-universal-translator-still-amplifies-your-intent',
-      'before-adopting-ai-agree-what-you-mean',
-      'thinking-you-cant-get-back-hidden-cost-ai',
-      'five-levels-ai-first-software-team',
-      'why-ai-features-need-proving-before-ship-demos-arent-enough',
-      'finding-the-unwritten-context-in-code-and-documentation',
-      'building-tools-with-agentic-coding',
-      'piloting-ai-tools-for-survey-analysis',
-    ],
     journey: ['applied-innovation-lead'],
   },
   {
@@ -40,8 +22,6 @@ export const threads: Thread[] = [
     blurb:
       'These are large public-sector systems where the hard part is making policy, agency needs, delivery constraints, and user outcomes meet in one working service. The public artifact is only part of the story; much of the work sits in coordination, tradeoffs, and keeping the platform usable at scale.',
     angle: 198,
-    projects: ['training-allowance-system', 'student-learning-space'],
-    writing: [],
     journey: ['training-allowance-system', 'student-learning-space'],
   },
   {
@@ -51,12 +31,6 @@ export const threads: Thread[] = [
     blurb:
       'These projects begin with scattered information: events across the web, skills taxonomies, survey responses, market signals. The work is to clean, structure, and present the material so a person can see what matters without wading through everything first.',
     angle: 126,
-    projects: [
-      'skills-framework-explorer',
-      'now-in-singapore',
-      'coingossip',
-    ],
-    writing: ['piloting-ai-tools-for-survey-analysis'],
     journey: ['forensic-analytics', 'signals-and-research'],
   },
   {
@@ -66,8 +40,6 @@ export const threads: Thread[] = [
     blurb:
       'This is work shaped by commercial needs and operational use cases, where the goal is to make client or enterprise workflows easier to run. The value is not a dramatic new interface; it is removing enough friction that the work becomes easier to manage and easier to trust.',
     angle: 54,
-    projects: ['relatus', 'jt-concierge', 'bmw-vantage'],
-    writing: [],
     journey: [
       'audit-modernisation',
       'digital-village-developer',
@@ -82,8 +54,6 @@ export const threads: Thread[] = [
     blurb:
       'These are smaller builds that started from my own friction or curiosity: food decisions, hardware experiments, games, utilities, and small apps. They are deliberately close to the problem: notice the repeated irritation, build around it, and keep enough personality in the result.',
     angle: 342,
-    projects: ['faveats', 'alastair', 'smart-mirror', 'the-resistance', 'timemoo', 'nearly'],
-    writing: [],
     journey: [],
   },
 ]
