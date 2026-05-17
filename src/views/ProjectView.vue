@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { projects, projectBySlug } from '@/data/workbench'
+import { projects } from '@/data/workbench'
+import { getProject } from '@/lib/projects'
 import { threadById } from '@/data/threads'
 
 const route = useRoute()
-const project = computed(() => projectBySlug(String(route.params.slug)))
+const project = computed(() => getProject(String(route.params.slug)))
 const thread = computed(() =>
   project.value ? threadById(project.value.thread) : undefined,
 )
@@ -44,24 +45,7 @@ const siblings = computed(() =>
       </figure>
     </div>
 
-    <div class="archaeology">
-      <section>
-        <h2>Why it existed</h2>
-        <p>{{ project.why }}</p>
-      </section>
-      <section>
-        <h2>The friction it answered</h2>
-        <p>{{ project.friction }}</p>
-      </section>
-      <section>
-        <h2>What was built</h2>
-        <p>{{ project.built }}</p>
-      </section>
-      <section v-if="project.trace">
-        <h2>What it left behind</h2>
-        <p class="note-serif">{{ project.trace }}</p>
-      </section>
-    </div>
+    <div class="prose" v-html="project.html"></div>
 
     <div class="meta">
       <div>
@@ -166,26 +150,40 @@ const siblings = computed(() =>
     transform: none;
   }
 }
-.archaeology {
+.prose {
   margin-top: 3rem;
-  display: grid;
-  gap: 2.75rem;
 }
-.archaeology h2 {
+.prose :deep(h2) {
   font-size: var(--text-xs);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-moss-deep);
+  margin-top: 2.75rem;
   margin-bottom: 0.75rem;
 }
-.archaeology p {
+.prose :deep(p) {
   font-size: var(--text-lg);
   line-height: 1.6;
   margin: 0;
 }
-.archaeology .note-serif {
-  font-size: var(--text-lg);
+.prose :deep(img) {
+  display: block;
+  width: min(50rem, calc(100vw - 5rem));
+  height: auto;
+  margin: 2rem 50%;
+  transform: translateX(-50%);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  .prose :deep(img) {
+    width: 100%;
+    margin: 1.5rem 0;
+    transform: none;
+  }
 }
 .meta {
   margin-top: 3.5rem;

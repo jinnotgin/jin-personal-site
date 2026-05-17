@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { listPosts, categories, formatDate } from '@/lib/markdown'
+import { listPosts, categories, formatDate, deslugifyCategory } from '@/lib/markdown'
 
 const route = useRoute()
 const posts = listPosts()
@@ -10,7 +10,9 @@ const filters = ['All', ...categories]
 const initialCategory = (() => {
   const q = route.query.category
   const qStr = Array.isArray(q) ? q[0] : q
-  return qStr && categories.includes(qStr) ? qStr : 'All'
+  if (!qStr) return 'All'
+  // support both slug form (ai-in-practice) and legacy exact match
+  return deslugifyCategory(qStr) ?? (categories.includes(qStr) ? qStr : 'All')
 })()
 
 const filter = ref<string>(initialCategory)

@@ -395,7 +395,7 @@ const latest = listPosts().slice(0, 3)
 }
 
 .latest {
-  margin-top: clamp(4rem, 9vw, 7rem);
+  margin-top: clamp(5rem, 12vw, 9.5rem);
   padding-bottom: clamp(4rem, 9vw, 7rem);
 }
 .latest-head {
@@ -407,7 +407,7 @@ const latest = listPosts().slice(0, 3)
   border-bottom: 1px solid var(--color-hairline);
 }
 .latest-head h2 {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
 }
 .latest ul {
   list-style: none;

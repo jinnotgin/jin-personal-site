@@ -1,89 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes, scrollBehavior } from './routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeView.vue'),
-      meta: { title: 'Jin — Applied innovation, shaping digital and human systems' },
-    },
-    {
-      path: '/projects',
-      name: 'projects',
-      component: () => import('@/views/WorkbenchView.vue'),
-      meta: { title: 'Projects — Jin' },
-    },
-    {
-      path: '/projects/:slug',
-      name: 'project',
-      component: () => import('@/views/ProjectView.vue'),
-      meta: { title: 'Projects — Jin' },
-    },
-    {
-      path: '/tools',
-      redirect: '/projects',
-    },
-    {
-      path: '/tools/:slug',
-      redirect: (to) => `/projects/${to.params.slug}`,
-    },
-    {
-      path: '/workbench',
-      redirect: '/projects',
-    },
-    {
-      path: '/workbench/:slug',
-      redirect: (to) => `/projects/${to.params.slug}`,
-    },
-    {
-      path: '/writing',
-      name: 'writing',
-      component: () => import('@/views/WritingView.vue'),
-      meta: { title: 'Writing — Jin' },
-    },
-    {
-      path: '/writing/:slug',
-      name: 'post',
-      component: () => import('@/views/PostView.vue'),
-      meta: { title: 'Writing — Jin' },
-    },
-    {
-      path: '/journey',
-      name: 'journey',
-      component: () => import('@/views/JourneyView.vue'),
-      meta: { title: 'Journey — Jin' },
-    },
-    {
-      path: '/shelf',
-      name: 'shelf',
-      component: () => import('@/views/ShelfView.vue'),
-      meta: { title: 'Shelf — Jin' },
-    },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: () => import('@/views/ContactView.vue'),
-      meta: { title: 'Contact — Jin' },
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue'),
-      meta: { title: 'Not found — Jin' },
-    },
-  ],
-  scrollBehavior(to, _from, savedPosition) {
-    if (savedPosition) return savedPosition
-    if (to.hash) return { el: to.hash, behavior: 'smooth' }
-    return { top: 0 }
-  },
+  routes,
+  scrollBehavior,
 })
 
 router.afterEach((to) => {
-  const title = (to.meta.title as string) ?? 'Jin'
-  document.title = title
+  document.title = (to.meta.title as string) ?? 'Jin'
 })
 
 export default router

@@ -5,6 +5,8 @@ import { threadById } from '@/data/threads'
 
 <template>
   <div class="shell shell--reading journey-shell">
+    <div class="banner" aria-hidden="true"></div>
+
     <header class="page-head">
       <h1>My journey so far.</h1>
       <p class="lede">
@@ -37,6 +39,21 @@ import { threadById } from '@/data/threads'
 <style scoped>
 .journey-shell {
   max-width: 54rem;
+}
+.banner {
+  height: clamp(7rem, 16vw, 12rem);
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius-lg);
+  background-image: url('/img/journey-vignette.webp'),
+    linear-gradient(
+      200deg,
+      var(--color-forest-soft) 0%,
+      var(--color-sage) 45%,
+      var(--color-sage-deep) 100%
+    );
+  background-size: cover, cover;
+  background-position: center;
+  border: 1px solid var(--color-hairline);
 }
 .timeline {
   list-style: none;

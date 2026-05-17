@@ -25,6 +25,8 @@ const channels = [
 
 <template>
   <div class="shell shell--reading">
+    <div class="banner" aria-hidden="true"></div>
+
     <header class="page-head">
       <h1>Get in touch.</h1>
       <p class="lede">
@@ -51,6 +53,21 @@ const channels = [
 </template>
 
 <style scoped>
+.banner {
+  height: clamp(7rem, 16vw, 12rem);
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius-lg);
+  background-image: url('/img/contact-vignette.webp'),
+    linear-gradient(
+      155deg,
+      var(--color-river) 0%,
+      var(--color-sage) 50%,
+      var(--color-paper-raised) 100%
+    );
+  background-size: cover, cover;
+  background-position: center;
+  border: 1px solid var(--color-hairline);
+}
 .channels {
   list-style: none;
   margin: 0;

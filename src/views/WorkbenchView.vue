@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Project } from '@/data/types'
+import type { ProjectMeta } from '@/data/types'
 import { projectBySlug, projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
 
-const latestYear = (project: Project) => {
+const latestYear = (project: ProjectMeta) => {
   if (project.year.toLowerCase().includes('now')) return Number.MAX_SAFE_INTEGER
 
   const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
   return Math.max(...years, 0)
 }
 
-const firstYear = (project: Project) => {
+const firstYear = (project: ProjectMeta) => {
   const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
   return Math.min(...years, 0)
 }
 
-const byMostRecent = (a: Project, b: Project) =>
+const byMostRecent = (a: ProjectMeta, b: ProjectMeta) =>
   latestYear(b) - latestYear(a) || firstYear(b) - firstYear(a)
 
 const groups = computed(() =>
@@ -39,6 +39,8 @@ const counts = computed(() => {
 
 <template>
   <div class="shell">
+    <div class="banner" aria-hidden="true"></div>
+
     <header class="page-head">
       <h1>Projects and tools, grouped by why they existed.</h1>
       <p class="lede">
@@ -80,6 +82,21 @@ const counts = computed(() => {
 </template>
 
 <style scoped>
+.banner {
+  height: clamp(7rem, 16vw, 12rem);
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius-lg);
+  background-image: url('/img/projects-vignette.webp'),
+    linear-gradient(
+      165deg,
+      var(--color-sage-deep) 0%,
+      var(--color-paper-raised) 50%,
+      var(--color-moss) 100%
+    );
+  background-size: cover, cover;
+  background-position: center;
+  border: 1px solid var(--color-hairline);
+}
 .groups {
   display: grid;
   gap: clamp(3rem, 6vw, 5rem);

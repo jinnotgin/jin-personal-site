@@ -10,7 +10,7 @@ export interface ProjectImage {
   alt: string
 }
 
-export interface Project {
+export interface ProjectMeta {
   slug: string
   name: string
   thread: ThreadId
@@ -18,17 +18,13 @@ export interface Project {
   status: ProjectStatus
   /** One-line statement of what it is. */
   intent: string
-  /** Why it existed. */
-  why: string
-  /** The system or friction it responded to. */
-  friction: string
-  /** What was actually built. */
-  built: string
-  /** What it left behind: a lesson, a pattern, or where it went. */
-  trace?: string
   stack: string[]
   links?: ProjectLink[]
   images?: ProjectImage[]
+}
+
+export interface Project extends ProjectMeta {
+  html: string
 }
 
 export type ThreadId =
