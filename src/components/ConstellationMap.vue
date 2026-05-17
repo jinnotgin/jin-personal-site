@@ -7,9 +7,9 @@ import { journey } from '@/data/journey'
 import type { ThreadId } from '@/data/types'
 
 const CX = 50
-const CY = 50
+const CY = 54
 const RX = 34
-const RY = 31
+const RY = 38
 
 const selected = ref<ThreadId>(threads[0]!.id)
 const touched = ref(false)
@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
         />
       </svg>
 
-      <div class="centre" aria-hidden="true">
+      <div class="centre" :style="{ left: CX + '%', top: CY + '%' }" aria-hidden="true">
         <span class="centre-name">Jin</span>
         <span class="centre-sub">Applied innovation</span>
       </div>
@@ -594,10 +594,10 @@ onBeforeUnmount(() => {
   .field {
     display: block;
     position: relative;
-    width: 100%;
+    width: min(100%, 70rem);
     aspect-ratio: 2.72 / 1;
-    max-height: 21.5rem;
-    margin: 0.2rem 0 0;
+    max-height: 24.5rem;
+    margin: 0.2rem auto 0;
     isolation: isolate;
   }
 
@@ -637,8 +637,6 @@ onBeforeUnmount(() => {
   .centre {
     position: absolute;
     z-index: 2;
-    left: 50%;
-    top: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -721,8 +719,7 @@ onBeforeUnmount(() => {
   }
   .node-label {
     position: absolute;
-    max-width: 13rem;
-    white-space: nowrap;
+    max-width: 10.5rem;
     font-size: var(--text-sm);
     font-weight: 600;
     line-height: 1.3;
@@ -736,6 +733,8 @@ onBeforeUnmount(() => {
     bottom: calc(50% + 1.55rem);
     left: 50%;
     transform: translateX(-50%);
+    max-width: 13rem;
+    white-space: nowrap;
   }
   .node--right .node-label {
     top: 50%;
@@ -747,6 +746,8 @@ onBeforeUnmount(() => {
     top: calc(50% + 1.55rem);
     left: 50%;
     transform: translateX(-50%);
+    max-width: 13rem;
+    white-space: nowrap;
   }
   .node--left .node-label {
     top: 50%;
