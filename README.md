@@ -95,7 +95,7 @@ coverage once the site has behavior that deserves automated tests.
 This site is developed with AI assistance as an explicit part of the working
 process. The current workflow acknowledges use of:
 
-- Codex, using GPT 5.5
+- Codex, using GPT 5.5 and GPT Image 2
 - Claude Code, using Opus 4.7 and Sonnet 4.6
 - The [Impeccable](https://impeccable.style) skill for interface critique and
   frontend design refinement
