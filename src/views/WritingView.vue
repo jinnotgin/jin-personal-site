@@ -1,16 +1,36 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { listPosts, categories, formatDate } from '@/lib/markdown'
 
+const route = useRoute()
 const posts = listPosts()
-const filter = ref<string>('All')
 const filters = ['All', ...categories]
+
+const initialCategory = (() => {
+  const q = route.query.category
+  const qStr = Array.isArray(q) ? q[0] : q
+  return qStr && categories.includes(qStr) ? qStr : 'All'
+})()
+
+const filter = ref<string>(initialCategory)
+const PAGE_SIZE = 8
+const limit = ref(PAGE_SIZE)
 
 const shown = computed(() =>
   filter.value === 'All'
     ? posts
     : posts.filter((p) => p.category === filter.value),
 )
+
+const visible = computed(() => shown.value.slice(0, limit.value))
+const hasMore = computed(() => limit.value < shown.value.length)
+
+watch(filter, () => { limit.value = PAGE_SIZE })
+
+function loadMore() {
+  limit.value += PAGE_SIZE
+}
 </script>
 
 <template>
@@ -38,7 +58,7 @@ const shown = computed(() =>
     </div>
 
     <ul class="posts">
-      <li v-for="p in shown" :key="p.slug">
+      <li v-for="p in visible" :key="p.slug">
         <RouterLink :to="`/writing/${p.slug}`" class="post">
           <span class="post-meta">
             <time :datetime="p.date">{{ formatDate(p.date) }}</time>
@@ -51,6 +71,13 @@ const shown = computed(() =>
         </RouterLink>
       </li>
     </ul>
+
+    <div v-if="hasMore" class="load-more">
+      <button class="load-more-btn" @click="loadMore">
+        Load {{ Math.min(PAGE_SIZE, shown.length - limit) }} more
+        <span class="load-more-count">({{ shown.length - limit }} remaining)</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -146,5 +173,35 @@ const shown = computed(() =>
   font-size: var(--text-sm);
   color: var(--color-ink-faint);
   margin-top: 0.35rem;
+}
+.load-more {
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  display: flex;
+  justify-content: center;
+}
+.load-more-btn {
+  font: inherit;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink-soft);
+  background: none;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  transition:
+    color 0.16s var(--ease-out-quint),
+    border-color 0.16s var(--ease-out-quint),
+    background 0.16s var(--ease-out-quint);
+}
+.load-more-btn:hover {
+  color: var(--color-ink);
+  border-color: var(--color-moss);
+  background: var(--color-sage);
+}
+.load-more-count {
+  font-weight: 400;
+  color: var(--color-ink-faint);
+  margin-left: 0.4rem;
 }
 </style>
