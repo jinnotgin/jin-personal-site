@@ -6,19 +6,19 @@ const channels = [
     label: 'Email',
     value: site.contact.email,
     href: `mailto:${site.contact.email}`,
-    note: 'Best for anything real. I read it.',
+    note: 'Easiest way to reach me!',
   },
   {
     label: 'LinkedIn',
-    value: 'in/linjin',
+    value: 'in/jin-sg',
     href: site.contact.links.find((l) => l.label === 'LinkedIn')!.href,
-    note: 'Formal identity, slower replies.',
+    note: 'Not super active here, but happy to connect with anyone interested in my work or background.',
   },
   {
     label: 'GitHub',
-    value: 'github.com/jin',
+    value: 'github/jinnotgin',
     href: site.contact.links.find((l) => l.label === 'GitHub')!.href,
-    note: 'The maker work, in progress and in the open.',
+    note: 'Where I post open source projects and experiments. Also the best way to see what I’m up to these days.',
   },
 ]
 </script>
@@ -47,11 +47,6 @@ const channels = [
         </a>
       </li>
     </ul>
-
-    <p class="sign note-serif">
-      — {{ site.formalName }}, where formal identity needs it. Jin everywhere
-      else.
-    </p>
   </div>
 </template>
 
