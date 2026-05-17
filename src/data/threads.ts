@@ -11,7 +11,7 @@ export const threads: Thread[] = [
     label: 'Applied AI in practice',
     line: 'AI tools that survive contact with real workflows.',
     blurb:
-      'Internal AI products, transcription flows, retrieval systems, agents, voice experiments, and the operating practices around them. The throughline is not novelty; it is making AI useful, confidential, legible, and adoptable inside real organisations.',
+      'AI work here starts from real constraints: confidential data, uneven adoption, messy files, cost, latency, and people who need the tool to fit into their day. The pattern is turning model capability into something usable, inspectable, and safe enough for actual work.',
     angle: 270,
     projects: [
       'promptpal',
@@ -38,7 +38,7 @@ export const threads: Thread[] = [
     label: 'Public platforms',
     line: 'Policy intent translated into services people depend on.',
     blurb:
-      'National-scale product work where policy, agency priorities, delivery constraints, and citizen or student outcomes have to resolve into a working platform. Most of the evidence here lives in the journey rather than a public demo.',
+      'These are large public-sector systems where the hard part is making policy, agency needs, delivery constraints, and user outcomes meet in one working service. The public artifact is only part of the story; much of the work sits in coordination, tradeoffs, and keeping the platform usable at scale.',
     angle: 198,
     projects: ['training-allowance-system', 'student-learning-space'],
     writing: [],
@@ -49,7 +49,7 @@ export const threads: Thread[] = [
     label: 'Sensemaking tools',
     line: 'Making messy signals easier to inspect and act on.',
     blurb:
-      'Scraping, summarisation, categorisation, taxonomy exploration, trend detection, and AI-assisted research. The recurring move is to turn scattered information into a surface that helps people make better judgement calls.',
+      'These projects begin with scattered information: events across the web, skills taxonomies, survey responses, market signals. The work is to clean, structure, and present the material so a person can see what matters without wading through everything first.',
     angle: 126,
     projects: [
       'skills-framework-explorer',
@@ -64,7 +64,7 @@ export const threads: Thread[] = [
     label: 'Commercial workflows',
     line: 'Client and enterprise operations made easier to run.',
     blurb:
-      'Client, enterprise, and operational tooling where the value is in making a messy workflow easier to quote, track, deploy, report on, or manage. Some of this sits in project pages; some belongs in the career timeline because the artifact itself is not public.',
+      'This is work around everyday business operations: quoting, tracking, deployment, reporting, concierge flows, procurement, and audit. The value is not a dramatic new interface; it is removing enough friction that the work becomes easier to run and easier to trust.',
     angle: 54,
     projects: ['relatus', 'jt-concierge', 'bmw-vantage'],
     writing: [],
@@ -80,7 +80,7 @@ export const threads: Thread[] = [
     label: 'Personal builds',
     line: 'Self-initiated tools built close to the problem.',
     blurb:
-      'Personal utilities, hardware builds, games, small apps, and experiments that started from my own friction or curiosity. The pattern is deliberately small: notice the repeated irritation, build a useful thing around it, and keep the maker signal visible.',
+      'These are smaller builds that started from my own friction or curiosity: food decisions, hardware experiments, games, utilities, and small apps. They are deliberately close to the problem: notice the repeated irritation, build around it, and keep enough personality in the result.',
     angle: 342,
     projects: ['faveats', 'alastair', 'smart-mirror', 'the-resistance', 'timemoo', 'nearly'],
     writing: [],
