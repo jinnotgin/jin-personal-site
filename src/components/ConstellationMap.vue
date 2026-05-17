@@ -897,6 +897,10 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 879px) {
+  .trail {
+    padding-top: clamp(1.5rem, 4vw, 2rem);
+  }
+
   .trail-list-footer {
     justify-content: flex-end;
   }

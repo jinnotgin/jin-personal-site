@@ -285,7 +285,7 @@ const latest = listPosts().slice(0, 3)
   overflow: hidden;
   width: min(15rem, 62vw);
   align-self: start;
-  order: 4;
+  order: -1;
 }
 .hero-portrait::after {
   content: '';
