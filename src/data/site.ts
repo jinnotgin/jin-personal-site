@@ -9,7 +9,7 @@ export const site = {
   now: [
     'Putting GenAI into real workflows: PromptPal context, retrieval, and small agents that earn their keep.',
     'Helping organisations adopt AI without losing judgement, dignity, or institutional memory.',
-    'Maker work in the open: Bifrost caching, Skills Framework Explorer, Now In Singapore, and prototypes that test an idea cheaply.',
+    'Maker work in the open: Skills Framework Explorer, Now In Singapore, and prototypes that test an idea cheaply.',
   ],
   nowUpdated: 'May 2026',
   contact: {
@@ -25,7 +25,7 @@ export const site = {
 export const nav = [
   { to: '/', label: 'About' },
   { to: '/writing', label: 'Writing' },
-  { to: '/tools', label: 'Projects' },
+  { to: '/projects', label: 'Projects' },
   { to: '/journey', label: 'Journey' },
   { to: '/shelf', label: 'Shelf' },
   { to: '/contact', label: 'Contact' },

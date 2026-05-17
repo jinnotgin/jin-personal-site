@@ -73,22 +73,6 @@ export const projects: Project[] = [
     stack: ['Product management', 'BDD', 'Gherkin', 'platform delivery'],
   },
   {
-    slug: 'bifrost-caching-plugin',
-    name: 'Bifrost default caching plugin',
-    thread: 'applied-ai',
-    year: '2025',
-    status: 'active',
-    intent: 'A drop-in plugin that turns on sensible prompt caching by default.',
-    why: 'Most teams pay full token price for context they send on every call. The default should be the cheap one.',
-    friction:
-      'Caching existed but needed per-call wiring. The friction was small enough to ignore and expensive enough to matter at scale.',
-    built:
-      'A plugin that detects stable context windows and applies caching automatically, with an escape hatch when you need cold reads.',
-    trace: 'Open source. The interesting part was the defaults, not the mechanism.',
-    stack: ['TypeScript', 'LLM infra'],
-    links: [{ label: 'GitHub', href: 'https://github.com/' }],
-  },
-  {
     slug: 'now-in-singapore',
     name: 'Now In Singapore',
     thread: 'signals',
@@ -210,7 +194,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'testforge',
-    name: 'TestForge',
+    name: 'TestForge AI',
     thread: 'signals',
     year: '2022',
     status: 'archived',
@@ -284,6 +268,23 @@ export const projects: Project[] = [
     trace:
       'This is less a public artifact than an early human-systems project: software shaped around an organisation’s operational reality.',
     stack: ['Resource management', 'reporting', 'analysis'],
+  },
+  {
+    slug: 'bmw-vantage',
+    name: 'BMW Vantage',
+    thread: 'human',
+    year: '2019',
+    status: 'archived',
+    intent:
+      'A commercial workflow stub for BMW Vantage, pending a fuller project note.',
+    why: 'Commercial platforms often need to coordinate customer-facing value, partner operations, and internal workflow constraints in one product surface.',
+    friction:
+      'The public-facing experience is only one part of the work; the harder layer is usually aligning the operational workflow behind it.',
+    built:
+      'Project details are still being written. Kept here as a commercial workflow marker rather than a public demo.',
+    trace:
+      'A placeholder for fuller notes on client and enterprise product delivery.',
+    stack: ['Commercial workflow', 'platform delivery', 'stakeholder alignment'],
   },
   {
     slug: 'alastair',

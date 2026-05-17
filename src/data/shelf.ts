@@ -62,9 +62,9 @@ export const shelf: ShelfItem[] = [
   },
   {
     kind: 'idea',
-    title: 'Five Types of Conversation',
-    href: 'https://www.thnk.org/blog/leader-essential-conversations-part-1',
-    note: 'A reminder to notice what kind of conversation I am actually in before trying to move it forward.',
+    title: 'Cynefin Framework',
+    href: 'https://thecynefin.co/about-us/about-cynefin-framework/',
+    note: 'Useful when I need to ask whether a problem is obvious, complicated, complex, or chaotic before choosing how to act.',
   },
   {
     kind: 'idea',
@@ -74,8 +74,8 @@ export const shelf: ShelfItem[] = [
   },
   {
     kind: 'idea',
-    title: 'Cynefin Framework',
-    href: 'https://thecynefin.co/about-us/about-cynefin-framework/',
-    note: 'Useful when I need to ask whether a problem is obvious, complicated, complex, or chaotic before choosing how to act.',
+    title: 'Five Types of Conversation',
+    href: 'https://www.thnk.org/blog/leader-essential-conversations-part-1',
+    note: 'A reminder to notice what kind of conversation I am actually in before trying to move it forward.',
   },
 ]

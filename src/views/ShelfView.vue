@@ -23,7 +23,7 @@ const groups = computed(() =>
 </script>
 
 <template>
-  <div class="shell shell--reading">
+  <div class="shell shell--reading shelf-shell">
     <header class="page-head">
       <h1>What has given me new perspectives.</h1>
       <p class="lede">
@@ -51,6 +51,9 @@ const groups = computed(() =>
 </template>
 
 <style scoped>
+.shelf-shell {
+  max-width: 54rem;
+}
 .shelf {
   display: grid;
   gap: clamp(2.5rem, 5vw, 4rem);

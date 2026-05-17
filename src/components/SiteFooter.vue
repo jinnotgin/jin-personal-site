@@ -8,7 +8,7 @@ const year = new Date().getFullYear()
     <div class="motif" aria-hidden="true"></div>
     <div class="inner">
       <div class="lead">
-        <p class="line">Things I’ve built, written, and learnt from.</p>
+        <p class="line">What I’ve built, written, and learnt from.</p>
         <p class="sub">
           My working archive across product, AI, organisations, and change.
         </p>
@@ -72,13 +72,13 @@ const year = new Date().getFullYear()
   font-size: var(--text-2xl);
   font-weight: 700;
   letter-spacing: -0.02em;
-  max-width: 18ch;
+  max-width: 18.5ch;
   margin: 0;
 }
 .sub {
   margin: 0.85rem 0 0;
   color: var(--color-forest-soft);
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
 }
 .links {
   display: flex;
@@ -101,7 +101,7 @@ const year = new Date().getFullYear()
   max-width: 78rem;
   margin: 0 auto;
   padding: 0 clamp(1.25rem, 4vw, 3.5rem) 2rem;
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   color: var(--color-forest-soft);
 }
 </style>

@@ -22,7 +22,7 @@ const siblings = computed(() =>
 
 <template>
   <div class="shell shell--reading" v-if="project">
-    <RouterLink to="/tools" class="back">← Projects</RouterLink>
+    <RouterLink to="/projects" class="back">← Projects</RouterLink>
 
     <header class="head">
       <p class="eyebrow">
@@ -88,7 +88,7 @@ const siblings = computed(() =>
       </p>
       <ul>
         <li v-for="s in siblings" :key="s.slug">
-          <RouterLink :to="`/tools/${s.slug}`" class="sib">
+          <RouterLink :to="`/projects/${s.slug}`" class="sib">
             <span>{{ s.name }}</span>
             <span class="sib-intent">{{ s.intent }}</span>
           </RouterLink>
@@ -101,7 +101,7 @@ const siblings = computed(() =>
     <h1>No such project</h1>
     <p class="lede">
       That project does not exist.
-      <RouterLink to="/tools" class="link">Back to all tools</RouterLink>.
+      <RouterLink to="/projects" class="link">Back to all projects</RouterLink>.
     </p>
   </div>
 </template>

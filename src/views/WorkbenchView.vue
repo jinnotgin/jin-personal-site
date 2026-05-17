@@ -1,13 +1,32 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { projects } from '@/data/workbench'
+import type { Project } from '@/data/types'
+import { projectBySlug, projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
+
+const latestYear = (project: Project) => {
+  if (project.year.toLowerCase().includes('now')) return Number.MAX_SAFE_INTEGER
+
+  const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
+  return Math.max(...years, 0)
+}
+
+const firstYear = (project: Project) => {
+  const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
+  return Math.min(...years, 0)
+}
+
+const byMostRecent = (a: Project, b: Project) =>
+  latestYear(b) - latestYear(a) || firstYear(b) - firstYear(a)
 
 const groups = computed(() =>
   threads
     .map((t) => ({
       thread: t,
-      items: projects.filter((p) => p.thread === t.id),
+      items: t.projects
+        .map((slug) => projectBySlug(slug))
+        .filter((p) => p !== undefined)
+        .sort(byMostRecent),
     }))
     .filter((g) => g.items.length),
 )
@@ -43,7 +62,7 @@ const counts = computed(() => {
 
         <ul class="rows">
           <li v-for="p in g.items" :key="p.slug">
-            <RouterLink :to="`/tools/${p.slug}`" class="row">
+            <RouterLink :to="`/projects/${p.slug}`" class="row">
               <span class="row-name">{{ p.name }}</span>
               <span class="row-intent">{{ p.intent }}</span>
               <span class="row-meta">

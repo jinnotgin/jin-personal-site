@@ -358,7 +358,7 @@ onBeforeUnmount(() => {
           <p class="col-title">Projects and tools</p>
           <ul v-if="trail.activeProjects.length">
             <li v-for="p in trail.activeProjects" :key="p.slug">
-              <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
+              <RouterLink :to="`/projects/${p.slug}`" class="trail-link">
                 {{ p.name }}
               </RouterLink>
               <span class="trail-note">{{ p.intent }}</span>
@@ -376,7 +376,7 @@ onBeforeUnmount(() => {
             </summary>
             <ul>
               <li v-for="p in trail.archivedProjects" :key="p.slug">
-                <RouterLink :to="`/tools/${p.slug}`" class="trail-link">
+                <RouterLink :to="`/projects/${p.slug}`" class="trail-link">
                   {{ p.name }}
                 </RouterLink>
                 <span class="trail-note">{{ p.intent }}</span>

@@ -13,8 +13,24 @@ export const threads: Thread[] = [
     blurb:
       'Internal AI products, transcription flows, retrieval systems, agents, voice experiments, and the operating practices around them. The throughline is not novelty; it is making AI useful, confidential, legible, and adoptable inside real organisations.',
     angle: 270,
-    projects: ['promptpal', 'promptpal-transcribe', 'bifrost-caching-plugin'],
-    writing: ['retrieval-over-vibes', 'the-gap-we-underestimate'],
+    projects: [
+      'promptpal',
+      'promptpal-transcribe',
+      'now-in-singapore',
+      'testforge',
+      'pete',
+    ],
+    writing: [
+      'how-you-talk-ai-itself-design-decision',
+      'ai-universal-translator-still-amplifies-your-intent',
+      'before-adopting-ai-agree-what-you-mean',
+      'thinking-you-cant-get-back-hidden-cost-ai',
+      'five-levels-ai-first-software-team',
+      'why-ai-features-need-proving-before-ship-demos-arent-enough',
+      'finding-the-unwritten-context-in-code-and-documentation',
+      'building-tools-with-agentic-coding',
+      'piloting-ai-tools-for-survey-analysis',
+    ],
     journey: ['applied-innovation-lead'],
   },
   {
@@ -25,7 +41,7 @@ export const threads: Thread[] = [
       'National-scale product work where policy, agency priorities, delivery constraints, and citizen or student outcomes have to resolve into a working platform. Most of the evidence here lives in the journey rather than a public demo.',
     angle: 342,
     projects: ['training-allowance-system', 'student-learning-space'],
-    writing: ['platforms-that-carry-policy'],
+    writing: [],
     journey: ['training-allowance-system', 'student-learning-space'],
   },
   {
@@ -42,7 +58,7 @@ export const threads: Thread[] = [
       'testforge',
       'pete',
     ],
-    writing: ['distrust-one-metric', 'sensemaking-before-recommendation'],
+    writing: ['piloting-ai-tools-for-survey-analysis'],
     journey: ['forensic-analytics', 'signals-and-research'],
   },
   {
@@ -53,7 +69,7 @@ export const threads: Thread[] = [
       'Personal utilities, hardware builds, games, small apps, and experiments that started from my own friction or curiosity. The pattern is deliberately small: notice the repeated irritation, build a useful thing around it, and keep the maker signal visible.',
     angle: 126,
     projects: ['faveats', 'alastair', 'smart-mirror', 'the-resistance', 'timemoo', 'nearly'],
-    writing: ['maker-notes-downtime'],
+    writing: [],
     journey: [],
   },
   {
@@ -63,8 +79,8 @@ export const threads: Thread[] = [
     blurb:
       'Client, enterprise, and operational tooling where the value is in making a messy workflow easier to quote, track, deploy, report on, or manage. Some of this sits in project pages; some belongs in the career timeline because the artifact itself is not public.',
     angle: 198,
-    projects: ['relatus', 'jt-concierge'],
-    writing: ['building-habits-not-features'],
+    projects: ['relatus', 'jt-concierge', 'bmw-vantage'],
+    writing: [],
     journey: [
       'audit-modernisation',
       'digital-village-developer',

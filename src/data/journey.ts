@@ -9,7 +9,7 @@ export const journey: JourneyEntry[] = [
     id: 'applied-innovation-lead',
     period: 'Jun 2023 — now',
     role: 'Applied Innovation Lead, Corporate Strategy & AI',
-    org: 'Singapore',
+    org: 'Ufinity, Singapore',
     summary:
       'Designed, built, and operate PromptPal, an internal Generative AI product that gives staff access to LLMs while preserving data confidentiality and contractual data residency. The work sits inside Corporate Strategy alongside AI readiness, organisational change, responsible adoption, and hands-on validation of emerging capabilities such as RAG, agents, voice-model interactions, AI-assisted research, and AI-generated specifications.',
     threads: ['applied-ai'],
@@ -81,7 +81,7 @@ export const journey: JourneyEntry[] = [
     id: 'ncs-deployment',
     period: 'Dec 2011 — Mar 2012',
     role: 'Deployment Engineer',
-    org: 'NCS Group',
+    org: 'NCS Singapore',
     summary:
       'Performed software and hardware upgrades for MOE schools and used robotic process automation to reduce manual intervention in upgrade workflows. The work was short, but it formed an early instinct for deployment repeatability and operational tooling.',
     threads: ['human'],
