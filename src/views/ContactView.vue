@@ -60,9 +60,9 @@ const channels = [
   background-image: url('/img/contact-vignette.webp'),
     linear-gradient(
       155deg,
-      var(--color-river) 0%,
+      var(--color-paper-raised) 0%,
       var(--color-sage) 50%,
-      var(--color-paper-raised) 100%
+      var(--color-sage-deep) 100%
     );
   background-size: cover, cover;
   background-position: center;

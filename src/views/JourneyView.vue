@@ -46,10 +46,10 @@ import { threadById } from '@/data/threads'
   border-radius: var(--radius-lg);
   background-image: url('/img/journey-vignette.webp'),
     linear-gradient(
-      200deg,
-      var(--color-forest-soft) 0%,
-      var(--color-sage) 45%,
-      var(--color-sage-deep) 100%
+      195deg,
+      var(--color-sage-deep) 0%,
+      var(--color-sage) 50%,
+      var(--color-paper-raised) 100%
     );
   background-size: cover, cover;
   background-position: center;

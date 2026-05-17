@@ -89,9 +89,9 @@ const counts = computed(() => {
   background-image: url('/img/projects-vignette.webp'),
     linear-gradient(
       165deg,
-      var(--color-sage-deep) 0%,
-      var(--color-paper-raised) 50%,
-      var(--color-moss) 100%
+      var(--color-sage) 0%,
+      var(--color-paper-raised) 55%,
+      var(--color-sage-deep) 100%
     );
   background-size: cover, cover;
   background-position: center;

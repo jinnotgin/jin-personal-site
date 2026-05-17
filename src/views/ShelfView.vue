@@ -65,7 +65,7 @@ const groups = computed(() =>
       175deg,
       var(--color-paper-raised) 0%,
       var(--color-sage) 55%,
-      var(--color-clay) 100%
+      var(--color-sage-deep) 100%
     );
   background-size: cover, cover;
   background-position: center;
