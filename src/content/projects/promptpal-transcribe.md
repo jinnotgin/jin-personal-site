@@ -19,7 +19,7 @@ Most transcription tools send audio to cloud servers. That is fine for general u
 
 ## What was built
 
-A transcription tool in the PromptPal family, built to run in the browser. It uses NVIDIA Parakeet so audio can be processed without a cloud transcription server. The tool also supports the steps after transcription: timestamps, speaker labels, cleanup, summary, extraction, and turning the transcript into useful notes.
+A transcription tool in the PromptPal family, built to run in the browser. It uses [NVIDIA Parakeet](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3) so audio can be processed without a cloud transcription server. The tool also supports the steps after transcription: timestamps, speaker labels, cleanup, summary, extraction, and turning the transcript into useful notes.
 
 ## What it left behind
 

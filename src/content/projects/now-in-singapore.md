@@ -24,4 +24,4 @@ A responsive web app that gathers event information, uses AI to summarise and ca
 
 ## What it left behind
 
-Now In Singapore taught me how LLMs change data scraping. Fetching pages is only the first step. The harder part is cleaning messy web content, keeping token use low, and deciding which parts should be handled by normal code versus LLM judgement. In 2024, structured outputs were still uneven, so the system needed checks, cleanup, and retries. Conceptually, it is close to the "LLM wiki" idea: use models to turn scattered web material into something easier to browse.
+Now In Singapore taught me how LLMs change data scraping. Fetching pages is only the first step. The harder part is cleaning messy web content, keeping token use low, and deciding which parts should be handled by normal code versus LLM judgement. In 2024, structured outputs were still uneven, so the system needed checks, cleanup, and retries. Conceptually, it is close to [Andrej Karpathy's LLM wiki concept](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): use models to turn scattered web material into something easier to browse.
