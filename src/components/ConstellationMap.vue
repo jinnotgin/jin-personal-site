@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { threads } from '@/data/threads'
 import { projectBySlug } from '@/data/workbench'
 import { postsBySlugs } from '@/lib/markdown'
@@ -13,10 +13,33 @@ const RY = 31
 
 const selected = ref<ThreadId>(threads[0]!.id)
 const touched = ref(false)
+const fieldEl = ref<HTMLElement | null>(null)
+const canvasEl = ref<HTMLCanvasElement | null>(null)
+const pointer = ref({ x: 0.5, y: 0.5, active: false })
+
+let frame = 0
+let resizeObserver: ResizeObserver | undefined
+let reduceMotion = false
 
 function pick(id: ThreadId) {
   selected.value = id
   touched.value = true
+}
+
+function trackPointer(event: PointerEvent) {
+  const field = fieldEl.value
+  if (!field) return
+
+  const rect = field.getBoundingClientRect()
+  pointer.value = {
+    x: (event.clientX - rect.left) / rect.width,
+    y: (event.clientY - rect.top) / rect.height,
+    active: true,
+  }
+}
+
+function releasePointer() {
+  pointer.value = { ...pointer.value, active: false }
 }
 
 const nodes = computed(() =>
@@ -54,11 +77,163 @@ function curve(x: number, y: number): string {
   return `M ${CX} ${CY} Q ${mx} ${my} ${x} ${y}`
 }
 
+function canvasCurve(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  x: number,
+  y: number,
+) {
+  const startX = (CX / 100) * width
+  const startY = (CY / 100) * height
+  const endX = (x / 100) * width
+  const endY = (y / 100) * height
+  const controlX = ((CX + x) / 200) * width
+  const controlY = (((CY + y) / 2 - 7) / 100) * height
+
+  ctx.moveTo(startX, startY)
+  ctx.quadraticCurveTo(controlX, controlY, endX, endY)
+}
+
+function pointOnCurve(width: number, height: number, x: number, y: number, t: number) {
+  const startX = (CX / 100) * width
+  const startY = (CY / 100) * height
+  const endX = (x / 100) * width
+  const endY = (y / 100) * height
+  const controlX = ((CX + x) / 200) * width
+  const controlY = (((CY + y) / 2 - 7) / 100) * height
+  const inv = 1 - t
+
+  return {
+    x: inv * inv * startX + 2 * inv * t * controlX + t * t * endX,
+    y: inv * inv * startY + 2 * inv * t * controlY + t * t * endY,
+  }
+}
+
+function prepareCanvas() {
+  const canvas = canvasEl.value
+  const field = fieldEl.value
+  if (!canvas || !field) return
+
+  const rect = field.getBoundingClientRect()
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  canvas.width = Math.round(rect.width * dpr)
+  canvas.height = Math.round(rect.height * dpr)
+  canvas.style.width = `${rect.width}px`
+  canvas.style.height = `${rect.height}px`
+
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+}
+
+function drawConstellation(time: number) {
+  const canvas = canvasEl.value
+  const field = fieldEl.value
+  const ctx = canvas?.getContext('2d')
+  if (!canvas || !field || !ctx) return
+
+  const rect = field.getBoundingClientRect()
+  const width = rect.width
+  const height = rect.height
+  ctx.clearRect(0, 0, width, height)
+
+  const drift = reduceMotion ? 0 : time * 0.001
+  const pointerX = pointer.value.x * width
+  const pointerY = pointer.value.y * height
+
+  if (pointer.value.active) {
+    const glow = ctx.createRadialGradient(
+      pointerX,
+      pointerY,
+      0,
+      pointerX,
+      pointerY,
+      Math.max(width, height) * 0.36,
+    )
+    glow.addColorStop(0, 'rgba(92, 143, 98, 0.07)')
+    glow.addColorStop(0.58, 'rgba(92, 143, 98, 0.022)')
+    glow.addColorStop(1, 'rgba(92, 143, 98, 0)')
+    ctx.fillStyle = glow
+    ctx.fillRect(0, 0, width, height)
+  }
+
+  nodes.value.forEach((n, index) => {
+    const isActive = n.id === selected.value
+    const phase = drift + index * 0.72
+    const nodeBreath = reduceMotion ? 0 : Math.sin(phase) * 0.55
+
+    ctx.beginPath()
+    canvasCurve(ctx, width, height, n.x, n.y + nodeBreath)
+    ctx.strokeStyle = isActive ? 'rgba(56, 128, 82, 0.68)' : 'rgba(176, 204, 177, 0.46)'
+    ctx.lineWidth = isActive ? 1.6 : 0.9
+    ctx.stroke()
+
+    if (!reduceMotion && isActive) {
+      for (let i = 0; i < 3; i += 1) {
+        const t = (drift * 0.22 + i * 0.34) % 1
+        const p = pointOnCurve(width, height, n.x, n.y + nodeBreath, t)
+        const radius = 2.4 + Math.sin(drift * 5 + i) * 0.75
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(56, 128, 82, ${0.1 + t * 0.38})`
+        ctx.fill()
+      }
+    }
+
+    const nodeX = (n.x / 100) * width
+    const nodeY = ((n.y + nodeBreath) / 100) * height
+    const dx = pointerX - nodeX
+    const dy = pointerY - nodeY
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    const pull = pointer.value.active ? Math.max(0, 1 - distance / 220) : 0
+
+    ctx.beginPath()
+    ctx.arc(nodeX, nodeY, isActive ? 13 : 9 + pull * 7, 0, Math.PI * 2)
+    ctx.strokeStyle = isActive
+      ? 'rgba(56, 128, 82, 0.2)'
+      : `rgba(56, 128, 82, ${0.05 + pull * 0.16})`
+    ctx.lineWidth = isActive ? 1.2 : 1
+    ctx.stroke()
+  })
+}
+
+function animate(time = 0) {
+  drawConstellation(time)
+  if (!reduceMotion) {
+    frame = window.requestAnimationFrame(animate)
+  }
+}
+
+function restartAnimation() {
+  window.cancelAnimationFrame(frame)
+  prepareCanvas()
+  animate()
+}
+
 function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'left' {
   if (y < CY - 18) return 'top'
   if (y > CY + 18) return 'bottom'
   return x > CX ? 'right' : 'left'
 }
+
+watch(selected, () => {
+  if (reduceMotion) restartAnimation()
+})
+
+onMounted(() => {
+  reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  prepareCanvas()
+  resizeObserver = new ResizeObserver(restartAnimation)
+  if (fieldEl.value) resizeObserver.observe(fieldEl.value)
+  animate()
+})
+
+onBeforeUnmount(() => {
+  window.cancelAnimationFrame(frame)
+  resizeObserver?.disconnect()
+})
 </script>
 
 <template>
@@ -66,7 +241,13 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     <h2 id="map-heading" class="sr-only">Recurring threads</h2>
 
     <!-- Constellation: decorative wires + identity, real buttons over it -->
-    <div class="field">
+    <div
+      ref="fieldEl"
+      class="field"
+      @pointermove="trackPointer"
+      @pointerleave="releasePointer"
+    >
+      <canvas ref="canvasEl" class="field-canvas" aria-hidden="true"></canvas>
       <svg
         class="wires"
         viewBox="0 0 100 100"
@@ -100,6 +281,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
           :aria-pressed="n.id === selected"
           @click="pick(n.id)"
           @focus="pick(n.id)"
+          @pointerenter="pick(n.id)"
         >
           <span class="node-dot" aria-hidden="true"></span>
           <span class="node-label">{{ n.label }}</span>
@@ -302,21 +484,12 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 
 /* ---------- trail (all sizes) ---------- */
 .trail {
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-  padding-top: clamp(2.2rem, 4vw, 2.8rem);
-  border-top: 2px solid var(--color-moss);
+  margin-top: clamp(0.45rem, 1.5vw, 1rem);
+  padding-top: clamp(0.9rem, 2vw, 1.35rem);
   position: relative;
 }
 .trail::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: 0;
-  width: min(18rem, 48vw);
-  height: 2px;
-  background: var(--color-moss-deep);
-  transform-origin: left center;
-  animation: trail-rule-in 0.72s var(--ease-out-expo) both;
+  content: none;
 }
 .trail-cue {
   display: flex;
@@ -422,16 +595,29 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 2.5 / 1;
-    max-height: 24rem;
-    margin: 0.5rem 0 0;
+    aspect-ratio: 2.72 / 1;
+    max-height: 21.5rem;
+    margin: 0.2rem 0 0;
+    isolation: isolate;
+  }
+
+  .field-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.76;
   }
 
   .wires {
     position: absolute;
     inset: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
+    opacity: 0.12;
   }
   .wire {
     fill: none;
@@ -445,10 +631,12 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   .wire.lit {
     stroke: var(--color-moss);
     stroke-width: 2;
+    opacity: 0.24;
   }
 
   .centre {
     position: absolute;
+    z-index: 2;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -457,12 +645,6 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     align-items: center;
     text-align: center;
     padding: 0.45rem 2.6rem 0.55rem;
-    background: radial-gradient(
-      ellipse at center,
-      var(--color-paper) 0%,
-      var(--color-paper) 68%,
-      oklch(0.968 0.013 95 / 0) 100%
-    );
   }
   .centre-name {
     font-size: clamp(2.6rem, 4vw, 3.8rem);
@@ -470,6 +652,10 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     letter-spacing: -0.04em;
     color: var(--color-ink);
     line-height: 1;
+    text-shadow:
+      0 0 0.5rem var(--color-paper),
+      0 0 1.2rem var(--color-paper),
+      0 0 2.2rem var(--color-paper);
   }
   .centre-sub {
     margin-top: 0.4rem;
@@ -477,11 +663,15 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-ink-faint);
+    text-shadow:
+      0 0 0.45rem var(--color-paper),
+      0 0 1.1rem var(--color-paper);
   }
 
   .node-layer {
     position: absolute;
     inset: 0;
+    z-index: 3;
   }
   .node {
     position: absolute;
@@ -497,6 +687,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     font: inherit;
     color: var(--color-ink-soft);
     touch-action: manipulation;
+    will-change: transform;
   }
   .node--right {
     width: min(35rem, 42vw);
@@ -524,17 +715,21 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
     transition:
       border-color 0.3s var(--ease-out-quint),
       background 0.3s var(--ease-out-quint),
-      transform 0.3s var(--ease-out-quint);
+      transform 0.3s var(--ease-out-quint),
+      box-shadow 0.3s var(--ease-out-quint);
+    will-change: transform;
   }
   .node-label {
     position: absolute;
     max-width: 13rem;
     white-space: nowrap;
-    background: var(--color-paper);
-    box-shadow: 0 0 0 0.35rem var(--color-paper);
     font-size: var(--text-sm);
     font-weight: 600;
     line-height: 1.3;
+    text-shadow:
+      0 0 0.35rem var(--color-paper),
+      0 0 0.9rem var(--color-paper),
+      0 0 1.4rem var(--color-paper);
     transition: color 0.2s var(--ease-out-quint);
   }
   .node--top .node-label {
@@ -568,6 +763,9 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   .node:hover .node-dot,
   .node:focus-visible .node-dot {
     border-color: var(--color-moss);
+    box-shadow:
+      0 0 0 7px var(--color-paper),
+      0 0 0 12px oklch(0.52 0.087 150 / 0.08);
     transform: translate(-50%, -50%) scale(1.22);
   }
   .node:hover .node-label,
@@ -577,6 +775,9 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
   .node.active .node-dot {
     background: var(--color-moss);
     border-color: var(--color-moss);
+    box-shadow:
+      0 0 0 7px var(--color-paper),
+      0 0 0 12px oklch(0.52 0.087 150 / 0.09);
     transform: translate(-50%, -50%) scale(1.18);
   }
   .node.active .node-label {
