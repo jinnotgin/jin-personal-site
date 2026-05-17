@@ -1,10 +1,38 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
 import { nav, site } from '@/data/site'
 
 const route = useRoute()
+const router = useRouter()
 const open = ref(false)
+const prefetchedRoutes = new Set<string>()
+type RouteComponentLoader = () => Promise<unknown>
+
+const activePath = computed(() => route.path.replace(/\/$/, '') || '/')
+
+const isActiveNavItem = (to: string) => {
+  const target = to.replace(/\/$/, '') || '/'
+  if (target === '/') return activePath.value === '/'
+  return activePath.value === target || activePath.value.startsWith(`${target}/`)
+}
+
+const prefetchRoute = (to: RouteLocationRaw) => {
+  const resolved = router.resolve(to)
+  if (prefetchedRoutes.has(resolved.fullPath)) return
+
+  prefetchedRoutes.add(resolved.fullPath)
+
+  for (const record of resolved.matched) {
+    const components = record.components ?? {}
+
+    for (const component of Object.values(components)) {
+      if (typeof component === 'function') {
+        void (component as RouteComponentLoader)()
+      }
+    }
+  }
+}
 
 watch(
   () => route.fullPath,
@@ -20,7 +48,13 @@ watch(
       class="bar"
       style="padding-top: calc(var(--p-density, 0.9) * 0.78rem); padding-bottom: calc(var(--p-density, 0.9) * 0.78rem)"
     >
-      <RouterLink to="/" class="wordmark" aria-label="Jin — home">
+      <RouterLink
+        to="/"
+        class="wordmark"
+        aria-label="Jin — home"
+        @pointerenter="prefetchRoute('/')"
+        @focus="prefetchRoute('/')"
+      >
         Jin<span class="dot" aria-hidden="true"></span>
       </RouterLink>
 
@@ -51,7 +85,10 @@ watch(
           :key="`v3-${item.to}`"
           :to="item.to"
           class="nav-link"
-          :class="{ exact: item.to === '/' }"
+          :class="{ 'nav-link--active': isActiveNavItem(item.to) }"
+          :aria-current="isActiveNavItem(item.to) ? 'page' : undefined"
+          @pointerenter="prefetchRoute(item.to)"
+          @focus="prefetchRoute(item.to)"
         >
           {{ item.label }}
         </RouterLink>
@@ -117,8 +154,7 @@ watch(
 .nav-link:hover {
   color: var(--color-ink);
 }
-.router-link-active:not(.exact),
-.nav-link.exact.router-link-exact-active {
+.nav-link--active {
   color: var(--color-moss-deep);
   border-bottom-color: var(--color-moss);
 }
@@ -161,8 +197,7 @@ watch(
     padding: 0.85rem 0;
     border-bottom: 1px solid var(--color-hairline);
   }
-  .router-link-active:not(.exact),
-  .nav-link.exact.router-link-exact-active {
+  .nav-link--active {
     border-bottom-color: var(--color-hairline);
     font-weight: 700;
   }
