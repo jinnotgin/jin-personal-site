@@ -29,7 +29,7 @@ const groups = computed(() =>
     <header class="page-head">
       <h1>What has given me new perspectives.</h1>
       <p class="lede">
-        A short list of things that have changed how I think.
+        A list of things that have shaped how I think, feel, and see the world.
       </p>
     </header>
 
