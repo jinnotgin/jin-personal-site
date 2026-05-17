@@ -4,18 +4,18 @@ name: Nearly Weather Kiosk
 thread: homegrown
 year: 2016
 status: archived
-intent: A minimalist kiosk app for hyper-local weather forecast alerts in Singapore.
+intent: A minimalist home kiosk for weather and everyday local information.
 stack: [Data.gov.sg, NEA 2 Hour Nowcast, kiosk UI]
 images: [/img/projects/nearly-weather.jpeg::Nearly Weather kiosk interface showing region-specific weather information.]
 ---
 
 ## Why it existed
 
-Singapore's weather can change sharply by region, so a general forecast is often not enough.
+Nearly was made for my mother at home. She was not formally educated and could not read, so using a phone to check everyday information was hard. I wanted a text-light, visual kiosk that could communicate useful local information without making her open apps, read menus, or search.
 
 ## The friction it answered
 
-NEA's 2 Hour Nowcast already had useful weather data. I wanted a simpler way to see region-specific alerts at a glance.
+[NEA's 2 Hour Nowcast](https://www.weather.gov.sg/weather-forecast-2hrnowcast/) already had useful region-specific weather data. The missing layer was presentation: a glanceable, mostly visual display that could show whether rain was coming, so she would know when to bring in clothes drying on bamboo poles outside the HDB window. The same idea could extend to other household information, like when the next bus would arrive at the nearest stop.
 
 ## What was built
 

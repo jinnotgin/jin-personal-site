@@ -12,7 +12,7 @@ images: [/img/projects/skillsfuture-training-allowance.png::SkillsFuture Mid-Car
 
 ## Why it existed
 
-The policy intent was clear: support mid-career workers through reskilling. The product challenge was turning that policy into a service that could work across SSG, WSG, GovTech, implementation teams, and real citizen journeys.
+The policy intent was clear: support mid-career Singaporeans as they reskill for career change or progression. The SkillsFuture Mid-Career Training Allowance gives eligible Singapore Citizens aged 40 and above financial support while taking selected long-form training, including full-time and part-time pathways. The product challenge was turning that policy into a service that could work across SSG, WSG, GovTech, implementation teams, and real citizen journeys.
 
 ## The friction it answered
 

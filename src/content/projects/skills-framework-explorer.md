@@ -4,7 +4,7 @@ name: Skills Framework Explorer
 thread: signals
 year: 2026
 status: active
-intent: A tool for exploring Singapore's Skills Framework as a navigable skills map.
+intent: A tool for comparing job-role skills and exploring Singapore's Skills Framework as a navigable skills map.
 stack: [Web app, search, taxonomy, skills data]
 links: [Live app::https://job-skills-explorer.web.app/, GitHub::https://github.com/jinnotgin/skills-framework-explorer]
 images: [/img/projects/skills-framework-explorer-pic2.png::Skills Framework Explorer interface comparing occupations and skill relationships.]
@@ -16,11 +16,11 @@ The Skills Framework data is useful, but hard to explore when it is presented as
 
 ## The friction it answered
 
-People need to compare occupations, skills, and nearby pathways. Static documents make those relationships hard to see.
+People need to compare occupations, skills, and nearby pathways. Static documents make those relationships hard to see, especially when the question is not one job role in isolation but how two roles differ, or what the full skills universe looks like for a job family or industry.
 
 ## What was built
 
-A web app that lets users search and explore the Skills Framework interactively.
+A web app that lets users search and explore the Skills Framework interactively. It supports comparing the skills required by two job roles, and browsing the wider universe of skills linked to a selected occupation, job family, or industry. That makes it useful not only for individual career exploration, but also for HR planning and workforce capability mapping.
 
 ## What it left behind
 

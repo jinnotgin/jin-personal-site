@@ -12,7 +12,7 @@ images: [/img/projects/testforge-ai.png::TestForge AI interface for inspecting s
 
 ## Why it existed
 
-In 2023, Google AI Trailblazers gave teams a short window to test real generative AI use cases. For us, one question was whether LLMs could help generate useful test scenarios from software requirements.
+In 2023, Google AI Trailblazers created an opportunity to test real generative AI use cases with Google Cloud and the early Gemini 1.5 models. For us, one question was whether LLMs could help generate useful test scenarios from software requirements.
 
 ## The friction it answered
 

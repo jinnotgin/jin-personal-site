@@ -1,5 +1,5 @@
-import { marked } from 'marked'
 import type { Post, PostMeta } from '@/data/types'
+import { renderMarkdown } from '@/lib/renderMarkdown'
 
 /**
  * Real Markdown infrastructure: posts live as .md files with YAML-ish
@@ -44,8 +44,6 @@ function parseFrontmatter(raw: string): {
   return { data, body: rawBody }
 }
 
-marked.setOptions({ gfm: true, breaks: false })
-
 function build(raw: string): Post {
   const { data, body } = parseFrontmatter(raw)
   const words = body.trim().split(/\s+/).filter(Boolean).length
@@ -57,7 +55,7 @@ function build(raw: string): Post {
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     status: data.status === 'draft' ? 'draft' : 'published',
     category: String(data.category ?? 'Notes'),
-    html: marked.parse(body, { async: false }) as string,
+    html: renderMarkdown(body),
     readingMinutes: Math.max(1, Math.round(words / 200)),
   }
 }

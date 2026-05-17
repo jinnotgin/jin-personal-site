@@ -1,5 +1,5 @@
-import { marked } from 'marked'
 import type { ProjectMeta, Project, ProjectLink, ProjectImage, ThreadId, ProjectStatus } from '@/data/types'
+import { renderMarkdown } from '@/lib/renderMarkdown'
 
 /**
  * Project content lives as .md files with YAML-ish frontmatter under
@@ -73,8 +73,6 @@ function parseImages(raw: unknown): ProjectImage[] | undefined {
   return result.length ? result : undefined
 }
 
-marked.setOptions({ gfm: true, breaks: false })
-
 function buildProject(raw: string): Project {
   const { data, body } = parseFrontmatter(raw)
   const links = parseLinks(data.links)
@@ -92,7 +90,7 @@ function buildProject(raw: string): Project {
     stack: Array.isArray(data.stack) ? (data.stack as string[]) : [],
     ...(links ? { links } : {}),
     ...(images ? { images } : {}),
-    html: marked.parse(body.trim(), { async: false }) as string,
+    html: renderMarkdown(body.trim()),
   }
 }
 

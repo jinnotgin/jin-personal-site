@@ -4,14 +4,14 @@ name: PromptPal Transcribe
 thread: applied-ai
 year: 2026
 status: active
-intent: A focused transcription tool that turns spoken work into usable written material.
+intent: A private transcription tool that turns spoken work into usable written material.
 stack: [NVIDIA Parakeet, browser ML, speech-to-text, LLMs, workflow design]
 images: [/img/projects/promptpal-transcribe-b.png::PromptPal Transcribe interface with timestamped and speaker-labelled transcript output.]
 ---
 
 ## Why it existed
 
-Many meetings, interviews, and voice notes contain useful information, but manually turning them into written notes is slow. The harder problem was that some of these recordings could contain client-sensitive data, so we could not simply use a commercial cloud transcription tool.
+There are already many meeting transcription tools, and many of them are useful. The gap was privacy. Some meetings, interviews, and voice notes contain client-sensitive material, so turning speech into notes could not always depend on sending audio to a commercial cloud transcription service.
 
 ## The friction it answered
 

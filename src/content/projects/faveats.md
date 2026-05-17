@@ -11,7 +11,7 @@ images: [/img/projects/faveats-main.png::FavEats interface showing favourite foo
 
 ## Why it existed
 
-I kept discovering good food places around Singapore, then forgetting them when I was nearby again.
+I kept discovering good food places around Singapore, then forgetting them when I was nearby again. Google Maps was useful, but it was not built around how I choose food: cuisine, personal favourites, opening hours, and other food-specific filters mattered more than a generic place search.
 
 ## The friction it answered
 

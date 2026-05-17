@@ -12,7 +12,7 @@ const latest = listPosts().slice(0, 3)
         <div class="hero-body">
           <div class="hero-copy">
             <h1 class="hero-statement">
-              I track emerging shifts, then build to understand them.
+              I track emerging signals, then build to understand them.
               <span class="hero-turn"
                 >Right now, that means <span class="hero-anchor">Generative AI.</span></span
               >
@@ -22,7 +22,7 @@ const latest = listPosts().slice(0, 3)
               <li class="spine-move" tabindex="0">
                 <span class="spine-index" aria-hidden="true">01</span>
                 <p class="spine-line">
-                  <span class="spine-verb">Track</span> emerging shifts early,
+                  <span class="spine-verb">Track</span> emerging signals early,
                   while they are still ambiguous.
                 </p>
                 <p class="spine-more">
@@ -40,7 +40,7 @@ const latest = listPosts().slice(0, 3)
                 </p>
                 <p class="spine-more">
                   <span
-                    >What those shifts do to teams, organisations, and digital
+                    >What those signals do to teams, organisations, and digital
                     systems.</span
                   >
                 </p>
@@ -49,7 +49,7 @@ const latest = listPosts().slice(0, 3)
                 <span class="spine-index" aria-hidden="true">03</span>
                 <p class="spine-line">
                   <span class="spine-verb">Understand</span> their second and
-                  third order effects on teams and organisations.
+                  third-order effects on teams and organisations.
                 </p>
                 <p class="spine-more">
                   <span
@@ -161,7 +161,7 @@ const latest = listPosts().slice(0, 3)
 
 .hero-statement {
   font-family: var(--font-display);
-  font-size: clamp(2.15rem, 1.35rem + 3.05vw, 3.85rem);
+  font-size: clamp(2.05rem, 1.3rem + 2.9vw, 3.65rem);
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.026em;
@@ -173,7 +173,7 @@ const latest = listPosts().slice(0, 3)
 .hero-turn {
   display: block;
   margin-top: 0.3em;
-  font-size: 0.60em;
+  font-size: 0.575em;
   line-height: 1.08;
   color: var(--color-forest-soft);
   font-weight: 500;
@@ -340,7 +340,7 @@ const latest = listPosts().slice(0, 3)
 @media (min-width: 760px) {
   .hero-body {
     grid-template-columns: minmax(0, 1fr) minmax(15rem, 20.5rem);
-    gap: clamp(2.5rem, 6vw, 4.5rem);
+    gap: clamp(2rem, 5vw, 3.75rem);
   }
   .hero-copy {
     display: flex;

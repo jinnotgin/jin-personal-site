@@ -11,7 +11,7 @@ images: [/img/projects/relatus-sacs-hillv2.jpg::Relatus resource management syst
 
 ## Why it existed
 
-Relatus started as a school project when I was in NTU. Instead of building for a made-up brief, our team decided to work with SACS Employment Support Services on a real operational problem.
+Relatus started as my NTU capstone project. Our team worked with SACS Employment Support Services on a real operational problem in vocational rehabilitation, where the software had to fit an existing service rather than a classroom-only brief.
 
 ## The friction it answered
 

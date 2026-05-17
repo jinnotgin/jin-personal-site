@@ -23,4 +23,6 @@ Pete started as an AI knowledge guide for Ufinity employees, using retrieval aug
 
 ## What it left behind
 
-Built in 2024, Pete was where I learned RAG in practice. Retrieval is hard: chunking, source grounding, stale documents, permissions, and answer traceability all matter. It also showed me the importance of being where users already are. HR knowledge was useful but occasional; project knowledge inside the team's working chat became much more useful. This became a concrete version of the context problem: retrieve the right documents, show where the answer came from, and fit into the moment where the question appears.
+Built in 2024, Pete was where I learned RAG in practice. Retrieval is hard: chunking, source grounding, stale documents, permissions, answer traceability, and outdated data all matter. Old documents can distort the answer as much as missing documents can, because the system has to decide what still counts as true. That turned knowledge management into part of the product problem, not just an input to it.
+
+It also showed me the importance of being where users already are. HR knowledge was useful but occasional; project knowledge inside the team's working chat became much more useful. This became a concrete version of the context problem: retrieve the right documents, show where the answer came from, and fit into the moment where the question appears.

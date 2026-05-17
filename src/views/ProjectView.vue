@@ -77,7 +77,7 @@ const siblings = computed(() =>
       <ul>
         <li v-for="s in siblings" :key="s.slug">
           <RouterLink :to="`/projects/${s.slug}`" class="sib">
-            <span>{{ s.name }}</span>
+            <span class="sib-title">{{ s.name }}</span>
             <span class="sib-intent">{{ s.intent }}</span>
           </RouterLink>
         </li>
@@ -171,6 +171,9 @@ const siblings = computed(() =>
   line-height: 1.6;
   margin: 0;
 }
+.prose :deep(p + p) {
+  margin-top: 1em;
+}
 .prose :deep(img) {
   display: block;
   width: min(50rem, calc(100vw - 5rem));
@@ -259,22 +262,38 @@ const siblings = computed(() =>
   gap: 0.25rem;
 }
 .sib {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  align-items: baseline;
-  padding: 0.85rem 0;
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.34fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  padding: 1rem 0.5rem;
   border-bottom: 1px solid var(--color-hairline);
   text-decoration: none;
   color: var(--color-ink);
-  font-weight: 600;
+  transition:
+    background-color 0.18s var(--ease-out-quint),
+    color 0.18s var(--ease-out-quint);
 }
 .sib:hover {
+  background: var(--color-sage);
   color: var(--color-moss-deep);
+}
+.sib-title {
+  font-weight: 700;
+  line-height: 1.25;
 }
 .sib-intent {
   font-weight: 400;
   font-size: var(--text-sm);
   color: var(--color-ink-faint);
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .sib {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 1rem 0;
+  }
 }
 </style>

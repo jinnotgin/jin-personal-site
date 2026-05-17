@@ -12,15 +12,15 @@ images: [/img/projects/student-learning-space.jpg::Student Learning Space platfo
 
 ## Why it existed
 
-During COVID-19, online learning became critical infrastructure.
+SLS is Singapore's national online learning platform for schools: a common place for curriculum-aligned resources, teacher-created lessons, self-directed learning, and collaboration. During COVID-19, that platform became critical infrastructure. When Singapore shifted to Home-Based Learning during the circuit breaker, learning had to continue across homes with different devices, bandwidth, routines, and levels of adult support.
 
 ## The friction it answered
 
-Feature decisions had to balance policy intent, teacher and student needs, UX behaviour, technical constraints, and QA clarity.
+The platform had to support a sharper range of real-world conditions than before. Not every household had a laptop available at the same time. Students could be learning from shared computers, tablets, or phones. Teachers needed authoring tools that could support different lesson designs, while students needed the experience to be clearer under stress.
 
 ## What was built
 
-Shaped product features, contributed to design critiques, led backlog refinement, and wrote behaviour-driven specifications in Gherkin so scope was clear and testable before development.
+Shaped product features, contributed to design critiques, led backlog refinement, and wrote behaviour-driven specifications in Gherkin so scope was clear and testable before development. The work sat across UI modernisation, platform behaviour, backend architecture, and QA clarity at a time when requirements were moving quickly.
 
 <iframe src="https://www.youtube-nocookie.com/embed/ht--L3Pj_yQ" title="Student Learning Space video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
