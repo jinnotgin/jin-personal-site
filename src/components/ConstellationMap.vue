@@ -891,12 +891,25 @@ onBeforeUnmount(() => {
 }
 .trail-all-link {
   font-size: var(--text-sm);
-  font-weight: 600;
   color: var(--color-river-deep);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: oklch(0.52 0.078 222 / 0.4);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.24em;
+  transition: text-decoration-color 0.18s var(--ease-out-quint);
 }
 .trail-all-link:hover {
-  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+@media (max-width: 879px) {
+  .trail-list-footer {
+    justify-content: flex-end;
+  }
+
+  .trail-all-link {
+    text-align: right;
+  }
 }
 
 /* ---------- wide: the constellation appears ---------- */
