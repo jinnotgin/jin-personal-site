@@ -11,7 +11,7 @@ export const threads: Thread[] = [
     label: 'Applied AI in practice',
     line: 'AI tools that survive contact with real workflows.',
     blurb:
-      'AI work here starts from real constraints: confidential data, uneven adoption, messy files, cost, latency, and people who need the tool to fit into their day. The pattern is turning model capability into something usable, inspectable, and safe enough for actual work.',
+      'AI work here starts from real constraints: confidential data, uneven adoption, messy files, cost, latency, and the cognitive and intent debt these tools can create. The pattern is turning model capability into something usable, inspectable, and safe enough for actual work.',
     angle: 270,
     projects: [
       'promptpal',
@@ -64,7 +64,7 @@ export const threads: Thread[] = [
     label: 'Commercial workflows',
     line: 'Client and enterprise operations made easier to run.',
     blurb:
-      'This is work around everyday business operations: quoting, tracking, deployment, reporting, concierge flows, procurement, and audit. The value is not a dramatic new interface; it is removing enough friction that the work becomes easier to run and easier to trust.',
+      'This is work shaped by commercial needs and operational use cases, where the goal is to make client or enterprise workflows easier to run. The value is not a dramatic new interface; it is removing enough friction that the work becomes easier to manage and easier to trust.',
     angle: 54,
     projects: ['relatus', 'jt-concierge', 'bmw-vantage'],
     writing: [],
