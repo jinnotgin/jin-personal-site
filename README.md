@@ -2,6 +2,11 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+## Acknowledgements
+
+This project uses AI-assisted development with Codex (GPT 5.5), Claude Code
+(Opus 4.7 and Sonnet 4.6), and the Impeccable skill.
+
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
