@@ -2,24 +2,26 @@
 slug: testforge
 name: TestForge AI
 thread: signals
-year: 2022
+year: 2023
 status: archived
-intent: A written case study on making software testing signals easier to inspect and act on.
-stack: [Testing, quality signals, case study]
+intent: A Google AI Trailblazers prototype for generating software test scenarios from requirements.
+stack: [Google AI Trailblazers, Vertex AI, LLMs, software testing]
+links: [AI Trailblazers::https://www.edb.gov.sg/en/about-edb/media-releases-publications/mci-disg-sndgo-and-google-cloud-launch-ai-trailblazers-initiative-to-accelerate-the-development-of-impactful-generative-ai-solution-singapore.html]
+images: [/img/projects/testforge-ai.png::TestForge AI interface for inspecting software testing signals.]
 ---
 
 ## Why it existed
 
-Testing work often produces a lot of output but not always a clear picture of what changed, what failed, and what deserves attention first.
+In 2023, Google AI Trailblazers gave teams a short window to test real generative AI use cases. For us, one question was whether LLMs could help generate useful test scenarios from software requirements.
 
 ## The friction it answered
 
-When test results are treated as raw pass/fail output, teams still have to do the sensemaking manually: patterns, severity, repetition, and confidence all sit outside the result itself.
+Writing test scenarios takes a lot of context. A tester has to understand the requirement, the product behaviour, the edge cases, and what has broken before. We wanted to see how much of that first draft could be assisted by an LLM.
 
 ## What was built
 
-A case-study project exploring how testing artifacts could be shaped into a more useful review surface for product and engineering teams.
+A prototype that used LLMs to turn requirements into draft test scenarios for review. It was built as part of the AI Trailblazers programme, which gave participating teams access to Google Cloud tools and support for building generative AI prototypes.
 
 ## What it left behind
 
-Kept as a written project rather than a live tool. It belongs in the sensemaking thread because the core problem is turning noisy technical output into judgement-ready signal.
+TestForge AI made the limits of manual context gathering more obvious to me. Test generation only becomes useful when the right surrounding information is pulled in: requirements, recent changes, past failures, related tickets, and the product area being tested. That pointed to a lesson I kept returning to later: AI tools need a way to gather the right context on their own, and the knowledge pipeline is often as important as the AI on top of it.

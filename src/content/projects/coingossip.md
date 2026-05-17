@@ -12,11 +12,11 @@ images: [/img/projects/coingossip-main.png::CoinGossip homepage showing cryptocu
 
 ## Why it existed
 
-Price charts were everywhere; attention and sentiment were the leading signal and went unmeasured.
+Price charts were everywhere, but it was harder to see what crypto communities were actually talking about.
 
 ## The friction it answered
 
-Sentiment tools were either toy-grade or enterprise-priced, with nothing honest in between.
+Most sentiment tools were either too shallow or too expensive.
 
 ## What was built
 
@@ -24,4 +24,4 @@ A scraping and aggregation pipeline with trend detection over social chatter, ch
 
 ## What it left behind
 
-Taught me to distrust a single metric and to show the workings, not just the conclusion.
+CoinGossip taught me to distrust a single metric and to show the workings, not just the conclusion. It was also where I learned how newer frontend frameworks changed product development: React, Redux, and API-driven interfaces made it easier to build a richer analytics view than the older server-rendered patterns I had used before.

@@ -6,19 +6,20 @@ year: 2016
 status: archived
 intent: A minimalist kiosk app for hyper-local weather forecast alerts in Singapore.
 stack: [Data.gov.sg, NEA 2 Hour Nowcast, kiosk UI]
+images: [/img/projects/nearly-weather.jpeg::Nearly Weather kiosk interface showing region-specific weather information.]
 ---
 
 ## Why it existed
 
-Singapore's weather can change sharply by region, and a general forecast is often less useful than a specific nowcast for the area someone is actually in.
+Singapore's weather can change sharply by region, so a general forecast is often not enough.
 
 ## The friction it answered
 
-Useful weather data existed through NEA's 2 Hour Nowcast via Data.gov.sg, but it needed a clearer glance surface for region-specific alerts.
+NEA's 2 Hour Nowcast already had useful weather data. I wanted a simpler way to see region-specific alerts at a glance.
 
 ## What was built
 
-A kiosk-style app that surfaced hyper-accurate forecast alerts for selected regions of Singapore using public weather data.
+A kiosk-style app that showed weather alerts for selected regions of Singapore using public weather data.
 
 ## What it left behind
 

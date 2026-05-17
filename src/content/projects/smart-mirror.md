@@ -11,15 +11,15 @@ images: [/img/projects/smartmirror-hardware.jpeg::Smart Mirror hardware build wi
 
 ## Why it existed
 
-The popularity of Raspberry Pi and IoT hardware made smart mirrors newly accessible, but most builds still needed a simple front-end surface for everyday information.
+Raspberry Pi and IoT hardware made smart mirrors easier to build, but they still needed a simple screen for everyday information.
 
 ## The friction it answered
 
-A useful glance display should show time, weather, headlines, and market prices without requiring a heavy application stack or device-specific implementation.
+A useful glance display should show time, weather, headlines, and market prices without needing a heavy app.
 
 ## What was built
 
-A single-page web application that consumed JSON APIs for weather, news, stock prices, and cryptocurrency prices, designed to run on lightweight devices across different operating systems and CPU architectures.
+A single-page web app that consumed JSON APIs for weather, news, stock prices, and cryptocurrency prices. It was designed to run on lightweight devices across different operating systems.
 
 ## What it left behind
 

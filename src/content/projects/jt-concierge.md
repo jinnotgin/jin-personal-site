@@ -4,22 +4,23 @@ name: JT Concierge
 thread: human
 year: 2012
 status: archived
-intent: An iOS app for obtaining quotes for automobile services from Insprop.
+intent: An early iOS app for obtaining quotes from a small automobile dealership.
 stack: [iOS, mobile app, service workflow]
+images: [/img/projects/jt-concierge.png::JT Concierge mobile app screen for automobile service quote requests.]
 ---
 
 ## Why it existed
 
-Automobile service enquiries, including insurance, rentals, limousine bookings, and maintenance, were easier to start when the request flow was structured.
+A small automobile dealership needed a simpler way for customers to request quotes from their phones.
 
 ## The friction it answered
 
-Users had to know which service path they needed before asking for help, even when the real need was simply to get a quote.
+Customers did not always know which service path they needed. The app had to make it easier to ask for help without first understanding the dealership's internal categories.
 
 ## What was built
 
-A mobile app that guided users through common automobile-service quote requests and routed the enquiry more clearly.
+An iOS app that guided users through common quote requests and routed the enquiry more clearly.
 
 ## What it left behind
 
-An early commercial client-facing mobile project, useful here as evidence of shaping service workflows into a small guided system.
+An early commercial mobile project where I learned about mobile app design, especially how small screens force the request flow to be simpler and more focused.

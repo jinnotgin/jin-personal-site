@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { threads } from '@/data/threads'
 import { projectBySlug } from '@/data/workbench'
+import { byMostRecentProject } from '@/lib/projects'
 import { postsBySlugs, slugifyCategory } from '@/lib/markdown'
 import { journey } from '@/data/journey'
 import type { ThreadId } from '@/data/types'
@@ -12,9 +13,22 @@ const RX = 34
 const RY = 38
 
 const WRITING_PREVIEW = 3
+const PROJECT_PREVIEW = 3
+const SELECTED_THREAD_STORAGE_KEY = 'jin:selected-thread'
 
-const selected = ref<ThreadId>(threads[0]!.id)
-const committed = ref<ThreadId | null>(null)
+function isThreadId(value: string | null): value is ThreadId {
+  return threads.some((thread) => thread.id === value)
+}
+
+function storedThreadId(): ThreadId {
+  if (typeof window === 'undefined') return threads[0]!.id
+  const stored = window.sessionStorage.getItem(SELECTED_THREAD_STORAGE_KEY)
+  return isThreadId(stored) ? stored : threads[0]!.id
+}
+
+const initialThread = storedThreadId()
+const selected = ref<ThreadId>(initialThread)
+const committed = ref<ThreadId | null>(initialThread === threads[0]!.id ? null : initialThread)
 const touched = computed(() => committed.value !== null)
 const fieldEl = ref<HTMLElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
@@ -113,6 +127,7 @@ function buildObservers() {
 function commit(id: ThreadId) {
   selected.value = id
   committed.value = id
+  window.sessionStorage.setItem(SELECTED_THREAD_STORAGE_KEY, id)
 }
 
 // Switching from the rail changes content far above the fold, so bring the
@@ -158,6 +173,10 @@ const writingPreview = computed(() => trail.value.writing.slice(0, WRITING_PREVI
 
 const writingOverflow = computed(() => trail.value.writing.length - WRITING_PREVIEW)
 
+const projectPreview = computed(() => trail.value.projects.slice(0, PROJECT_PREVIEW))
+
+const projectOverflow = computed(() => trail.value.projects.length - PROJECT_PREVIEW)
+
 const writingCategoryParam = computed(() => {
   const cats = trail.value.writing.map((w) => w.category)
   if (!cats.length) return null
@@ -200,10 +219,10 @@ const trail = computed(() => {
   const projects = t.projects
     .map((s) => projectBySlug(s))
     .filter((p): p is NonNullable<typeof p> => Boolean(p))
+    .sort(byMostRecentProject)
 
   return {
-    activeProjects: projects.filter((p) => p.status === 'active'),
-    archivedProjects: projects.filter((p) => p.status === 'archived'),
+    projects,
     writing: postsBySlugs(t.writing),
     journey: journey.filter((j) => t.journey.includes(j.id)),
     external: t.external ?? [],
@@ -553,7 +572,7 @@ onBeforeUnmount(() => {
               <span class="trail-note">{{ w.excerpt }}</span>
             </li>
           </ul>
-          <div v-if="writingOverflow > 0" class="trail-writing-footer">
+          <div v-if="writingOverflow > 0" class="trail-list-footer">
             <RouterLink
               :to="writingCategoryParam ? `/writing?category=${slugifyCategory(writingCategoryParam)}` : '/writing'"
               class="trail-all-link"
@@ -561,38 +580,21 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <div
-          v-if="trail.activeProjects.length || trail.archivedProjects.length"
-          class="trail-col"
-        >
+        <div v-if="trail.projects.length" class="trail-col">
           <p class="col-title">Projects and tools</p>
-          <ul v-if="trail.activeProjects.length">
-            <li v-for="p in trail.activeProjects" :key="p.slug">
+          <ul>
+            <li v-for="p in projectPreview" :key="p.slug">
               <RouterLink :to="`/projects/${p.slug}`" class="trail-link">
                 {{ p.name }}
               </RouterLink>
               <span class="trail-note">{{ p.intent }}</span>
             </li>
           </ul>
-
-          <details
-            v-if="trail.archivedProjects.length"
-            class="archive-drawer"
-            :class="{ 'archive-drawer--with-active': trail.activeProjects.length }"
-          >
-            <summary>
-              {{ trail.archivedProjects.length }} archived
-              {{ trail.archivedProjects.length === 1 ? 'project' : 'projects' }}
-            </summary>
-            <ul>
-              <li v-for="p in trail.archivedProjects" :key="p.slug">
-                <RouterLink :to="`/projects/${p.slug}`" class="trail-link">
-                  {{ p.name }}
-                </RouterLink>
-                <span class="trail-note">{{ p.intent }}</span>
-              </li>
-            </ul>
-          </details>
+          <div v-if="projectOverflow > 0" class="trail-list-footer">
+            <RouterLink to="/projects" class="trail-all-link"
+              >View all in this thread →</RouterLink
+            >
+          </div>
         </div>
 
         <div v-if="trail.external.length" class="trail-col">
@@ -835,8 +837,8 @@ onBeforeUnmount(() => {
   margin-top: clamp(2rem, 5vw, 3.6rem);
   margin-bottom: clamp(2.5rem, 6vw, 4rem);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  gap: clamp(1.5rem, 4vw, 2rem) 2.5rem;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 2rem);
 }
 .col-title {
   font-size: var(--text-xs);
@@ -853,12 +855,12 @@ onBeforeUnmount(() => {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 1.15rem;
+  gap: 0.6rem;
 }
 .trail-col li {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
 }
 .trail-link {
   display: inline;
@@ -877,8 +879,9 @@ onBeforeUnmount(() => {
   font-size: var(--text-sm);
   color: var(--color-ink-faint);
   line-height: 1.5;
+  display: none;
 }
-.trail-writing-footer {
+.trail-list-footer {
   display: flex;
   align-items: baseline;
   gap: 1rem;
@@ -896,32 +899,24 @@ onBeforeUnmount(() => {
   text-decoration: underline;
 }
 
-.archive-drawer {
-  margin-top: 0;
-}
-.archive-drawer--with-active {
-  margin-top: 1.15rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-hairline);
-}
-.archive-drawer summary {
-  width: fit-content;
-  cursor: pointer;
-  color: var(--color-ink-faint);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-.archive-drawer summary:hover {
-  color: var(--color-moss-deep);
-}
-.archive-drawer ul {
-  margin-top: 1rem;
-}
-
 /* ---------- wide: the constellation appears ---------- */
 @media (min-width: 880px) {
   .stacked {
     display: none;
+  }
+
+  .trail-note {
+    display: block;
+  }
+  .trail-col ul {
+    gap: 1.15rem;
+  }
+  .trail-col li {
+    gap: 0.25rem;
+  }
+  .trail-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: clamp(1.5rem, 4vw, 2rem) 2.5rem;
   }
   .field {
     display: block;

@@ -5,21 +5,22 @@ thread: human
 year: 2015
 status: archived
 intent: A bespoke resource management system for vocational rehabilitation services.
-stack: [Resource management, reporting, analysis]
+stack: [PHP, resource management, reporting, analysis]
+images: [/img/projects/relatus-sacs-hillv2.jpg::Relatus resource management system for SACS Employment Support Services.]
 ---
 
 ## Why it existed
 
-SACS Employment Support Services needed tooling that fit its business operations rather than a generic tracking surface.
+Relatus started as a school project when I was in NTU. Instead of building for a made-up brief, our team decided to work with SACS Employment Support Services on a real operational problem.
 
 ## The friction it answered
 
-Resource management, reporting, and analysis are hard to sustain when operational data is scattered or shaped around tools that do not match the service model.
+SACS needed a system that fit how the team actually worked. Resource management, reporting, and analysis become hard when operational data is scattered or forced into the wrong tool.
 
 ## What was built
 
-A bespoke system for client business operations, with reporting and analysis capabilities for resource management.
+A bespoke PHP system for client operations, reporting, analysis, and resource management.
 
 ## What it left behind
 
-This is less a public artifact than an early human-systems project: software shaped around an organisation's operational reality.
+This was my first real encounter with client management as a software development partner. It taught me that building the system was only one part of the work; understanding the client's operating model, clarifying needs, and keeping trust with the people using it mattered just as much.

@@ -1,23 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ProjectMeta } from '@/data/types'
 import { projectBySlug, projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
-
-const latestYear = (project: ProjectMeta) => {
-  if (project.year.toLowerCase().includes('now')) return Number.MAX_SAFE_INTEGER
-
-  const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
-  return Math.max(...years, 0)
-}
-
-const firstYear = (project: ProjectMeta) => {
-  const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
-  return Math.min(...years, 0)
-}
-
-const byMostRecent = (a: ProjectMeta, b: ProjectMeta) =>
-  latestYear(b) - latestYear(a) || firstYear(b) - firstYear(a)
+import { byMostRecentProject } from '@/lib/projects'
 
 const groups = computed(() =>
   threads
@@ -26,7 +11,7 @@ const groups = computed(() =>
       items: t.projects
         .map((slug) => projectBySlug(slug))
         .filter((p) => p !== undefined)
-        .sort(byMostRecent),
+        .sort(byMostRecentProject),
     }))
     .filter((g) => g.items.length),
 )
@@ -83,7 +68,7 @@ const counts = computed(() => {
 
 <style scoped>
 .banner {
-  height: clamp(7rem, 16vw, 12rem);
+  height: clamp(8rem, 18vw, 14rem);
   margin-bottom: 2.5rem;
   border-radius: var(--radius-lg);
   background-image: url('/img/projects-vignette.webp'),

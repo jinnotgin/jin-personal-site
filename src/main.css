@@ -237,8 +237,7 @@
     color: var(--color-ink-faint);
   }
   .status--archived::before {
-    background: transparent;
-    border: 1.5px solid currentColor;
+    background: var(--color-clay);
   }
 
   /* Long-form Markdown article styling */

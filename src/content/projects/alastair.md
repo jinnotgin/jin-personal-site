@@ -12,11 +12,11 @@ images: [/img/projects/alastair-illustration.jpeg::Alastair system illustration 
 
 ## Why it existed
 
-Most smart home systems depended on third-party cloud services, which made convenience feel tied to avoidable security and privacy tradeoffs.
+Most smart home systems depended on third-party cloud services. I wanted to see how much could be done locally instead.
 
 ## The friction it answered
 
-I wanted a smart home implementation that could control lights, plugs, cooling, presence, occupancy, and camera streaming without handing the core control loop to an external provider.
+I wanted to control lights, plugs, cooling, presence detection, occupancy detection, and camera streaming without relying on an external provider.
 
 ## What was built
 
@@ -24,4 +24,4 @@ A full-stack system across Raspberry Pi, ESP8266 plugs, Yeelight bulbs, IR contr
 
 ## What it left behind
 
-Completed in March 2016 and archived, but it remains the clearest early marker of the homegrown systems thread: local control, readable source, and a willingness to wire hardware, scripts, and realtime sensor algorithms together.
+Completed in March 2016 and archived. It remains one of my clearest early examples of wanting to understand the full system myself: hardware, scripts, sensors, and control logic.

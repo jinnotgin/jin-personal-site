@@ -3,7 +3,7 @@ import type { Thread } from './types'
 /**
  * The recurring threads Jin returns to. These are the homepage.
  * `angle` places the node on the constellation (degrees, 0 = right,
- * clockwise; 270 = top). Connections are the evidence trails.
+ * increasing with screen y; 270 = top). Connections are the evidence trails.
  */
 export const threads: Thread[] = [
   {
@@ -39,7 +39,7 @@ export const threads: Thread[] = [
     line: 'Policy intent translated into services people depend on.',
     blurb:
       'National-scale product work where policy, agency priorities, delivery constraints, and citizen or student outcomes have to resolve into a working platform. Most of the evidence here lives in the journey rather than a public demo.',
-    angle: 342,
+    angle: 198,
     projects: ['training-allowance-system', 'student-learning-space'],
     writing: [],
     journey: ['training-allowance-system', 'student-learning-space'],
@@ -50,7 +50,7 @@ export const threads: Thread[] = [
     line: 'Making messy signals easier to inspect and act on.',
     blurb:
       'Scraping, summarisation, categorisation, taxonomy exploration, trend detection, and AI-assisted research. The recurring move is to turn scattered information into a surface that helps people make better judgement calls.',
-    angle: 54,
+    angle: 126,
     projects: [
       'skills-framework-explorer',
       'now-in-singapore',
@@ -60,23 +60,12 @@ export const threads: Thread[] = [
     journey: ['forensic-analytics', 'signals-and-research'],
   },
   {
-    id: 'homegrown',
-    label: 'Personal builds',
-    line: 'Self-initiated tools built close to the problem.',
-    blurb:
-      'Personal utilities, hardware builds, games, small apps, and experiments that started from my own friction or curiosity. The pattern is deliberately small: notice the repeated irritation, build a useful thing around it, and keep the maker signal visible.',
-    angle: 126,
-    projects: ['faveats', 'alastair', 'smart-mirror', 'the-resistance', 'timemoo', 'nearly'],
-    writing: [],
-    journey: [],
-  },
-  {
     id: 'human',
     label: 'Commercial workflows',
     line: 'Client and enterprise operations made easier to run.',
     blurb:
       'Client, enterprise, and operational tooling where the value is in making a messy workflow easier to quote, track, deploy, report on, or manage. Some of this sits in project pages; some belongs in the career timeline because the artifact itself is not public.',
-    angle: 198,
+    angle: 54,
     projects: ['relatus', 'jt-concierge', 'bmw-vantage'],
     writing: [],
     journey: [
@@ -85,6 +74,17 @@ export const threads: Thread[] = [
       'mindef-procurement',
       'ncs-deployment',
     ],
+  },
+  {
+    id: 'homegrown',
+    label: 'Personal builds',
+    line: 'Self-initiated tools built close to the problem.',
+    blurb:
+      'Personal utilities, hardware builds, games, small apps, and experiments that started from my own friction or curiosity. The pattern is deliberately small: notice the repeated irritation, build a useful thing around it, and keep the maker signal visible.',
+    angle: 342,
+    projects: ['faveats', 'alastair', 'smart-mirror', 'the-resistance', 'timemoo', 'nearly'],
+    writing: [],
+    journey: [],
   },
 ]
 

@@ -49,7 +49,11 @@ const siblings = computed(() =>
 
     <div class="meta">
       <div>
-        <p class="meta-label">Made with</p>
+        <p class="meta-label">Date</p>
+        <p class="meta-value">{{ project.year }}</p>
+      </div>
+      <div>
+        <p class="meta-label">Built around</p>
         <ul class="tags">
           <li v-for="s in project.stack" :key="s">{{ s }}</li>
         </ul>
@@ -178,8 +182,20 @@ const siblings = computed(() =>
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
+.prose :deep(iframe) {
+  display: block;
+  width: min(50rem, calc(100vw - 5rem));
+  aspect-ratio: 16 / 9;
+  height: auto;
+  margin: 2rem 50%;
+  transform: translateX(-50%);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+}
 @media (max-width: 760px) {
-  .prose :deep(img) {
+  .prose :deep(img),
+  .prose :deep(iframe) {
     width: 100%;
     margin: 1.5rem 0;
     transform: none;
@@ -200,6 +216,12 @@ const siblings = computed(() =>
   text-transform: uppercase;
   color: var(--color-ink-faint);
   margin: 0 0 0.85rem;
+}
+.meta-value {
+  color: var(--color-ink-soft);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: 0;
 }
 .tags {
   list-style: none;

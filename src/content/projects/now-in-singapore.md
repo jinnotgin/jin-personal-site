@@ -16,7 +16,7 @@ People often say there is nothing to do in Singapore, but the real problem is th
 
 ## The friction it answered
 
-Discovery required endless searching, duplicate tabs, and raw listings that did not explain what made each event worth attention.
+Finding events meant too much searching, too many tabs, and too many raw listings that did not explain why an event was worth attention.
 
 ## What was built
 
@@ -24,4 +24,4 @@ A responsive web app that gathers event information, uses AI to summarise and ca
 
 ## What it left behind
 
-A personal civic utility, but better understood as sensemaking: collect scattered signals, reduce noise, and make the next decision easier.
+Now In Singapore taught me how LLMs change data scraping. Fetching pages is only the first step. The harder part is cleaning messy web content, keeping token use low, and deciding which parts should be handled by normal code versus LLM judgement. In 2024, structured outputs were still uneven, so the system needed checks, cleanup, and retries. Conceptually, it is close to the "LLM wiki" idea: use models to turn scattered web material into something easier to browse.

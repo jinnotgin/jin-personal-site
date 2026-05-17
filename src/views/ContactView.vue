@@ -57,7 +57,7 @@ const channels = [
   height: clamp(7rem, 16vw, 12rem);
   margin-bottom: 2.5rem;
   border-radius: var(--radius-lg);
-  background-image: url('/img/contact-vignette.webp'),
+  background-image: url('/img/contact-vignette-v2.webp'),
     linear-gradient(
       155deg,
       var(--color-paper-raised) 0%,

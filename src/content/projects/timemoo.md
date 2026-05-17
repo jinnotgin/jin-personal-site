@@ -6,15 +6,16 @@ year: 2013
 status: archived
 intent: A chatbot for natural-language timezone conversion.
 stack: [NLP, chatbot, timezone conversion]
+images: [/img/projects/timezone-conversion.png::TimeMoo timezone conversion interface showing natural-language time conversion.]
 ---
 
 ## Why it existed
 
-Timezone conversion is conceptually simple but annoying in practice, especially when people have to reason through offsets manually.
+Timezone conversion is simple in theory, but annoying in practice.
 
 ## The friction it answered
 
-Most timezone tools required users to deal with the mechanics of timezones instead of asking in ordinary language.
+Most timezone tools made users deal with timezone mechanics instead of asking in ordinary language.
 
 ## What was built
 

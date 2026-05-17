@@ -41,7 +41,7 @@ export interface Thread {
   line: string
   /** Longer framing shown when the trail opens. */
   blurb: string
-  /** Angle in degrees around the identity centre, 0 = right, clockwise. */
+  /** Angle in degrees around the identity centre, 0 = right, 270 = top. */
   angle: number
   projects: string[]
   writing: string[]

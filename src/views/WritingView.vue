@@ -142,7 +142,7 @@ watch([safePage, currentPage], ([safe, current]) => {
 
 <style scoped>
 .banner {
-  height: clamp(7rem, 16vw, 12rem);
+  height: clamp(8rem, 18vw, 14rem);
   margin-bottom: 2.5rem;
   border-radius: var(--radius-lg);
   background-image: url('/img/writing-vignette.webp'),

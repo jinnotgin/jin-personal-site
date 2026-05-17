@@ -2,24 +2,26 @@
 slug: bmw-vantage
 name: BMW Vantage
 thread: human
-year: 2019
+year: 2020
 status: archived
-intent: A commercial workflow stub for BMW Vantage, pending a fuller project note.
-stack: [Commercial workflow, platform delivery, stakeholder alignment]
+intent: A BMW membership app that connected customer rewards to real service and purchase journeys.
+stack: [Mobile app, blockchain rewards, loyalty programme, platform delivery]
+links: [Reference::https://enjin.io/ecosystem/bmw-vantage-app/]
+images: [/img/projects/bmw-vantage.jpg::BMW Vantage membership app interface for earning and using rewards.]
 ---
 
 ## Why it existed
 
-Commercial platforms often need to coordinate customer-facing value, partner operations, and internal workflow constraints in one product surface.
+BMW Vantage was built around a simple loyalty idea: let BMW customers earn rewards and use them for real services.
 
 ## The friction it answered
 
-The public-facing experience is only one part of the work; the harder layer is usually aligning the operational workflow behind it.
+Membership programmes often become abstract points systems. Customers earn points, but it is not always clear what those points are worth or where they can be used.
 
 ## What was built
 
-Project details are still being written. Kept here as a commercial workflow marker rather than a public demo.
+A mobile membership app where BMW customers could earn BMW Coin and BMW Points through purchases, referrals, app activity, and games, then use those rewards for maintenance discounts, airport pickup services, new vehicle purchases, gifts, and vouchers. Korea was the first launch market, with the first 1,000 registrants receiving an opening reward through the app.
 
 ## What it left behind
 
-A placeholder for fuller notes on client and enterprise product delivery.
+For me, this was less a blockchain story and more a customer workflow story. The technology only mattered if it made the reward loop clearer: earn, understand, redeem, and come back.
