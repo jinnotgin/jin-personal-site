@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue'
+import { computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getPost, listPosts, formatDate } from '@/lib/markdown'
 
@@ -15,8 +15,11 @@ const next = computed(() =>
   idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
 )
 
-watchEffect(() => {
+onMounted(() => {
   if (post.value) document.title = `${post.value.title} — Jin`
+})
+watch(post, (p) => {
+  if (p) document.title = `${p.title} — Jin`
 })
 </script>
 
@@ -160,6 +163,26 @@ watchEffect(() => {
   }
   .pager-link.next {
     text-align: left;
+  }
+}
+
+.prose :deep(img) {
+  display: block;
+  width: min(50rem, calc(100vw - 5rem));
+  height: auto;
+  margin: 2rem 50%;
+  transform: translateX(-50%);
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+@media (max-width: 760px) {
+  .prose :deep(img) {
+    width: 100%;
+    margin: 1.5rem 0;
+    transform: none;
   }
 }
 </style>

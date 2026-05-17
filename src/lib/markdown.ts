@@ -85,6 +85,14 @@ export const categories = Array.from(
   new Set(allPosts.map((p) => p.category)),
 )
 
+export function slugifyCategory(cat: string): string {
+  return cat.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+}
+
+export function deslugifyCategory(slug: string): string | undefined {
+  return categories.find((c) => slugifyCategory(c) === slug)
+}
+
 export function formatDate(iso: string): string {
   if (!iso) return ''
   const d = new Date(iso)

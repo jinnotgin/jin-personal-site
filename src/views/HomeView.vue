@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { site } from '@/data/site'
 import ConstellationMap from '@/components/ConstellationMap.vue'
 import { listPosts, formatDate } from '@/lib/markdown'
 
@@ -128,8 +127,8 @@ const latest = listPosts().slice(0, 3)
   overflow: clip;
 }
 .hero-inner {
-  padding-top: clamp(3.5rem, 8vw, 6.5rem);
-  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  padding-top: clamp(2.5rem, 8vw, 6.5rem);
+  padding-bottom: clamp(2.5rem, 8vw, 6rem);
 }
 
 .hero-kicker {
@@ -144,9 +143,9 @@ const latest = listPosts().slice(0, 3)
 }
 
 .hero-body {
-  margin-top: clamp(1.6rem, 4vw, 2.6rem);
+  margin-top: clamp(1.2rem, 4vw, 2.6rem);
   display: grid;
-  gap: clamp(2rem, 5vw, 3rem);
+  gap: clamp(1.4rem, 5vw, 3rem);
   align-items: stretch;
   animation: hero-rise 0.9s var(--ease-out-expo) 0.08s both;
 }
@@ -281,7 +280,7 @@ const latest = listPosts().slice(0, 3)
   overflow: hidden;
   width: min(15rem, 62vw);
   align-self: start;
-  order: 2;
+  order: 4;
 }
 .hero-portrait::after {
   content: '';
@@ -396,7 +395,8 @@ const latest = listPosts().slice(0, 3)
 }
 
 .latest {
-  margin-top: clamp(4rem, 9vw, 7rem);
+  margin-top: clamp(5rem, 12vw, 9.5rem);
+  padding-bottom: clamp(4rem, 9vw, 7rem);
 }
 .latest-head {
   display: flex;
@@ -407,7 +407,7 @@ const latest = listPosts().slice(0, 3)
   border-bottom: 1px solid var(--color-hairline);
 }
 .latest-head h2 {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
 }
 .latest ul {
   list-style: none;

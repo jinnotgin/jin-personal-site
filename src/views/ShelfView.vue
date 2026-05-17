@@ -24,6 +24,8 @@ const groups = computed(() =>
 
 <template>
   <div class="shell shell--reading shelf-shell">
+    <div class="banner" aria-hidden="true"></div>
+
     <header class="page-head">
       <h1>What has given me new perspectives.</h1>
       <p class="lede">
@@ -53,6 +55,21 @@ const groups = computed(() =>
 <style scoped>
 .shelf-shell {
   max-width: 54rem;
+}
+.banner {
+  height: clamp(7rem, 16vw, 12rem);
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius-lg);
+  background-image: url('/img/shelf-vignette.webp'),
+    linear-gradient(
+      175deg,
+      var(--color-paper-raised) 0%,
+      var(--color-sage) 55%,
+      var(--color-sage-deep) 100%
+    );
+  background-size: cover, cover;
+  background-position: center;
+  border: 1px solid var(--color-hairline);
 }
 .shelf {
   display: grid;

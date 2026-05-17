@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { threads } from '@/data/threads'
 import { projectBySlug } from '@/data/workbench'
-import { postsBySlugs } from '@/lib/markdown'
+import { postsBySlugs, slugifyCategory } from '@/lib/markdown'
 import { journey } from '@/data/journey'
 import type { ThreadId } from '@/data/types'
 
@@ -11,20 +11,133 @@ const CY = 54
 const RX = 34
 const RY = 38
 
+const WRITING_PREVIEW = 3
+
 const selected = ref<ThreadId>(threads[0]!.id)
-const touched = ref(false)
+const committed = ref<ThreadId | null>(null)
+const touched = computed(() => committed.value !== null)
 const fieldEl = ref<HTMLElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
+const switcherEl = ref<HTMLElement | null>(null)
+const mapStartEl = ref<HTMLElement | null>(null)
+const trailHeadEl = ref<HTMLElement | null>(null)
+const railListEl = ref<HTMLElement | null>(null)
+const mapEndEl = ref<HTMLElement | null>(null)
 const pointer = ref({ x: 0.5, y: 0.5, active: false })
+
+// The sticky rail is a second copy of the switcher. It is live only in the
+// window between "the map has scrolled out of comfortable reach" and "the
+// reader has left the trail entirely" (i.e. entered the writing section).
+const pastSwitcher = ref(false)
+const pastTrail = ref(false)
+const railVisible = computed(() => pastSwitcher.value && !pastTrail.value)
+const railTop = ref(0)
+const railOverflowing = ref(false)
+
+// How many px of the switcher should still be on screen at the moment the
+// rail appears, i.e. the rail kicks in once (switcherHeight - REMAINING) has
+// scrolled past the header. Larger = appears earlier (more still showing);
+// smaller = waits until almost all of it is gone.
+const RAIL_REVEAL_REMAINING = 120
+
+// How many px before the trail's true end the rail should retire. Larger =
+// vanishes earlier (further from the writing section).
+const RAIL_HIDE_OFFSET = 240
 
 let frame = 0
 let resizeObserver: ResizeObserver | undefined
+let switcherObserver: IntersectionObserver | undefined
+let endObserver: IntersectionObserver | undefined
 let reduceMotion = false
 
-function pick(id: ThreadId) {
-  selected.value = id
-  touched.value = true
+function measureRailTop() {
+  const header = document.querySelector<HTMLElement>('.site-header')
+  railTop.value = header ? Math.round(header.getBoundingClientRect().height) : 0
 }
+
+function measureRailOverflow() {
+  const list = railListEl.value
+  railOverflowing.value = !!list && list.scrollWidth - list.clientWidth > 1
+}
+
+// Rebuilt whenever the header height changes: both observers' top inset must
+// track the sticky header. The switcher observer reveals the rail as soon as
+// the map slips under the header; the end observer hides it again once the
+// trail's end passes under the header, so it never bleeds into the writing.
+function buildObservers() {
+  switcherObserver?.disconnect()
+  endObserver?.disconnect()
+
+  // Anchored to a sentinel at the very top of the map block. The rail appears
+  // once (switcherHeight - REMAINING) has scrolled past the header, where
+  // REMAINING is the px of switcher still wanted on screen at that moment. A
+  // positive rootMargin top grows the root upward so the sentinel must travel
+  // further to exit it. Height and layout are re-measured so this tracks
+  // whichever component (desktop constellation vs mobile stack) is live.
+  const switcherHeight = switcherEl.value?.getBoundingClientRect().height ?? 0
+  const revealLine = Math.round(railTop.value - (switcherHeight - RAIL_REVEAL_REMAINING))
+  switcherObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry) return
+      pastSwitcher.value =
+        !entry.isIntersecting && entry.boundingClientRect.top < revealLine
+    },
+    { threshold: 0, rootMargin: `${-revealLine}px 0px 0px 0px` },
+  )
+  if (mapStartEl.value) switcherObserver.observe(mapStartEl.value)
+
+  // Hide the rail RAIL_HIDE_OFFSET px before the trail's end actually reaches
+  // the header, so it clears out as the reader approaches the writing section
+  // rather than lingering until the very last pixel of the trail.
+  const hideLine = railTop.value + RAIL_HIDE_OFFSET
+  endObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry) return
+      pastTrail.value =
+        !entry.isIntersecting && entry.boundingClientRect.top < hideLine
+    },
+    { threshold: 0, rootMargin: `-${hideLine}px 0px 0px 0px` },
+  )
+  if (mapEndEl.value) endObserver.observe(mapEndEl.value)
+}
+
+// Deliberate choice (click / keyboard focus): locks the selection so hover
+// can no longer change it.
+function commit(id: ThreadId) {
+  selected.value = id
+  committed.value = id
+}
+
+// Switching from the rail changes content far above the fold, so bring the
+// new pattern's head into view to confirm the switch instead of leaving the
+// reader stranded mid-trail in a now-different thread.
+function commitFromRail(id: ThreadId) {
+  commit(id)
+  requestAnimationFrame(() => {
+    trailHeadEl.value?.scrollIntoView({
+      behavior: reduceMotion ? 'auto' : 'smooth',
+      block: 'start',
+    })
+  })
+}
+
+// Non-committal hover preview: only steers the map until the visitor has
+// actually committed to a thread.
+function preview(id: ThreadId) {
+  if (committed.value !== null) return
+  selected.value = id
+}
+
+const writingPreview = computed(() => trail.value.writing.slice(0, WRITING_PREVIEW))
+
+const writingOverflow = computed(() => trail.value.writing.length - WRITING_PREVIEW)
+
+const writingCategoryParam = computed(() => {
+  const cats = trail.value.writing.map((w) => w.category)
+  if (!cats.length) return null
+  const freq = cats.reduce<Record<string, number>>((acc, c) => { acc[c] = (acc[c] ?? 0) + 1; return acc }, {})
+  return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+})
 
 function trackPointer(event: PointerEvent) {
   const field = fieldEl.value
@@ -228,11 +341,25 @@ onMounted(() => {
   resizeObserver = new ResizeObserver(restartAnimation)
   if (fieldEl.value) resizeObserver.observe(fieldEl.value)
   animate()
+
+  measureRailTop()
+  measureRailOverflow()
+  buildObservers()
+  window.addEventListener('resize', onResize)
 })
+
+function onResize() {
+  measureRailTop()
+  measureRailOverflow()
+  buildObservers()
+}
 
 onBeforeUnmount(() => {
   window.cancelAnimationFrame(frame)
   resizeObserver?.disconnect()
+  switcherObserver?.disconnect()
+  endObserver?.disconnect()
+  window.removeEventListener('resize', onResize)
 })
 </script>
 
@@ -240,6 +367,8 @@ onBeforeUnmount(() => {
   <section class="map" aria-labelledby="map-heading">
     <h2 id="map-heading" class="sr-only">Recurring threads</h2>
 
+    <div ref="switcherEl" class="switcher">
+    <span ref="mapStartEl" class="map-start-sentinel" aria-hidden="true"></span>
     <!-- Constellation: decorative wires + identity, real buttons over it -->
     <div
       ref="fieldEl"
@@ -275,13 +404,17 @@ onBeforeUnmount(() => {
           class="node"
           :class="[
             `node--${n.placement}`,
-            { active: n.id === selected, inviting: !touched && n.id !== selected },
+            {
+              active: n.id === selected,
+              preselected: n.id === selected && committed === null,
+              inviting: !touched && n.id !== selected,
+            },
           ]"
           :style="{ left: n.x + '%', top: n.y + '%' }"
-          :aria-pressed="n.id === selected"
-          @click="pick(n.id)"
-          @focus="pick(n.id)"
-          @pointerenter="pick(n.id)"
+          :aria-pressed="n.id === committed"
+          @click="commit(n.id)"
+          @focus="commit(n.id)"
+          @pointerenter="preview(n.id)"
         >
           <span class="node-dot" aria-hidden="true"></span>
           <span class="node-label">{{ n.label }}</span>
@@ -297,7 +430,7 @@ onBeforeUnmount(() => {
         :key="t.id"
         class="stack-item"
         :aria-pressed="t.id === selected"
-        @click="pick(t.id)"
+        @click="commit(t.id)"
       >
         <span class="stack-text">
           <span class="stack-label">{{ t.label }}</span>
@@ -308,6 +441,38 @@ onBeforeUnmount(() => {
         </span>
       </button>
     </div>
+    </div>
+
+    <!-- Sticky rail: takes over once the switcher above is out of view -->
+    <nav
+      class="thread-rail"
+      :class="{ 'is-visible': railVisible }"
+      :style="{ top: railTop + 'px' }"
+      aria-label="Switch pattern"
+      :aria-hidden="!railVisible"
+    >
+      <div class="thread-rail-inner">
+        <span class="thread-rail-eyebrow" aria-hidden="true">Patterns</span>
+        <div
+          ref="railListEl"
+          class="thread-rail-list"
+          :class="{ overflowing: railOverflowing }"
+        >
+          <button
+            v-for="t in threads"
+            :key="t.id"
+            class="rail-item"
+            :class="{ active: t.id === selected, committed: t.id === committed }"
+            :aria-current="t.id === selected ? 'true' : undefined"
+            :tabindex="railVisible ? 0 : -1"
+            @click="commitFromRail(t.id)"
+          >
+            <span class="rail-dot" aria-hidden="true"></span>
+            {{ t.label }}
+          </button>
+        </div>
+      </div>
+    </nav>
 
     <!-- The trail: evidence for the selected thread -->
     <div
@@ -317,10 +482,14 @@ onBeforeUnmount(() => {
       aria-live="polite"
       :aria-label="`Trail for ${active.label}`"
     >
-      <header class="trail-head">
+      <header
+        ref="trailHeadEl"
+        class="trail-head"
+        :style="{ scrollMarginTop: railTop + 56 + 'px' }"
+      >
         <p class="trail-cue">
           <span class="trail-cue-mark" aria-hidden="true"></span>
-          Tracing this thread
+          Tracing this pattern
         </p>
         <h3>{{ active.label }}</h3>
         <p class="trail-blurb measure">{{ active.blurb }}</p>
@@ -342,13 +511,19 @@ onBeforeUnmount(() => {
         <div v-if="trail.writing.length" class="trail-col">
           <p class="col-title">Writing</p>
           <ul>
-            <li v-for="w in trail.writing" :key="w.slug">
+            <li v-for="w in writingPreview" :key="w.slug">
               <RouterLink :to="`/writing/${w.slug}`" class="trail-link">
                 {{ w.title }}
               </RouterLink>
               <span class="trail-note">{{ w.excerpt }}</span>
             </li>
           </ul>
+          <div v-if="writingOverflow > 0" class="trail-writing-footer">
+            <RouterLink
+              :to="writingCategoryParam ? `/writing?category=${slugifyCategory(writingCategoryParam)}` : '/writing'"
+              class="trail-all-link"
+            >View all in this thread →</RouterLink>
+          </div>
         </div>
 
         <div
@@ -401,6 +576,8 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+
+    <span ref="mapEndEl" class="map-end-sentinel" aria-hidden="true"></span>
   </section>
 </template>
 
@@ -510,7 +687,7 @@ onBeforeUnmount(() => {
   background: var(--color-moss);
 }
 .trail-head h3 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   margin: 0.7rem 0 0;
 }
 .trail-blurb {
@@ -519,10 +696,11 @@ onBeforeUnmount(() => {
   font-size: var(--text-lg);
 }
 .trail-grid {
-  margin-top: clamp(2.75rem, 5vw, 3.6rem);
+  margin-top: clamp(2rem, 5vw, 3.6rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  gap: 2rem 2.5rem;
+  gap: clamp(1.5rem, 4vw, 2rem) 2.5rem;
 }
 .col-title {
   font-size: var(--text-xs);
@@ -564,6 +742,24 @@ onBeforeUnmount(() => {
   color: var(--color-ink-faint);
   line-height: 1.5;
 }
+.trail-writing-footer {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-hairline);
+}
+.trail-all-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-river-deep);
+  text-decoration: none;
+}
+.trail-all-link:hover {
+  text-decoration: underline;
+}
+
 .archive-drawer {
   margin-top: 0;
 }
@@ -786,6 +982,22 @@ onBeforeUnmount(() => {
     font-weight: 700;
   }
 
+  /* Pre-selected default: this thread is shown, but the visitor hasn't
+     chosen it yet. Reads as a hollow "suggested" marker rather than the
+     solid fill of a committed choice, and stays steerable by hover. */
+  .node.active.preselected .node-dot {
+    background: var(--color-paper);
+    border-color: var(--color-moss);
+    box-shadow:
+      0 0 0 7px var(--color-paper),
+      0 0 0 12px oklch(0.52 0.087 150 / 0.05);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  .node.active.preselected .node-label {
+    color: var(--color-ink-soft);
+    font-weight: 600;
+  }
+
   /* Resting invitation: unpicked dots breathe so the map reads as touchable
      without an imperative. Stops once the visitor has engaged. */
   .node.inviting .node-dot::after {
@@ -819,6 +1031,137 @@ onBeforeUnmount(() => {
       opacity: 0.35;
       transform: scale(1);
     }
+  }
+}
+
+.map-start-sentinel,
+.map-end-sentinel {
+  display: block;
+  height: 1px;
+}
+
+/* ---------- sticky thread rail ---------- */
+.thread-rail {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-hairline);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100%);
+  transition:
+    transform 0.42s var(--ease-out-quint),
+    opacity 0.32s var(--ease-out-quint),
+    visibility 0s linear 0.42s;
+}
+.thread-rail.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    transform 0.42s var(--ease-out-quint),
+    opacity 0.32s var(--ease-out-quint),
+    visibility 0s;
+}
+.thread-rail-inner {
+  max-width: 78rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.85rem, 2.5vw, 1.75rem);
+  padding: 0.7rem clamp(1.25rem, 4vw, 3.5rem);
+}
+.thread-rail-eyebrow {
+  flex: none;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+.thread-rail-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 1.1rem;
+  height: 1px;
+  margin-left: 0.7rem;
+  vertical-align: middle;
+  background: var(--color-hairline);
+}
+.thread-rail-list {
+  display: flex;
+  gap: clamp(0.6rem, 2vw, 1.4rem);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.thread-rail-list.overflowing {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 1.1rem,
+    #000 calc(100% - 1.6rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 1.1rem,
+    #000 calc(100% - 1.6rem),
+    transparent 100%
+  );
+}
+.thread-rail-list::-webkit-scrollbar {
+  display: none;
+}
+.rail-item {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.15rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-ink-soft);
+  transition: color 0.18s var(--ease-out-quint);
+}
+.rail-item:hover {
+  color: var(--color-ink);
+}
+.rail-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  border: 1.5px solid var(--color-sage-deep);
+  transition:
+    background 0.2s var(--ease-out-quint),
+    border-color 0.2s var(--ease-out-quint);
+}
+.rail-item.active {
+  color: var(--color-moss-deep);
+  font-weight: 700;
+}
+/* Pre-selected default: outlined moss, matching the map's hollow node so the
+   two switchers agree on "shown but not yet chosen". */
+.rail-item.active .rail-dot {
+  border-color: var(--color-moss);
+}
+/* A committed choice: solid fill, mirroring the map's filled active node. */
+.rail-item.committed .rail-dot {
+  background: var(--color-moss);
+  border-color: var(--color-moss);
+}
+@media (prefers-reduced-motion: reduce) {
+  .thread-rail,
+  .thread-rail.is-visible {
+    transition: visibility 0s;
+    transform: none;
   }
 }
 
