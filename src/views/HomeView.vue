@@ -173,7 +173,7 @@ const latest = listPosts().slice(0, 3)
 .hero-turn {
   display: block;
   margin-top: 0.3em;
-  font-size: 0.575em;
+  font-size: 0.58em;
   line-height: 1.08;
   color: var(--color-forest-soft);
   font-weight: 500;
