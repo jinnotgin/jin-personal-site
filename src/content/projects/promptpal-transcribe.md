@@ -23,4 +23,4 @@ A transcription tool in the PromptPal family, built to run in the browser. It us
 
 ## What it left behind
 
-This made one lesson clearer: "AI" is as broad a word as "transportation". A bicycle and a rocket are both transportation, but you would not reach for a rocket to solve a bicycle-sized problem. PromptPal Transcribe uses smaller local models, WebGPU, and client-only browser technology — deliberately. The right answer here was not a larger model in the cloud, but a lighter one running closer to the user and the data.
+This made one lesson clearer: "AI" is as broad a word as "transportation". A bicycle and a rocket are both transportation, but you would not reach for a rocket to solve a bicycle-sized problem. PromptPal Transcribe *deliberately* uses smaller local models, WebGPU, and client-only browser technology. The right answer here was not a larger model in the cloud, but a lighter one running closer to the user and the data.
