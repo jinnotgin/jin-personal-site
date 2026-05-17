@@ -11,7 +11,7 @@ export const journey: JourneyEntry[] = [
     role: 'Applied Innovation Lead, Corporate Strategy & AI',
     org: 'Ufinity, Singapore',
     summary:
-      'Work sits inside Corporate Strategy, spanning three areas: enabling the organisation, tracking the external environment, and validating what is worth adopting. On the enabling side, I built and operate PromptPal (an internal Generative AI product giving staff access to LLMs while preserving data confidentiality and residency). On the organisational side, this covers AI readiness, change management, and anticipating the second and third order effects teams will face. On the external side, maps emerging capabilities (RAG, agents, voice interfaces, AI-assisted research) against business viability and proof of value before recommending adoption.',
+      'Work sits inside Corporate Strategy, spanning three areas: enabling the organisation, tracking the external environment, and validating what is worth adopting. On the enabling aspect, I built and operate PromptPal, an internal Generative AI product giving staff access to LLMs while preserving data confidentiality and residency. On the external aspect, I map emerging capabilities (RAG, agents, voice interfaces, AI-assisted research) against business viability and proof of value before recommending adoption. On the organisational aspect, it involves AI readiness, change management, and anticipating the second and third-order effects that teams will face.',
     threads: ['applied-ai'],
   },
   {
