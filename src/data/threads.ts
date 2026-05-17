@@ -55,8 +55,6 @@ export const threads: Thread[] = [
       'skills-framework-explorer',
       'now-in-singapore',
       'coingossip',
-      'testforge',
-      'pete',
     ],
     writing: ['piloting-ai-tools-for-survey-analysis'],
     journey: ['forensic-analytics', 'signals-and-research'],

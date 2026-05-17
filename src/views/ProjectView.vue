@@ -141,7 +141,10 @@ const siblings = computed(() =>
 .project-images {
   margin-top: 2.4rem;
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
+  width: min(50rem, calc(100vw - 5rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 .project-images figure {
   margin: 0;
@@ -154,6 +157,14 @@ const siblings = computed(() =>
   display: block;
   width: 100%;
   height: auto;
+}
+
+@media (max-width: 760px) {
+  .project-images {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
 }
 .archaeology {
   margin-top: 3rem;
