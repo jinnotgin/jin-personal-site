@@ -11,8 +11,11 @@ const CY = 54
 const RX = 34
 const RY = 38
 
+const WRITING_PREVIEW = 3
+
 const selected = ref<ThreadId>(threads[0]!.id)
 const touched = ref(false)
+const showAllWriting = ref(false)
 const fieldEl = ref<HTMLElement | null>(null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 const pointer = ref({ x: 0.5, y: 0.5, active: false })
@@ -24,7 +27,23 @@ let reduceMotion = false
 function pick(id: ThreadId) {
   selected.value = id
   touched.value = true
+  showAllWriting.value = false
 }
+
+const writingPreview = computed(() =>
+  showAllWriting.value
+    ? trail.value.writing
+    : trail.value.writing.slice(0, WRITING_PREVIEW),
+)
+
+const writingOverflow = computed(() => trail.value.writing.length - WRITING_PREVIEW)
+
+const writingCategoryParam = computed(() => {
+  const cats = trail.value.writing.map((w) => w.category)
+  if (!cats.length) return null
+  const freq = cats.reduce<Record<string, number>>((acc, c) => { acc[c] = (acc[c] ?? 0) + 1; return acc }, {})
+  return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+})
 
 function trackPointer(event: PointerEvent) {
   const field = fieldEl.value
@@ -219,6 +238,7 @@ function labelPlacement(x: number, y: number): 'top' | 'right' | 'bottom' | 'lef
 }
 
 watch(selected, () => {
+  showAllWriting.value = false
   if (reduceMotion) restartAnimation()
 })
 
@@ -342,13 +362,24 @@ onBeforeUnmount(() => {
         <div v-if="trail.writing.length" class="trail-col">
           <p class="col-title">Writing</p>
           <ul>
-            <li v-for="w in trail.writing" :key="w.slug">
+            <li v-for="w in writingPreview" :key="w.slug">
               <RouterLink :to="`/writing/${w.slug}`" class="trail-link">
                 {{ w.title }}
               </RouterLink>
               <span class="trail-note">{{ w.excerpt }}</span>
             </li>
           </ul>
+          <div class="trail-writing-footer">
+            <button
+              v-if="!showAllWriting && writingOverflow > 0"
+              class="trail-expand-btn"
+              @click="showAllWriting = true"
+            >{{ writingOverflow }} more in this thread</button>
+            <RouterLink
+              :to="writingCategoryParam ? `/writing?category=${encodeURIComponent(writingCategoryParam)}` : '/writing'"
+              class="trail-all-link"
+            >All writing →</RouterLink>
+          </div>
         </div>
 
         <div
@@ -519,10 +550,11 @@ onBeforeUnmount(() => {
   font-size: var(--text-lg);
 }
 .trail-grid {
-  margin-top: clamp(2.75rem, 5vw, 3.6rem);
+  margin-top: clamp(2rem, 5vw, 3.6rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  gap: 2rem 2.5rem;
+  gap: clamp(1.5rem, 4vw, 2rem) 2.5rem;
 }
 .col-title {
   font-size: var(--text-xs);
@@ -564,6 +596,41 @@ onBeforeUnmount(() => {
   color: var(--color-ink-faint);
   line-height: 1.5;
 }
+.trail-writing-footer {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-hairline);
+}
+.trail-expand-btn {
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-moss-deep);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: oklch(0.424 0.078 152 / 0.35);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 0.16s var(--ease-out-quint);
+}
+.trail-expand-btn:hover {
+  text-decoration-color: currentColor;
+}
+.trail-all-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-river-deep);
+  text-decoration: none;
+}
+.trail-all-link:hover {
+  text-decoration: underline;
+}
+
 .archive-drawer {
   margin-top: 0;
 }
