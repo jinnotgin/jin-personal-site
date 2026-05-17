@@ -1212,8 +1212,8 @@ onBeforeUnmount(() => {
   max-width: 78rem;
   margin: 0 auto;
   display: flex;
-  align-items: baseline;
-  gap: clamp(0.85rem, 2.5vw, 1.75rem);
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.4rem);
   padding: 0.7rem clamp(1.25rem, 4vw, 3.5rem);
 }
 @media (max-width: 520px) {
@@ -1229,15 +1229,8 @@ onBeforeUnmount(() => {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-ink-faint);
-}
-.thread-rail-eyebrow::after {
-  content: '';
-  display: inline-block;
-  width: 1.1rem;
-  height: 1px;
-  margin-left: 0.7rem;
-  vertical-align: middle;
-  background: var(--color-hairline);
+  border-right: 1px solid var(--color-hairline);
+  padding-right: clamp(0.6rem, 2vw, 1.4rem);
 }
 @media (max-width: 520px) {
   .thread-rail-eyebrow {
