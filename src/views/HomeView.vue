@@ -15,7 +15,7 @@ const latest = listPosts().slice(0, 3)
             <h1 class="hero-statement">
               I track emerging shifts, then build to understand them.
               <span class="hero-turn"
-                >Right now, that means <span class="hero-anchor">AI.</span></span
+                >Right now, that means <span class="hero-anchor">Generative AI.</span></span
               >
             </h1>
 
@@ -168,13 +168,15 @@ const latest = listPosts().slice(0, 3)
 }
 .hero-turn {
   display: block;
-  margin-top: 0.1em;
+  margin-top: 0.3em;
+  font-size: 0.60em;
+  line-height: 1.08;
   color: var(--color-forest-soft);
   font-weight: 500;
 }
 .hero-anchor {
   font-weight: 800;
-  font-size: 1.28em;
+  font-size: 1.2em;
   letter-spacing: -0.04em;
   color: var(--color-signal);
 }

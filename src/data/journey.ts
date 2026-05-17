@@ -15,6 +15,15 @@ export const journey: JourneyEntry[] = [
     threads: ['applied-ai'],
   },
   {
+    id: 'signals-and-research',
+    period: 'Jan 2012 — now',
+    role: 'Side projects in signals and research',
+    org: 'Independent',
+    summary:
+      'Maintain a small practice of learning new technology through shipped experiments: Now In Singapore for AI-assisted event discovery, and Skills Framework Explorer for navigating a complex national skills taxonomy with clearer search, synthesis, and exploration paths.',
+    threads: ['signals'],
+  },
+  {
     id: 'training-allowance-system',
     period: 'Mar 2024 — Oct 2025',
     role: 'Product Co-Lead, SkillsFuture Training Allowance System',
@@ -27,7 +36,7 @@ export const journey: JourneyEntry[] = [
     id: 'student-learning-space',
     period: 'Mar 2020 — May 2023',
     role: 'Product Co-Lead, MOE Student Learning Space',
-    org: 'MOE',
+    org: 'MOE, GovTech',
     summary:
       'Shaped features for Singapore’s national online learning platform during a period when it became critical infrastructure for continuity of learning. Progressed from senior contributor to team lead, built shared practices in behaviour-driven specification, partnered closely with UX/UI and technical leads, and used structured scenarios to reduce ambiguity between policy intent, design behaviour, development, and QA.',
     threads: ['public-platforms'],
@@ -76,14 +85,5 @@ export const journey: JourneyEntry[] = [
     summary:
       'Performed software and hardware upgrades for MOE schools and used robotic process automation to reduce manual intervention in upgrade workflows. The work was short, but it formed an early instinct for deployment repeatability and operational tooling.',
     threads: ['human'],
-  },
-  {
-    id: 'signals-and-research',
-    period: '2018 — now',
-    role: 'Side projects in signals and research',
-    org: 'Independent',
-    summary:
-      'Built and maintained tools that turn scattered information into more inspectable surfaces: CoinGossip for crypto attention and sentiment, Now In Singapore for event discovery, and Skills Framework Explorer for navigating a complex national skills taxonomy.',
-    threads: ['signals'],
   },
 ]

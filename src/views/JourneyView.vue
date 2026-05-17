@@ -4,7 +4,7 @@ import { threadById } from '@/data/threads'
 </script>
 
 <template>
-  <div class="shell shell--reading">
+  <div class="shell shell--reading journey-shell">
     <header class="page-head">
       <h1>My journey so far.</h1>
       <p class="lede">
@@ -35,6 +35,9 @@ import { threadById } from '@/data/threads'
 </template>
 
 <style scoped>
+.journey-shell {
+  max-width: 54rem;
+}
 .timeline {
   list-style: none;
   margin: 0;
@@ -42,14 +45,14 @@ import { threadById } from '@/data/threads'
   display: grid;
   gap: 0;
 }
-.timeline li {
+.timeline > li {
   display: grid;
-  grid-template-columns: 9rem 1fr;
+  grid-template-columns: 10.75rem minmax(0, 1fr);
   gap: 2rem;
   padding: 2.25rem 0;
   border-top: 1px solid var(--color-hairline);
 }
-.timeline li:last-child {
+.timeline > li:last-child {
   border-bottom: 1px solid var(--color-hairline);
 }
 .period {
@@ -58,6 +61,7 @@ import { threadById } from '@/data/threads'
   color: var(--color-moss-deep);
   display: inline-block;
   padding-top: 0.4rem;
+  white-space: nowrap;
 }
 .what h2 {
   font-size: var(--text-2xl);
@@ -79,23 +83,33 @@ import { threadById } from '@/data/threads'
 }
 .threads {
   list-style: none;
-  margin: 1.25rem 0 0;
+  margin: 1.15rem 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.55rem 0.75rem;
 }
 .threads li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--color-ink-soft);
-  background: var(--color-sage);
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--radius-md);
+  background: transparent;
+  padding: 0;
+}
+.threads li::before {
+  content: '';
+  width: 0.44rem;
+  height: 0.44rem;
+  border-radius: 99px;
+  background: var(--color-signal);
+  box-shadow: inset 0 0 0 1px oklch(0.424 0.078 152 / 0.2);
 }
 @media (max-width: 640px) {
-  .timeline li {
+  .timeline > li {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
