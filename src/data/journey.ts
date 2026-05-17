@@ -17,7 +17,7 @@ export const journey: JourneyEntry[] = [
   {
     id: 'signals-and-research',
     period: 'Jan 2012 — now',
-    role: 'Side projects in signals and research',
+    role: 'Personal projects in signals and research',
     org: 'Independent',
     summary:
       'Maintain a small practice of learning new technology through shipped experiments: Now In Singapore for AI-assisted event discovery, and Skills Framework Explorer for navigating a complex national skills taxonomy with clearer search, synthesis, and exploration paths.',
