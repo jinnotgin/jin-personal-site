@@ -91,7 +91,7 @@ const latest = listPosts().slice(0, 3)
         <h2>The patterns I keep returning to</h2>
         <p class="map-instruction">
           <span class="map-instruction-mark" aria-hidden="true"></span>
-          Pick a thread below to see the writing and projects behind it.
+          Pick a pattern below to see the writing and projects behind it.
         </p>
       </section>
 
@@ -99,7 +99,7 @@ const latest = listPosts().slice(0, 3)
 
       <section class="latest">
         <div class="latest-head">
-          <h2>From the writing</h2>
+          <h2>The ideas I sit with</h2>
           <RouterLink to="/writing" class="link">All writing →</RouterLink>
         </div>
         <ul>
@@ -113,6 +113,11 @@ const latest = listPosts().slice(0, 3)
             </RouterLink>
           </li>
         </ul>
+        <div class="latest-footer">
+          <RouterLink to="/writing" class="latest-more link">
+            View all writing →
+          </RouterLink>
+        </div>
       </section>
     </div>
   </div>
@@ -441,5 +446,14 @@ const latest = listPosts().slice(0, 3)
 .latest-excerpt {
   color: var(--color-ink-soft);
   max-width: 62ch;
+}
+
+.latest-footer {
+  padding-top: 1.5rem;
+  text-align: right;
+}
+.latest-more {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
 }
 </style>

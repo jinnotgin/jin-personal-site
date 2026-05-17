@@ -32,7 +32,9 @@ const pastSwitcher = ref(false)
 const pastTrail = ref(false)
 const railVisible = computed(() => pastSwitcher.value && !pastTrail.value)
 const railTop = ref(0)
+const railHeight = ref(56)
 const railOverflowing = ref(false)
+const railEl = ref<HTMLElement | null>(null)
 
 // How many px of the switcher should still be on screen at the moment the
 // rail appears, i.e. the rail kicks in once (switcherHeight - REMAINING) has
@@ -42,7 +44,7 @@ const RAIL_REVEAL_REMAINING = 120
 
 // How many px before the trail's true end the rail should retire. Larger =
 // vanishes earlier (further from the writing section).
-const RAIL_HIDE_OFFSET = 240
+const RAIL_HIDE_OFFSET = 120
 
 let frame = 0
 let resizeObserver: ResizeObserver | undefined
@@ -53,6 +55,11 @@ let reduceMotion = false
 function measureRailTop() {
   const header = document.querySelector<HTMLElement>('.site-header')
   railTop.value = header ? Math.round(header.getBoundingClientRect().height) : 0
+}
+
+function measureRailHeight() {
+  const el = railEl.value
+  railHeight.value = el ? Math.round(el.getBoundingClientRect().height) : 56
 }
 
 function measureRailOverflow() {
@@ -118,8 +125,27 @@ function commitFromRail(id: ThreadId) {
       behavior: reduceMotion ? 'auto' : 'smooth',
       block: 'start',
     })
+    scrollRailToActive()
   })
 }
+
+// Keep the active rail item visible when the selection changes or the rail
+// appears. Without this, the active thread can sit off-screen in the
+// horizontally-scrolling rail on narrow viewports.
+function scrollRailToActive() {
+  const list = railListEl.value
+  if (!list) return
+  const active = list.querySelector<HTMLElement>('.rail-item.active')
+  if (!active) return
+  const listRect = list.getBoundingClientRect()
+  const itemRect = active.getBoundingClientRect()
+  const offset = itemRect.left - listRect.left - (listRect.width - itemRect.width) / 2
+  list.scrollBy({ left: offset, behavior: 'smooth' })
+}
+
+watch(railVisible, (visible) => {
+  if (visible) requestAnimationFrame(scrollRailToActive)
+})
 
 // Non-committal hover preview: only steers the map until the visitor has
 // actually committed to a thread.
@@ -343,6 +369,7 @@ onMounted(() => {
   animate()
 
   measureRailTop()
+  measureRailHeight()
   measureRailOverflow()
   buildObservers()
   window.addEventListener('resize', onResize)
@@ -350,6 +377,7 @@ onMounted(() => {
 
 function onResize() {
   measureRailTop()
+  measureRailHeight()
   measureRailOverflow()
   buildObservers()
 }
@@ -426,12 +454,18 @@ onBeforeUnmount(() => {
     <!-- Stacked index: same threads, source of truth on narrow screens -->
     <div class="stacked">
       <button
-        v-for="t in threads"
+        v-for="(t, i) in threads"
         :key="t.id"
         class="stack-item"
+        :class="{
+          'stack-item--active': t.id === selected,
+          'stack-item--committed': t.id === committed,
+        }"
+        :style="{ '--i': i }"
         :aria-pressed="t.id === selected"
         @click="commit(t.id)"
       >
+        <span class="stack-dot" aria-hidden="true"></span>
         <span class="stack-text">
           <span class="stack-label">{{ t.label }}</span>
           <span class="stack-line">{{ t.line }}</span>
@@ -445,6 +479,7 @@ onBeforeUnmount(() => {
 
     <!-- Sticky rail: takes over once the switcher above is out of view -->
     <nav
+      ref="railEl"
       class="thread-rail"
       :class="{ 'is-visible': railVisible }"
       :style="{ top: railTop + 'px' }"
@@ -485,7 +520,7 @@ onBeforeUnmount(() => {
       <header
         ref="trailHeadEl"
         class="trail-head"
-        :style="{ scrollMarginTop: railTop + 56 + 'px' }"
+        :style="{ scrollMarginTop: railTop + railHeight + 42 + 'px' }"
       >
         <p class="trail-cue">
           <span class="trail-cue-mark" aria-hidden="true"></span>
@@ -601,46 +636,134 @@ onBeforeUnmount(() => {
 }
 
 .stacked {
+  position: relative;
   display: grid;
   border-top: 1px solid var(--color-hairline);
 }
+
 .stack-item {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
   text-align: left;
-  padding: 1.05rem 0.4rem 1.05rem 0.9rem;
+  padding: 0.72rem 0.4rem 0.72rem 0.9rem;
   background: none;
   border: 0;
   border-bottom: 1px solid var(--color-hairline);
   cursor: pointer;
   font: inherit;
   color: var(--color-ink);
-  transition: background 0.18s var(--ease-out-quint);
+  z-index: 1;
+  transition:
+    background 0.25s var(--ease-out-quint),
+    transform 0.12s var(--ease-out-quint);
+  /* Staggered entry animation */
+  animation: stack-enter 0.48s calc(var(--i) * 60ms) var(--ease-out-expo) both;
 }
+
+/* --- Node dot: echoes the constellation nodes --- */
+.stack-dot {
+  position: relative;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  border: 2px solid var(--color-sage-deep);
+  background: var(--color-paper);
+  z-index: 3;
+  transition:
+    background 0.3s var(--ease-out-quint),
+    border-color 0.3s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint),
+    box-shadow 0.3s var(--ease-out-quint);
+}
+/* Vertical thread segments above and below each dot */
+.stack-dot::before,
+.stack-dot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  background: var(--color-sage-deep);
+  opacity: 0.45;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.stack-dot::before {
+  bottom: calc(100% + 2px);
+  height: 2rem;
+}
+.stack-dot::after {
+  top: calc(100% + 2px);
+  height: 2rem;
+}
+/* First item: no line above */
+.stack-item:first-child .stack-dot::before {
+  display: none;
+}
+/* Last item: no line below */
+.stack-item:last-child .stack-dot::after {
+  display: none;
+}
+
 .stack-text {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
   min-width: 0;
+  flex: 1;
 }
 .stack-item:hover {
   background: oklch(0.922 0.022 135 / 0.5);
 }
-.stack-item[aria-pressed='true'] {
+.stack-item:hover .stack-dot {
+  border-color: var(--color-moss);
+  transform: scale(1.15);
+}
+
+/* --- Touch press feedback --- */
+.stack-item:active {
+  transform: scale(0.985);
+  transition-duration: 0.08s;
+}
+
+/* --- Active state: sage bg + filled dot --- */
+.stack-item--active {
   background: var(--color-sage);
 }
-.stack-item[aria-pressed='true'] .stack-label {
+.stack-item--active .stack-label {
   color: var(--color-moss-deep);
 }
+.stack-item--active .stack-dot {
+  background: var(--color-sage);
+  border-color: var(--color-moss);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px oklch(0.52 0.087 150 / 0.1);
+}
+
+/* --- Committed state: solid filled dot + breathing --- */
+.stack-item--committed .stack-dot {
+  background: var(--color-moss);
+  border-color: var(--color-moss);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px oklch(0.52 0.087 150 / 0.12);
+  animation: stack-dot-breathe 3s ease-in-out infinite;
+}
+
 .stack-label {
   font-size: var(--text-lg);
   font-weight: 700;
+  transition: color 0.25s var(--ease-out-quint);
 }
 .stack-line {
   font-size: var(--text-sm);
   color: var(--color-ink-soft);
+  display: none;
+}
+.stack-item--active .stack-line {
+  display: block;
 }
 .stack-mark {
   flex: none;
@@ -648,15 +771,28 @@ onBeforeUnmount(() => {
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--color-ink-faint);
+  transition:
+    color 0.25s var(--ease-out-quint),
+    transform 0.3s var(--ease-out-quint),
+    opacity 0.3s var(--ease-out-quint);
 }
 .stack-mark::after {
   content: ' \203A';
 }
-.stack-item[aria-pressed='true'] .stack-mark {
+.stack-item--active .stack-mark {
   color: var(--color-moss-deep);
+  font-weight: 700;
+  animation: stack-mark-in 0.4s var(--ease-out-expo) both;
 }
-.stack-item[aria-pressed='true'] .stack-mark::after {
+.stack-item--active .stack-mark::after {
   content: ' \2193';
+}
+
+/* --- Active dot thread segments turn moss --- */
+.stack-item--active .stack-dot::before,
+.stack-item--active .stack-dot::after {
+  background: var(--color-moss);
+  opacity: 0.35;
 }
 
 /* ---------- trail (all sizes) ---------- */
@@ -795,6 +931,7 @@ onBeforeUnmount(() => {
     max-height: 24.5rem;
     margin: 0.2rem auto 0;
     isolation: isolate;
+    overflow: hidden;
   }
 
   .field-canvas {
@@ -1073,6 +1210,12 @@ onBeforeUnmount(() => {
   gap: clamp(0.85rem, 2.5vw, 1.75rem);
   padding: 0.7rem clamp(1.25rem, 4vw, 3.5rem);
 }
+@media (max-width: 520px) {
+  .thread-rail-inner {
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem 0.6rem 1rem;
+  }
+}
 .thread-rail-eyebrow {
   flex: none;
   font-size: var(--text-xs);
@@ -1090,11 +1233,18 @@ onBeforeUnmount(() => {
   vertical-align: middle;
   background: var(--color-hairline);
 }
+@media (max-width: 520px) {
+  .thread-rail-eyebrow {
+    display: none;
+  }
+}
 .thread-rail-list {
   display: flex;
   gap: clamp(0.6rem, 2vw, 1.4rem);
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
 }
 .thread-rail-list.overflowing {
   -webkit-mask-image: linear-gradient(
@@ -1130,6 +1280,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   color: var(--color-ink-soft);
   transition: color 0.18s var(--ease-out-quint);
+  scroll-snap-align: start;
 }
 .rail-item:hover {
   color: var(--color-ink);
@@ -1200,6 +1351,57 @@ onBeforeUnmount(() => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ---------- mobile stacked index animations ---------- */
+@keyframes stack-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.7rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stack-dot-breathe {
+  0%, 100% {
+    box-shadow: 0 0 0 3px oklch(0.52 0.087 150 / 0.1);
+    transform: scale(1.1);
+  }
+  50% {
+    box-shadow: 0 0 0 5px oklch(0.52 0.087 150 / 0.06);
+    transform: scale(1.2);
+  }
+}
+
+@keyframes stack-mark-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- reduced motion: mobile stacked ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .stack-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .stack-item--committed .stack-dot {
+    animation: none;
+  }
+  .stack-item--active .stack-mark {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { listPosts, categories, formatDate, deslugifyCategory } from '@/lib/markdown'
+import { computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { listPosts, categories, formatDate, deslugifyCategory, slugifyCategory } from '@/lib/markdown'
 
 const route = useRoute()
+const router = useRouter()
 const posts = listPosts()
 const filters = ['All', ...categories]
+const PAGE_SIZE = 8
 
-const initialCategory = (() => {
+/* ── Derive state from URL query params ── */
+
+const filter = computed(() => {
   const q = route.query.category
   const qStr = Array.isArray(q) ? q[0] : q
   if (!qStr) return 'All'
-  // support both slug form (ai-in-practice) and legacy exact match
   return deslugifyCategory(qStr) ?? (categories.includes(qStr) ? qStr : 'All')
-})()
+})
 
-const filter = ref<string>(initialCategory)
-const PAGE_SIZE = 8
-const limit = ref(PAGE_SIZE)
+const currentPage = computed(() => {
+  const p = route.query.page
+  const n = Number(Array.isArray(p) ? p[0] : p)
+  return Number.isFinite(n) && n >= 1 ? Math.floor(n) : 1
+})
 
 const shown = computed(() =>
   filter.value === 'All'
@@ -25,14 +30,43 @@ const shown = computed(() =>
     : posts.filter((p) => p.category === filter.value),
 )
 
-const visible = computed(() => shown.value.slice(0, limit.value))
-const hasMore = computed(() => limit.value < shown.value.length)
+const totalPages = computed(() => Math.max(1, Math.ceil(shown.value.length / PAGE_SIZE)))
 
-watch(filter, () => { limit.value = PAGE_SIZE })
+// Clamp page to valid range (handles stale URLs)
+const safePage = computed(() => Math.min(currentPage.value, totalPages.value))
 
-function loadMore() {
-  limit.value += PAGE_SIZE
+const visible = computed(() => {
+  const start = (safePage.value - 1) * PAGE_SIZE
+  return shown.value.slice(start, start + PAGE_SIZE)
+})
+
+const hasPrev = computed(() => safePage.value > 1)
+const hasNext = computed(() => safePage.value < totalPages.value)
+
+/* ── Navigation helpers ── */
+
+function buildQuery(page: number, category?: string) {
+  const cat = category ?? filter.value
+  const q: Record<string, string> = {}
+  if (cat !== 'All') q.category = slugifyCategory(cat)
+  if (page > 1) q.page = String(page)
+  return q
 }
+
+function setFilter(cat: string) {
+  router.push({ path: '/writing', query: buildQuery(1, cat) })
+}
+
+function goToPage(page: number) {
+  router.push({ path: '/writing', query: buildQuery(page) })
+}
+
+// If URL has a page beyond the valid range, silently correct it
+watch([safePage, currentPage], ([safe, current]) => {
+  if (current !== safe) {
+    router.replace({ path: '/writing', query: buildQuery(safe) })
+  }
+})
 </script>
 
 <template>
@@ -53,7 +87,7 @@ function loadMore() {
         :key="c"
         class="chip"
         :aria-pressed="filter === c"
-        @click="filter = c"
+        @click="setFilter(c)"
       >
         {{ c }}
       </button>
@@ -74,12 +108,35 @@ function loadMore() {
       </li>
     </ul>
 
-    <div v-if="hasMore" class="load-more">
-      <button class="load-more-btn" @click="loadMore">
-        Load {{ Math.min(PAGE_SIZE, shown.length - limit) }} more
-        <span class="load-more-count">({{ shown.length - limit }} remaining)</span>
-      </button>
-    </div>
+    <nav v-if="totalPages > 1" class="pagination" aria-label="Writing pages">
+      <RouterLink
+        v-if="hasPrev"
+        :to="{ path: '/writing', query: buildQuery(safePage - 1) }"
+        class="page-link prev"
+      >
+        <span class="page-arrow" aria-hidden="true">←</span>
+        Newer
+      </RouterLink>
+      <span v-else class="page-link prev disabled" aria-hidden="true">
+        <span class="page-arrow">←</span>
+        Newer
+      </span>
+
+      <span class="page-pos">{{ safePage }}<span class="page-sep">/</span>{{ totalPages }}</span>
+
+      <RouterLink
+        v-if="hasNext"
+        :to="{ path: '/writing', query: buildQuery(safePage + 1) }"
+        class="page-link next"
+      >
+        Older
+        <span class="page-arrow" aria-hidden="true">→</span>
+      </RouterLink>
+      <span v-else class="page-link next disabled" aria-hidden="true">
+        Older
+        <span class="page-arrow">→</span>
+      </span>
+    </nav>
   </div>
 </template>
 
@@ -176,34 +233,57 @@ function loadMore() {
   color: var(--color-ink-faint);
   margin-top: 0.35rem;
 }
-.load-more {
-  padding: clamp(2rem, 5vw, 3rem) 0;
+/* ── Pagination ── */
+.pagination {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  gap: 1rem;
 }
-.load-more-btn {
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font: inherit;
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--color-ink-soft);
-  background: none;
+  text-decoration: none;
+  padding: 0.55rem 1.1rem;
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
-  padding: 0.7rem 1.5rem;
-  cursor: pointer;
   transition:
     color 0.16s var(--ease-out-quint),
     border-color 0.16s var(--ease-out-quint),
     background 0.16s var(--ease-out-quint);
+  min-width: 6.5rem;
 }
-.load-more-btn:hover {
+.page-link.prev { justify-content: flex-start; }
+.page-link.next { justify-content: flex-end; }
+.page-link:not(.disabled):hover {
   color: var(--color-ink);
   border-color: var(--color-moss);
   background: var(--color-sage);
 }
-.load-more-count {
+.page-link.disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.page-arrow {
   font-weight: 400;
+  font-size: 1.05em;
+}
+.page-pos {
+  font-size: var(--text-sm);
+  font-weight: 600;
   color: var(--color-ink-faint);
-  margin-left: 0.4rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.page-sep {
+  margin: 0 0.15rem;
+  opacity: 0.5;
 }
 </style>
