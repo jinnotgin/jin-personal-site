@@ -1293,44 +1293,28 @@ onBeforeUnmount(() => {
 }
 
 /* Receipts re-animate on each thread change so the cause is felt */
-/* trail-cue ("Tracing this thread") stays instant — only the title + blurb animate */
-.trail-head h3 {
-	animation: trail-head-in 0.56s var(--ease-out-expo) both;
-}
+/* trail-cue stays instant — only title + blurb animate as one block */
+.trail-head h3,
 .trail-blurb {
-	animation: trail-head-in 0.56s 0.04s var(--ease-out-expo) both;
-}
-.trail-grid {
-	animation: trail-in 0.64s 0.08s var(--ease-out-expo) both;
-}
-@keyframes trail-rule-in {
-	from {
-		opacity: 0.45;
-		transform: scaleX(0.08);
-	}
-	to {
-		opacity: 1;
-		transform: scaleX(1);
-	}
+	animation: trail-head-in 0.68s 0.06s var(--ease-out-expo) both;
 }
 @keyframes trail-head-in {
 	from {
 		opacity: 0;
-		transform: translateY(0.9rem);
+		transform: translateY(2rem);
 	}
 	to {
 		opacity: 1;
 		transform: translateY(0);
 	}
 }
-@keyframes trail-in {
-	from {
-		opacity: 0;
-		transform: translateY(1.2rem);
-	}
-	to {
+
+@media (prefers-reduced-motion: reduce) {
+	.trail-head h3,
+	.trail-blurb {
+		animation: none;
 		opacity: 1;
-		transform: translateY(0);
+		transform: none;
 	}
 }
 

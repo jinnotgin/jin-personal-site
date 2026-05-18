@@ -83,7 +83,7 @@ So I tried [OpenAI's Codex IDE tool](https://openai.com/index/introducing-codex/
 
 *(Technically, I could have used [Roo Code](https://github.com/RooCodeInc/Roo-Code) for this too, which is my primary tool in this "exploration". But I was curious to try more tools, and sometimes you just want to see what's out there.)*
 
-![Codex IDE tool identifying relevant files](/img/writing/building-tools-with-agentic-coding/codex-ide-files.png)
+![Codex IDE tool identifying relevant files](/img/writing/building-tools-with-agentic-coding/codex-ide-files.png "Codex maps the codebase and surfaces which files the feature will need to touch")
 
 It came back with a reasonable list:
 
@@ -106,7 +106,7 @@ Also, if you're doing code implementation analysis and planning (a complicated t
 
 I uploaded the relevant files surfaced earlier, described the feature requirements, and asked for an implementation plan.
 
-![Claude Opus providing an implementation plan](/img/writing/building-tools-with-agentic-coding/claude-opus-plan.png)
+![Claude Opus providing an implementation plan](/img/writing/building-tools-with-agentic-coding/claude-opus-plan.png "One expensive question, one detailed answer. Opus produces the plan before implementation begins.")
 
 Claude delivered. Architecture diagrams (in ASCII, because of course). A new composable for managing the upload queue. Status enums for tracking each file's progress. Store mutations for placeholder entries. And more!
 
@@ -121,7 +121,7 @@ Now came the long part: actually writing the code.
 
 This is where I switched to **Gemini 3 Flash** via [Roo Code](https://github.com/RooCodeInc/Roo-Code). Remember the compounding cost problem? This is where it bites. Every follow-up - every "make the button smaller" or "remove the bar, it's too cluttered" - adds tokens to the running total cost.
 
-![Iterating on code with Roo Code and Gemini Flash](/img/writing/building-tools-with-agentic-coding/roo-code-iterations.png)
+![Iterating on code with Roo Code and Gemini Flash](/img/writing/building-tools-with-agentic-coding/roo-code-iterations.png "14 exchanges with Flash, each one cheap enough to iterate freely without rationing questions")
 
 With Flash's pricing, I could afford to iterate freely:
 

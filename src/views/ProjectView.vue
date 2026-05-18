@@ -174,16 +174,42 @@ const siblings = computed(() =>
 .prose :deep(p + p) {
   margin-top: 1em;
 }
-.prose :deep(img) {
+.prose :deep(img),
+.prose :deep(figure) {
   display: block;
   width: min(50rem, calc(100vw - 5rem));
   height: auto;
   margin: 2rem 50%;
   transform: translateX(-50%);
+}
+.prose :deep(img) {
   border: 1px solid var(--color-hairline);
   background: var(--color-paper-raised);
   border-radius: var(--radius-lg);
   overflow: hidden;
+}
+.prose :deep(figure) {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.prose :deep(figure img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  transform: none;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.prose :deep(figcaption) {
+  margin-top: 0.65rem;
+  font-size: var(--text-sm);
+  color: var(--color-ink-faint);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.5;
 }
 .prose :deep(iframe) {
   display: block;
@@ -198,6 +224,7 @@ const siblings = computed(() =>
 }
 @media (max-width: 760px) {
   .prose :deep(img),
+  .prose :deep(figure),
   .prose :deep(iframe) {
     width: 100%;
     margin: 1.5rem 0;

@@ -12,9 +12,7 @@ category: AI in practice
 
 It all started from a Teams message I received from a colleague.
 
-![Uh oh, red = bad](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/promptpal-upload-error.png)
-
-*Uh oh, red = bad*
+![PromptPal showing two red error messages after a failed Excel upload](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/promptpal-upload-error.png "Uh oh. Red means bad.")
 
 Daniel, a colleague at Ufinity, had uploaded an Excel file into PromptPal (an internal AI tool I built for staff to work with project and customer data securely), and the app crashed. Two error messages, with one mentioning a file size exceeding a maximum limit.
 
@@ -32,17 +30,13 @@ The immediate solution was to split the converted output into multiple smaller f
 
 I thought I was done. Then I started testing with larger files and noticed something: even moderately sized spreadsheets were taking a *really* long time to process, and the upload screen gave no indication of what was happening. A static "Extracting spreadsheet data..." message sat there with no movement. Was it processing? Had it failed silently? There was no way to tell. So I added live progress reporting from the conversion process: which sheet was being processed, which row, how many remained.
 
-![Showing more in-progress feedback to the user](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/upload-processing-feedback.png)
-
-*Showing more in-progress feedback to the user*
+![Upload progress screen showing sheet-by-sheet conversion status](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/upload-processing-feedback.png "Showing more in-progress feedback to the user")
 
 But, even with progress visible, the processing time was still taking far longer than felt reasonable. The bottleneck turned out to be in how the app verified that each growing chunk of output still fit under the size limit: it was recalculating the entire chunk's size after every single row was added. Seeing that coding inefficiency, I switched it to a leaner approach that let the app measure each row's contribution just once, removing the recalculation loop entirely.
 
 Then something stranger happened. I tested with a small file, just 40 KB, expecting it to breeze through. It expanded to nearly 9 MB after conversion. I stared at the output for a moment before it clicked: Excel can sometimes apply invisible formatting to far more cells and columns than actually contain data. The spreadsheet looked small, but behind the scenes, it had formatting applied across thousands of empty columns. The converter was faithfully preserving all of it.
 
-![How PromptPal “sees" some Excel files, with blank columns taking up space](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/excel-empty-columns-expanded-output.png)
-
-*How PromptPal “sees" some Excel files, with blank columns taking up space*
+![JSON output of an Excel file bloated by invisible formatting across empty columns](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/excel-empty-columns-expanded-output.png “How PromptPal sees an Excel file with invisible formatting applied across thousands of empty columns”)
 
 The fix was also straightforward here: strip out the empty content to cut the output size. But it also made me uneasy. How many users had uploaded files like this over the past five months without realising the converted version was bloated with nothing?
 
@@ -58,9 +52,7 @@ This one really did give me pause. A silent data integrity issue, which is basic
 
 What stays with me is not the technical cascade. Each fix was individually reasonable, and the AI coding agent handled all of them in roughly two hours. What stays with me is that the cascade was fairly predictable, and I did not catch it beforehand.
 
-![All the chats within Codex to push the eight fixes.](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/codex-fix-sessions.png)
-
-*All the chats within Codex to push the eight fixes.*
+![All the Codex chat sessions used to push the eight fixes](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/codex-fix-sessions.png "All the chats within Codex to push the eight fixes, roughly two hours of work total")
 
 The original requirement felt complete: let users upload Excel files by converting them to a format AI models can process. I validated that the conversion worked for the files I tested with. I did not ask what happens when the converted output exceeds the size limit, or when a small file expands because of invisible formatting. None of these are exotic scenarios. They are the kind of possibilities that surface when you sit with a requirement a bit longer and explore it from different angles (with or without AI), before committing to an implementation.
 

@@ -25,7 +25,7 @@ const channels = [
 
 <template>
   <div class="shell shell--reading">
-    <div class="banner" aria-hidden="true"></div>
+    <!-- <div class="banner" aria-hidden="true"></div> -->
 
     <header class="page-head">
       <h1>Get in touch.</h1>

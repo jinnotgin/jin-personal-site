@@ -166,23 +166,82 @@ watch(post, (p) => {
   }
 }
 
-.prose :deep(img) {
+.prose :deep(img),
+.prose :deep(figure) {
   display: block;
   width: min(50rem, calc(100vw - 5rem));
   height: auto;
   margin: 2rem 50%;
   transform: translateX(-50%);
+}
+.prose :deep(img) {
   border: 1px solid var(--color-hairline);
   background: var(--color-paper-raised);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
+.prose :deep(figure) {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.prose :deep(figure img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  transform: none;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.prose :deep(figcaption) {
+  margin-top: 0.65rem;
+  font-size: var(--text-sm);
+  color: var(--color-ink-faint);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.5;
+}
 
 @media (max-width: 760px) {
-  .prose :deep(img) {
+  .prose :deep(img),
+  .prose :deep(figure) {
     width: 100%;
     margin: 1.5rem 0;
     transform: none;
   }
+}
+
+.prose :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  margin: 2rem 0;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.prose :deep(thead) {
+  border-bottom: 2px solid var(--color-hairline);
+}
+.prose :deep(th) {
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  padding: 0 1.25rem 0.65rem 0;
+  white-space: nowrap;
+}
+.prose :deep(td) {
+  padding: 0.7rem 1.25rem 0.7rem 0;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-hairline);
+  line-height: 1.5;
+}
+.prose :deep(tr:last-child td) {
+  border-bottom: none;
 }
 </style>

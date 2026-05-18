@@ -28,7 +28,7 @@ Other problems resist upfront definition. You know quality when you see it, but 
 
 ## Frontend taste, backend contracts
 
-![Article image](/img/writing/how-you-talk-ai-itself-design-decision/inline-1.jpg)
+![Illustration contrasting frontend taste with backend contractual precision](/img/writing/how-you-talk-ai-itself-design-decision/inline-1.jpg "Frontend quality lives in judgment you can only access once something exists to react to")
 
 This maps, roughly, onto a divide most developers already feel. Frontend work tends to carry more of what I think of as human taste. Spacing, visual weight, the way a layout guides attention, the moment a page crosses from dense to cluttered. These qualities are hard to pin down in a written spec. You can describe a button's behaviour, but the feel of the interaction around it emerges through seeing and adjusting.
 
@@ -46,7 +46,7 @@ Agile emerged as a response. Shorter cycles, continuous feedback, planning that 
 
 **AI-assisted development compresses both patterns dramatically.** Spec-driven prompting is waterfall compressed into minutes. You still front-load all the thinking, but execution is basically instant. Iterative prompting is agile compressed into a single working session. You still discover through doing, but each cycle takes minutes rather than weeks.
 
-![Article image](/img/writing/how-you-talk-ai-itself-design-decision/inline-2.jpg)
+![Illustration showing spec-driven and iterative development as two ends of a spectrum](/img/writing/how-you-talk-ai-itself-design-decision/inline-2.jpg "Spec-driven prompting is waterfall compressed into minutes; iterative prompting is agile compressed into a single session")
 
 The compression changes the speed. The underlying tradeoffs remain. Birgitta Böckeler, after [testing several spec-driven development tools hands-on](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), observed that small iterative steps still tend to outperform verbose upfront specifications, particularly when the tools cannot reliably pick up on everything in a large context window. Her conclusion was direct: she would rather review code than review markdown files. The problems that made pure waterfall fail do not disappear just because the cycle is faster.
 
@@ -56,13 +56,13 @@ The reverse also holds, but the failure mode is different. Agile's weakness was 
 
 The clearest illustration I have seen of this spectrum comes from watching how two experienced developers work with AI, each starting from a different end but arriving at a similar conclusion.
 
-![Article image](/img/writing/how-you-talk-ai-itself-design-decision/inline-3.jpg)
+![Illustration of Matt Pocock's spec-first grill-me workflow](/img/writing/how-you-talk-ai-itself-design-decision/inline-3.jpg "Matt Pocock's /grill-me skill interrogates every branch of a plan before a line of code is written")
 
 **Matt Pocock**, a TypeScript educator and toolmaker, built an agent skill called [/grill-me](https://github.com/mattpocock/skills). Before any code is written, it instructs the AI to interrogate him about every aspect of his plan, walking down each branch of the decision tree, resolving dependencies between decisions one by one. He has described sessions where the agent [asked 40 or 50 questions](https://www.aihero.dev/my-grill-me-skill-has-gone-viral) before a single line of code was produced. The output of these sessions feeds into a specification document, which then becomes the blueprint the agent builds against. His reasoning is straightforward: the most common failure mode in software development is misalignment between what you meant and what gets built. The grilling session closes that communication gap before implementation begins.
 
 But Pocock does not grill everything. He skips it for single-step tasks, reversible experiments, and changes where the decision space is already fully constrained. The tool exists precisely because he recognises that some problems benefit from exhaustive upfront definition and others do not.
 
-![Article image](/img/writing/how-you-talk-ai-itself-design-decision/inline-4.jpg)
+![Illustration of Simon Willison's test-first iterative loop approach](/img/writing/how-you-talk-ai-itself-design-decision/inline-4.jpg "Simon Willison anchors iterative loops with tests and a hard rule: never commit code you can't explain to someone else")
 
 **Simon Willison**, co-creator of Python Django, works from the other end. His [preferred definition](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/) of an AI agent is something that runs tools in a loop to achieve a goal. His practice centres on designing that loop well: small testable chunks of logic, immediate execution, verification, and feedback into the next prompt. He [chooses his core AI tools](https://www.lennysnewsletter.com/p/an-ai-state-of-the-union) based primarily on whether they can safely run and iterate on his code.
 
@@ -74,7 +74,7 @@ Both practitioners have found their way toward the middle. Pocock starts with ex
 
 Most real work sits somewhere in the middle, and often the right approach varies within a single project.
 
-![Screenshot of Skills Framework Explorer](/img/writing/how-you-talk-ai-itself-design-decision/inline-5.jpg)
+![Screenshot of Skills Framework Explorer showing hybrid spec-then-iterate approach](/img/writing/how-you-talk-ai-itself-design-decision/inline-5.jpg "Skills Framework Explorer: data model specced upfront, search interface discovered through iteration")
 
 When I built the [Skills Framework Explorer](https://job-skills-explorer.web.app/), I wrote detailed specifications for the data model and the logic that mapped roles to skills and proficiency levels. That part had clear contracts: the data either matched the source accurately or it did not. But the search and comparison interface went through several rounds of iterative prompting. I needed to see the layout before I could judge whether the information hierarchy worked for users who were comparing two roles side by side.
 

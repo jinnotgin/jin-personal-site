@@ -24,7 +24,7 @@ A rough idea becomes a prototype. A prototype becomes a real app. A bug report b
 
 One example is [Skills Framework Explorer,](https://job-skills-explorer.web.app/) a tool I started building in 2026 and recently updated. The official SSG Skills Framework dataset exists, but its raw format is hard to use: spread across multiple spreadsheets, with no clean way to search roles, compare them, or inspect skills at different proficiency levels.
 
-![Skills Framework Explorer - Comparing between 2 job roles](/img/writing/ai-universal-translator-still-amplifies-your-intent/inline-1.jpg)
+![Skills Framework Explorer - Comparing between 2 job roles](/img/writing/ai-universal-translator-still-amplifies-your-intent/inline-1.jpg "Skills Framework Explorer: translating a raw SSG dataset into something you can actually search and compare")
 
 That gap is translation work that I do with AI tools. It starts with a public dataset and a user problem, becomes a data model, then a product flow, then a working tool for both the public and internal staff. AI helped across those layers: understanding the workbook structure, shaping the data model, building the interface, checking edge cases, and turning rough product intent into working software. The value was less in AI writing code and more in how it compressed the movement between idea, spec, prototype, and real app.
 
@@ -34,7 +34,7 @@ Translation still needs direction. AI can write code quickly, explain APIs, sugg
 
 I saw this clearly when building a no-server, fully client-side transcription tool based on [NVIDIA Parakeet v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3). Managers in my company needed a private way to transcribe client-sensitive discussions, but the tool also had to be widely accessible. That created a hard boundary: browser-only, no cloud servers involved.
 
-![Screenshot of PromptPal Transcribe, with timestamped, speaker-labeled text](/img/writing/ai-universal-translator-still-amplifies-your-intent/inline-2.jpg)
+![Screenshot of PromptPal Transcribe, with timestamped, speaker-labeled text](/img/writing/ai-universal-translator-still-amplifies-your-intent/inline-2.jpg "PromptPal Transcribe: browser-only, no server, no data leaves the device")
 
 Once that boundary was set, many decisions became easier. Audio handling, model loading, UI states, privacy expectations, and failure cases all had to fit around it. The prompt was never as loose as "build a transcription app". It was closer to a list of specifications provided through multiple prompts, describing a private, browser-only transcription tool for sensitive discussions, using a targeted speech model, and other supporting considerations that ensured no server in the loop.
 

@@ -1,9 +1,15 @@
 import { Renderer, marked, type Tokens } from 'marked'
 
-const escapeAttribute = (value: string) =>
+const escapeAttr = (value: string) =>
   value
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
 
@@ -12,11 +18,16 @@ export function renderMarkdown(markdown: string): string {
 
   renderer.link = ({ href, title, tokens }: Tokens.Link) => {
     const text = renderer.parser.parseInline(tokens)
-    const titleAttribute = title
-      ? ` title="${escapeAttribute(title)}"`
-      : ''
+    const titleAttribute = title ? ` title="${escapeAttr(title)}"` : ''
+    return `<a href="${escapeAttr(href)}"${titleAttribute} target="_blank" rel="noopener noreferrer">${text}</a>`
+  }
 
-    return `<a href="${escapeAttribute(href)}"${titleAttribute} target="_blank" rel="noopener noreferrer">${text}</a>`
+  renderer.image = ({ href, title, text }: Tokens.Image) => {
+    const img = `<img src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" />`
+    if (title) {
+      return `<figure>${img}<figcaption>${escapeHtml(title)}</figcaption></figure>`
+    }
+    return img
   }
 
   return marked.parse(markdown, {

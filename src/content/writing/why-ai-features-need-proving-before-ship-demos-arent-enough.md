@@ -36,7 +36,7 @@ I ran into this recently when testing AI tools for research survey analysis, by 
 
 It was only when I started double-checking the numbers that I noticed: **the percentages weren't right.**
 
-![Article image](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-1.jpg)
+![Illustration of polished AI output that hides numerical errors inside confident prose](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-1.jpg "The report read confidently. The numbers were wrong. Polish is not proof.")
 
 The draft said 26 non-developer respondents. The actual number was 23. Another percentage was off by four points. While the overall narrative was still accurate, such gaps would've been factually embarrassing if someone downstream ran the numbers themselves.
 
@@ -66,7 +66,7 @@ A demo shows the best case. **A POC maps the failure surface.** It's designed to
 
 Not necessarily. And this is where AI POCs differ most from traditional ones: **the results have a much shorter expiration date.**
 
-![Article image](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-2.jpg)
+![Illustration showing a POC as a timestamp rather than a permanent verdict](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-2.jpg "A failed POC is a timestamp, not a verdict. The same idea tested today with better models might pass.")
 
 In 2023, as part of [Google AI Trailblazers](https://www.edb.gov.sg/en/about-edb/media-releases-publications/mci-disg-sndgo-and-google-cloud-launch-ai-trailblazers-initiative-to-accelerate-the-development-of-impactful-generative-ai-solution-singapore.html), my team experimented with using LLMs to generate test scenarios from requirements. It didn't work well enough to ship. The models at the time had small context windows, limited agentic capability, and the RAG technology we needed for feeding in project context was still immature. The POC failed... correctly.
 
@@ -83,7 +83,7 @@ This is what a **Proof of Value (POV)** addresses. Where a POC validates feasibi
 
 I learned this distinction the hard way. In 2024, I built **Pete**, an internal RAG-based AI tool that could answer questions by searching across company documentation. One of the first use cases was HR knowledge: policies, leave procedures, onboarding guides. The POC was clean: the model retrieved relevant articles, synthesised accurate answers, handled follow-up questions. It worked.
 
-![Article image](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-3.jpg)
+![Illustration of Pete, an internal RAG tool that passed the POC but failed the POV](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-3.jpg "Pete answered HR questions accurately. People just didn't have HR questions often enough.")
 
 But, it also showed an uncomfortable truth: the usage was low.
 
@@ -91,7 +91,7 @@ While the answers were adequate, people just didn't have HR questions often enou
 
 Meanwhile, the *same underlying technology*, RAG over internal documents, applied to a different context told a completely different story. When I connected Pete to **software project documentation** and integrated it with the development team's **day-to-day chat software**, demand was immediate. Analysts & developers queried it constantly. It lived where the work happened, answered questions people had *every day*, and saved real time on tasks that were genuinely painful.
 
-![Article image](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-4.jpg)
+![Illustration showing Pete succeeding when applied to daily project documentation](/img/writing/why-ai-features-need-proving-before-ship-demos-arent-enough/inline-4.jpg "The same technology, routed to project documentation, became something developers relied on daily")
 
 Same technology. Same architecture. One use case gathered dust. The other became relied upon.
 
