@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { useHead } from '@unhead/vue'
 import ConstellationMap from '@/components/ConstellationMap.vue'
 import { listPosts, formatDate } from '@/lib/markdown'
 import { listProjects, byMostRecentProject } from '@/lib/projects'
+import { siteSeo } from '@/lib/seo'
+
+useHead(siteSeo())
 
 const latest = listPosts().slice(0, 3)
 

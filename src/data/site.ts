@@ -1,7 +1,13 @@
 export const site = {
 	name: 'Jin',
 	formalName: 'Lin Jin',
+	url: import.meta.env.VITE_SITE_URL ?? 'https://itsjin.com',
 	role: 'Applied innovation, shaping digital and human systems',
+	description:
+		"Jin's personal systems map with evidence trails: applied innovation, GenAI in practice, product and platform work, and the human systems that keep teams healthy.",
+	previewDescription:
+		'A personal systems map: the threads Jin keeps returning to, and the work, writing, and roles behind each.',
+	previewImage: '/img/og-card.svg',
 	/** Plain-credibility paragraph. Replace with Jin's own words. */
 	positioning:
 		'I work between emerging technology, organisational change, and the human systems underneath both. The work is turning ambiguous possibilities into practice teams can actually keep: applied AI, product and platform systems, and the facilitation that makes the change stick.',

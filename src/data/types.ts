@@ -55,6 +55,7 @@ export interface PostMeta {
   tags: string[]
   status: 'published' | 'draft'
   category: string
+  image?: ProjectImage
 }
 
 export interface Post extends PostMeta {

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { projects } from '@/data/workbench'
 import { getProject } from '@/lib/projects'
 import { threadById } from '@/data/threads'
+import { projectSeo, projectsIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
 const project = computed(() => getProject(String(route.params.slug)))
+useHead(computed(() => (project.value ? projectSeo(project.value) : projectsIndexSeo())))
 const thread = computed(() =>
   project.value ? threadById(project.value.threads[0]!) : undefined,
 )

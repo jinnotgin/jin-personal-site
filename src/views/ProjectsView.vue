@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useHead } from '@unhead/vue'
 import { projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
 import { byMostRecentProject, projectsByThread } from '@/lib/projects'
+import { projectsIndexSeo } from '@/lib/seo'
+
+useHead(projectsIndexSeo())
 
 const groups = computed(() =>
   threads

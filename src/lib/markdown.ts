@@ -44,9 +44,19 @@ function parseFrontmatter(raw: string): {
   return { data, body: rawBody }
 }
 
+function firstMarkdownImage(body: string): Post['image'] {
+  const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/.exec(body)
+  if (!match || !match[2]) return undefined
+  return {
+    src: match[2],
+    alt: match[1] || 'Writing preview image',
+  }
+}
+
 function build(raw: string): Post {
   const { data, body } = parseFrontmatter(raw)
   const words = body.trim().split(/\s+/).filter(Boolean).length
+  const image = firstMarkdownImage(body)
   return {
     slug: String(data.slug ?? ''),
     title: String(data.title ?? 'Untitled'),
@@ -55,6 +65,7 @@ function build(raw: string): Post {
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     status: data.status === 'draft' ? 'draft' : 'published',
     category: String(data.category ?? 'Notes'),
+    ...(image ? { image } : {}),
     html: renderMarkdown(body),
     readingMinutes: Math.max(1, Math.round(words / 200)),
   }

@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue'
+import { computed } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { getPost, listPosts, formatDate } from '@/lib/markdown'
+import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
 const all = listPosts()
 const post = computed(() => getPost(String(route.params.slug)))
+useHead(computed(() => (post.value ? postSeo(post.value) : writingIndexSeo())))
 
 const idx = computed(() =>
   all.findIndex((p) => p.slug === route.params.slug),
@@ -15,12 +18,6 @@ const next = computed(() =>
   idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
 )
 
-onMounted(() => {
-  if (post.value) document.title = `${post.value.title} — Jin`
-})
-watch(post, (p) => {
-  if (p) document.title = `${p.title} — Jin`
-})
 </script>
 
 <template>

@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { listPosts, categories, formatDate, deslugifyCategory, slugifyCategory } from '@/lib/markdown'
+import { writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
 const router = useRouter()
+useHead(writingIndexSeo())
+
 const posts = listPosts()
 const filters = ['All', ...categories]
 const PAGE_SIZE = 8
