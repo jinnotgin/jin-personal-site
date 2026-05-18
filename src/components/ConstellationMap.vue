@@ -327,7 +327,7 @@ function drawConstellation(time: number) {
 			for (let i = 0; i < 3; i += 1) {
 				const t = (drift * 0.22 + i * 0.34) % 1
 				const p = pointOnCurve(width, height, n.x, n.y + nodeBreath, t)
-				const radius = 2.4 + Math.sin(drift * 5 + i) * 0.75
+				const radius = 3.2 + Math.sin(drift * 5 + i) * 0.75
 				ctx.beginPath()
 				ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
 				ctx.fillStyle = `rgba(56, 128, 82, ${0.1 + t * 0.38})`
