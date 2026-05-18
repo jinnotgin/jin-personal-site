@@ -107,7 +107,7 @@ watch(post, (p) => {
   font-weight: 700;
 }
 .head h1 {
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   margin: 0;
 }
 .excerpt {

@@ -116,7 +116,7 @@ const siblings = computed(() =>
   border-bottom: 1px solid currentColor;
 }
 .head h1 {
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   margin: 0.5rem 0 0;
 }
 .intent {
