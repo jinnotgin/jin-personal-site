@@ -320,7 +320,7 @@ function drawConstellation(time: number) {
 		ctx.beginPath()
 		canvasCurve(ctx, width, height, n.x, n.y + nodeBreath)
 		ctx.strokeStyle = isActive ? 'rgba(56, 128, 82, 0.68)' : 'rgba(176, 204, 177, 0.46)'
-		ctx.lineWidth = isActive ? 1.6 : 0.9
+		ctx.lineWidth = isActive ? 2.6 : 1.5
 		ctx.stroke()
 
 		if (!reduceMotion && isActive) {
@@ -946,7 +946,7 @@ onBeforeUnmount(() => {
 	.wire {
 		fill: none;
 		stroke: var(--color-sage-deep);
-		stroke-width: 1;
+		stroke-width: 1.6;
 		vector-effect: non-scaling-stroke;
 		transition:
 			stroke 0.4s var(--ease-out-quint),
@@ -954,7 +954,7 @@ onBeforeUnmount(() => {
 	}
 	.wire.lit {
 		stroke: var(--color-moss);
-		stroke-width: 2;
+		stroke-width: 3;
 		opacity: 0.24;
 	}
 
@@ -965,11 +965,12 @@ onBeforeUnmount(() => {
 		width: clamp(4.8rem, 8vw, 6.7rem);
 		aspect-ratio: 1;
 		border-radius: 999px;
-		padding: 0.28rem;
+		padding: 0.18rem;
 		background: var(--color-paper);
+		overflow: hidden;
 		box-shadow:
 			0 0 0 1px var(--color-hairline),
-			0 0 0 0.65rem oklch(0.968 0.013 95 / 0.78),
+			0 0 0 0.3rem oklch(0.968 0.013 95 / 0.78),
 			0 0 2.2rem var(--color-paper);
 	}
 	.centre-avatar {
@@ -979,6 +980,7 @@ onBeforeUnmount(() => {
 		border-radius: inherit;
 		object-fit: cover;
 		object-position: 50% 42%;
+		scale: 1.15;
 		filter: saturate(0.82) brightness(1.03) contrast(0.98);
 	}
 
@@ -1035,8 +1037,8 @@ onBeforeUnmount(() => {
 	}
 	.node-label {
 		position: absolute;
-		max-width: 10.5rem;
-		font-size: var(--text-sm);
+		max-width: 12rem;
+		font-size: var(--text-base);
 		font-weight: 600;
 		line-height: 1.3;
 		text-shadow:
@@ -1049,7 +1051,7 @@ onBeforeUnmount(() => {
 		bottom: calc(50% + 1.55rem);
 		left: 50%;
 		transform: translateX(-50%);
-		max-width: 13rem;
+		max-width: 15rem;
 		white-space: nowrap;
 	}
 	.node--right .node-label {
@@ -1062,7 +1064,7 @@ onBeforeUnmount(() => {
 		top: calc(50% + 1.55rem);
 		left: 50%;
 		transform: translateX(-50%);
-		max-width: 13rem;
+		max-width: 15rem;
 		white-space: nowrap;
 	}
 	.node--left .node-label {
