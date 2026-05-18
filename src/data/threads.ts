@@ -11,7 +11,7 @@ export const threads: Thread[] = [
 		label: 'Applied AI in practice',
 		line: 'AI tools that survive contact with real workflows.',
 		blurb:
-			'AI work here starts from the parts demos usually skip: confidential data, uneven adoption, messy files, cost, latency, and the cognitive debt these tools can create. The point is not capability on its own. It is whether a model can become a tool people can inspect, trust, and use in actual work.',
+			'AI work here starts from the parts demos usually skip: confidential data, uneven adoption, messy files, cost, latency, and the cognitive debt these tools can create. What matters is whether an AI model can become a tool people can inspect, trust, and use in actual work.',
 		angle: 270,
 		journey: ['applied-innovation-lead'],
 	},

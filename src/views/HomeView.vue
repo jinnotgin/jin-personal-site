@@ -375,13 +375,6 @@ onBeforeUnmount(() => {
 	opacity: 0;
 }
 
-@media (prefers-reduced-motion: reduce), (hover: none) {
-	.move-more {
-		grid-template-rows: 1fr;
-		opacity: 1;
-		margin-top: 0.85rem;
-	}
-}
 @media (hover: none) {
 	.hero-portrait img {
 		filter: none;
@@ -598,6 +591,14 @@ onBeforeUnmount(() => {
 .move:focus-visible {
 	border-radius: var(--radius-sm);
 	box-shadow: 0 0 0 2px oklch(0.7 0.088 122 / 0.55);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+	.move-more {
+		grid-template-rows: 1fr;
+		opacity: 1;
+		margin-top: 0.85rem;
+	}
 }
 
 @media (min-width: 900px) {
