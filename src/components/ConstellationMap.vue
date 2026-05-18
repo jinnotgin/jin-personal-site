@@ -981,7 +981,7 @@ onBeforeUnmount(() => {
 		object-fit: cover;
 		object-position: 50% 42%;
 		scale: 1.15;
-		filter: saturate(0.82) brightness(1.03) contrast(0.98);
+		filter: saturate(0.92) brightness(1.02) contrast(0.98);
 	}
 
 	.node-layer {

@@ -359,7 +359,7 @@ onBeforeUnmount(() => {
 	aspect-ratio: 1;
 	object-fit: cover;
 	object-position: 50% 42%;
-	filter: saturate(0.72) brightness(1.04) contrast(0.99);
+	filter: saturate(0.88) brightness(1.02) contrast(0.99);
 	transition: filter 0.55s var(--ease-out-quint);
 }
 .hero-portrait:hover img,
