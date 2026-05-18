@@ -1,8 +1,81 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import ConstellationMap from '@/components/ConstellationMap.vue'
 import { listPosts, formatDate } from '@/lib/markdown'
+import { listProjects, byMostRecentProject } from '@/lib/projects'
 
 const latest = listPosts().slice(0, 3)
+
+/**
+ * Currently-building pointer. Set BUILDING to:
+ *   'auto'                       newest active project, resolved dynamically
+ *   'promptpal' (a slug string)  pin to a specific project, links to it
+ *   { label, to? }               custom label; links internally if `to` given
+ */
+const BUILDING: 'auto' | string | { label: string; to?: string } = {
+  label: 'AI-driven Software Development Lifecycle',
+}
+
+const building = (() => {
+  if (typeof BUILDING === 'object') {
+    return { name: BUILDING.label, to: BUILDING.to }
+  }
+  const project =
+    BUILDING === 'auto'
+      ? listProjects()
+          .filter((p) => p.status === 'active')
+          .sort(byMostRecentProject)[0]
+      : listProjects().find((p) => p.slug === BUILDING)
+  return project ? { name: project.name, to: `/projects/${project.slug}` } : null
+})()
+
+const method = ref<HTMLElement | null>(null)
+let raf = 0
+let moveEls: HTMLElement[] = []
+
+function update() {
+  raf = 0
+  const vh = window.innerHeight
+  const start = vh * 1.02
+  const end = vh * 0.74
+  for (const el of moveEls) {
+    const r = el.getBoundingClientRect()
+    const anchor = r.top + r.height * 0.15
+    const p = Math.max(0, Math.min(1, (start - anchor) / (start - end)))
+    el.style.setProperty('--p', p.toFixed(4))
+  }
+  const sec = method.value
+  if (sec) {
+    const r = sec.getBoundingClientRect()
+    const span = Math.max(r.height - vh * 0.5, 1)
+    const lp = Math.max(0, Math.min(1, (vh * 0.6 - r.top) / span))
+    sec.style.setProperty('--lp', lp.toFixed(4))
+  }
+}
+
+function onScroll() {
+  if (!raf) raf = requestAnimationFrame(update)
+}
+
+onMounted(() => {
+  const el = method.value
+  if (!el) return
+  moveEls = Array.from(el.querySelectorAll<HTMLElement>('.move'))
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.style.setProperty('--lp', '1')
+    moveEls.forEach((m) => m.style.setProperty('--p', '1'))
+    return
+  }
+  update()
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', onScroll)
+  if (raf) cancelAnimationFrame(raf)
+})
 </script>
 
 <template>
@@ -18,72 +91,115 @@ const latest = listPosts().slice(0, 3)
               >
             </h1>
 
-            <ol class="hero-spine">
-              <li class="spine-move" tabindex="0">
-                <span class="spine-index" aria-hidden="true">01</span>
-                <p class="spine-line">
-                  <span class="spine-verb">Track</span> emerging signals early,
-                  while they are still ambiguous.
-                </p>
-                <p class="spine-more">
-                  <span
-                    >Where AI changes how products are made, and what products
-                    can do.</span
-                  >
-                </p>
-              </li>
-              <li class="spine-move" tabindex="0">
-                <span class="spine-index" aria-hidden="true">02</span>
-                <p class="spine-line">
-                  <span class="spine-verb">Build</span> tools and prototypes
-                  with them, to learn what they really change.
-                </p>
-                <p class="spine-more">
-                  <span
-                    >What those signals do to teams, organisations, and digital
-                    systems.</span
-                  >
-                </p>
-              </li>
-              <li class="spine-move" tabindex="0">
-                <span class="spine-index" aria-hidden="true">03</span>
-                <p class="spine-line">
-                  <span class="spine-verb">Understand</span> their second and
-                  third-order effects on teams and organisations.
-                </p>
-                <p class="spine-more">
-                  <span
-                    >Which trade-offs, unintended consequences, and strategic
-                    bets matter.</span
-                  >
-                </p>
-              </li>
-            </ol>
+            <component
+              :is="building?.to ? 'RouterLink' : 'span'"
+              v-if="building"
+              :to="building.to"
+              class="hero-building"
+              :class="{ 'is-static': !building.to }"
+            >
+              <span class="hero-building-label">Currently on</span>
+              <span class="hero-building-name">{{ building.name }}</span>
+              <span v-if="building.to" class="hero-building-arrow" aria-hidden="true">→</span>
+            </component>
           </div>
 
           <figure class="hero-portrait">
-            <picture>
-              <source
-                media="(max-width: 759px)"
-                srcset="
-                  /img/jin-portrait-square-800.jpg   800w,
-                  /img/jin-portrait-square-1200.jpg 1200w
-                "
-                sizes="min(15rem, 62vw)"
-              />
-              <img
-                src="/img/jin-portrait-800.jpg"
-                srcset="
-                  /img/jin-portrait-800.jpg   800w,
-                  /img/jin-portrait-1400.jpg 1400w
-                "
-                sizes="(min-width: 760px) 20.5rem, min(15rem, 62vw)"
-                alt="Jin outdoors, smiling in a denim shirt."
-              />
-            </picture>
+            <img
+              src="/img/jin-portrait-square-800.jpg"
+              srcset="
+                /img/jin-portrait-square-800.jpg   800w,
+                /img/jin-portrait-square-1200.jpg 1200w
+              "
+              sizes="(min-width: 760px) 18rem, min(15rem, 62vw)"
+              alt="Jin outdoors, smiling in a denim shirt."
+            />
           </figure>
         </div>
       </div>
+    </section>
+
+    <section ref="method" class="method shell" aria-labelledby="method-title">
+      <p class="method-eyebrow">The method, not the pitch</p>
+      <h2 id="method-title" class="method-title">
+        I don't strategise from the<br />sidelines. I build, then I know.
+      </h2>
+
+      <ol class="moves">
+        <li class="move" tabindex="0">
+          <span class="move-num">
+            <span class="ghost">01</span>
+            <span class="fill" aria-hidden="true">01</span>
+          </span>
+          <div class="move-head">
+            <h3 class="move-verb">
+              <span class="ghost">Track</span>
+              <span class="fill" aria-hidden="true">Track</span>
+            </h3>
+            <span class="move-rule" aria-hidden="true"></span>
+          </div>
+          <div class="move-text">
+            <p class="move-line">
+              Emerging signals early, while they are still ambiguous.
+            </p>
+            <p class="move-more">
+              <span
+                >Reading where AI changes how products get made, and what
+                products can suddenly do, before it is consensus.</span
+              >
+            </p>
+          </div>
+        </li>
+        <li class="move" tabindex="0">
+          <span class="move-num">
+            <span class="ghost">02</span>
+            <span class="fill" aria-hidden="true">02</span>
+          </span>
+          <div class="move-head">
+            <h3 class="move-verb">
+              <span class="ghost">Build</span>
+              <span class="fill" aria-hidden="true">Build</span>
+            </h3>
+            <span class="move-rule" aria-hidden="true"></span>
+          </div>
+          <div class="move-text">
+            <p class="move-line">
+              Real tools and prototypes with them, to learn what they actually
+              change.
+            </p>
+            <p class="move-more">
+              <span
+                >Shipping working software, not slides, so the lesson comes
+                from what breaks and what holds.</span
+              >
+            </p>
+          </div>
+        </li>
+        <li class="move" tabindex="0">
+          <span class="move-num">
+            <span class="ghost">03</span>
+            <span class="fill" aria-hidden="true">03</span>
+          </span>
+          <div class="move-head">
+            <h3 class="move-verb">
+              <span class="ghost">Understand</span>
+              <span class="fill" aria-hidden="true">Understand</span>
+            </h3>
+            <span class="move-rule" aria-hidden="true"></span>
+          </div>
+          <div class="move-text">
+            <p class="move-line">
+              Their second and third-order effects on teams and organisations.
+            </p>
+            <p class="move-more">
+              <span
+                >Which trade-offs, unintended consequences, and strategic bets
+                matter once the prototype meets real people.</span
+              >
+            </p>
+          </div>
+        </li>
+      </ol>
     </section>
 
     <div class="shell home-rest">
@@ -132,26 +248,14 @@ const latest = listPosts().slice(0, 3)
   overflow: clip;
 }
 .hero-inner {
-  padding-top: clamp(2.5rem, 8vw, 6.5rem);
-  padding-bottom: clamp(2.5rem, 8vw, 6rem);
-}
-
-.hero-kicker {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-forest-soft);
-  margin: 0;
-  animation: hero-rise 0.8s var(--ease-out-expo) both;
+  padding-top: clamp(2rem, 5vw, 3.6rem);
+  padding-bottom: clamp(2rem, 5vw, 3.6rem);
 }
 
 .hero-body {
-  margin-top: clamp(1.2rem, 4vw, 2.6rem);
   display: grid;
-  gap: clamp(1.4rem, 5vw, 3rem);
-  align-items: stretch;
+  gap: clamp(1.6rem, 5vw, 3rem);
+  align-items: center;
   animation: hero-rise 0.9s var(--ease-out-expo) 0.08s both;
 }
 .hero-copy {
@@ -185,97 +289,54 @@ const latest = listPosts().slice(0, 3)
   color: var(--color-signal);
 }
 
-.hero-spine {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 62ch;
-  display: flex;
-  flex-direction: column;
+.hero-building {
+  align-self: start;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  padding-bottom: 3px;
+  width: fit-content;
+  text-decoration: none;
+  border-bottom: 1px solid oklch(0.52 0.078 222 / 0.45);
   order: 3;
+  transition: border-color 0.3s var(--ease-out-quint);
 }
-.spine-move {
-  display: grid;
-  grid-template-columns: 2.8rem 1fr;
-  column-gap: clamp(0.75rem, 1.5vw, 1.05rem);
-  padding: clamp(0.85rem, 2vw, 1.15rem) 0;
-  border-top: 1px solid oklch(0.93 0.016 100 / 0.13);
-  outline: none;
-  cursor: default;
-}
-.spine-move:first-child {
-  border-top: 0;
-  padding-top: 0;
-}
-.spine-index {
-  grid-column: 1;
-  justify-self: start;
-  padding-top: 0.42rem;
-  font-size: var(--text-sm);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  color: oklch(0.74 0.03 130 / 0.66);
-  transition: color 0.4s var(--ease-out-quint);
-}
-.spine-line {
-  grid-column: 2;
-  margin: 0;
-  font-size: var(--text-lg);
-  line-height: 1.5;
-  color: oklch(0.93 0.016 100 / 0.82);
-  text-wrap: pretty;
-}
-.spine-verb {
-  font-family: var(--font-display);
-  font-size: 1.18em;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-signal);
-}
-.spine-more {
-  grid-column: 2;
-  margin: 0;
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition:
-    grid-template-rows 0.5s var(--ease-out-expo),
-    opacity 0.4s var(--ease-out-quint);
-}
-.spine-more > span {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  min-height: 0;
-  padding-left: 1.3rem;
-  font-size: var(--text-base);
-  line-height: 1.5;
+.hero-building-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--color-forest-soft);
 }
-.spine-more > span::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-signal);
+.hero-building-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-river);
 }
-.spine-move:hover .spine-more,
-.spine-move:focus-visible .spine-more {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  margin-top: 0.55rem;
+.hero-building-arrow {
+  color: var(--color-river);
+  transition: transform 0.32s var(--ease-out-expo);
 }
-.spine-move:hover .spine-index,
-.spine-move:focus-visible .spine-index {
-  color: var(--color-signal);
+.hero-building:hover {
+  border-color: var(--color-river);
 }
-.spine-move:focus-visible {
+.hero-building:hover .hero-building-arrow {
+  transform: translateX(4px);
+}
+.hero-building:focus-visible {
+  outline: none;
   border-radius: var(--radius-sm);
   box-shadow: 0 0 0 2px oklch(0.7 0.088 122 / 0.55);
+}
+.hero-building.is-static {
+  border-bottom-color: oklch(0.74 0.03 130 / 0.32);
+  pointer-events: none;
+}
+.hero-building.is-static .hero-building-name {
+  color: var(--color-signal);
 }
 
 .hero-portrait {
@@ -284,7 +345,7 @@ const latest = listPosts().slice(0, 3)
   border-radius: var(--radius-md);
   overflow: hidden;
   width: min(15rem, 62vw);
-  align-self: start;
+  align-self: center;
   order: -1;
 }
 .hero-portrait::after {
@@ -322,10 +383,10 @@ const latest = listPosts().slice(0, 3)
 }
 
 @media (prefers-reduced-motion: reduce), (hover: none) {
-  .spine-more {
+  .move-more {
     grid-template-rows: 1fr;
     opacity: 1;
-    margin-top: 0.55rem;
+    margin-top: 0.85rem;
   }
 }
 @media (hover: none) {
@@ -339,27 +400,19 @@ const latest = listPosts().slice(0, 3)
 
 @media (min-width: 760px) {
   .hero-body {
-    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20.5rem);
-    gap: clamp(2rem, 5vw, 3.75rem);
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    gap: clamp(2.25rem, 5vw, 4rem);
   }
   .hero-copy {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(1.4rem, 3vw, 2rem);
-  }
-  .hero-spine {
-    order: initial;
+    gap: clamp(1.2rem, 2.5vw, 1.8rem);
   }
   .hero-portrait {
-    width: 100%;
-    align-self: stretch;
+    width: 18rem;
+    align-self: center;
     order: initial;
-  }
-  .hero-portrait img {
-    height: 100%;
-    aspect-ratio: auto;
-    min-height: 19rem;
   }
 }
 
@@ -371,6 +424,216 @@ const latest = listPosts().slice(0, 3)
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ---- How I actually work: bold builder statement ---- */
+.method {
+  padding-top: clamp(4.5rem, 12vw, 9rem);
+  padding-bottom: clamp(4.5rem, 12vw, 9rem);
+}
+.method-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.4rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-moss-deep);
+}
+.method-eyebrow::before {
+  content: '';
+  width: 2rem;
+  height: 2px;
+  background: var(--color-moss);
+}
+.method-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.2rem + 3.4vw, 3.7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--color-ink);
+  margin: 0 0 clamp(3rem, 8vw, 6rem);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+/* --p: 0..1 scroll progress of one move. --lp: list progress (unused track). */
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.moves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+.move {
+  --p: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(3rem, 9vw, 7rem) 1fr;
+  grid-template-areas:
+    'num head'
+    'num text';
+  column-gap: clamp(1.1rem, 3vw, 2.2rem);
+  row-gap: clamp(0.9rem, 2vw, 1.4rem);
+  align-items: start;
+  outline: none;
+  cursor: default;
+  transform: translate3d(calc((1 - var(--p)) * -1.4rem), 0, 0);
+  transition: --p 0.16s linear;
+}
+.move-num {
+  grid-area: num;
+}
+.move-head {
+  grid-area: head;
+}
+.move-text {
+  grid-area: text;
+  min-width: 0;
+}
+
+/* Layered build: ghost + fill share one grid cell so they register exactly;
+   both carry identical text-stroke so geometry matches at any viewport. */
+.move-num,
+.move-verb {
+  display: inline-grid;
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+}
+.ghost,
+.fill {
+  grid-area: 1 / 1;
+  display: block;
+  white-space: nowrap;
+  padding-right: 0.12em;
+}
+.move-num .ghost,
+.move-num .fill {
+  font-size: clamp(2.7rem, 1.6rem + 5vw, 6.4rem);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+}
+.move-verb .ghost,
+.move-verb .fill {
+  font-size: clamp(2.3rem, 1.4rem + 4vw, 4.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+/* Ghost shows the not-yet-built right portion; fill shows the built left
+   portion. They are clipped to complementary halves of the same box, so a
+   built row has zero ghost left to fringe and they meet cleanly mid-scrub. */
+.ghost {
+  color: transparent;
+  -webkit-text-stroke-width: 1.25px;
+  clip-path: inset(-0.2em -0.2em -0.2em calc(var(--p) * 100%));
+}
+.fill {
+  -webkit-text-stroke-width: 1.25px;
+  clip-path: inset(-0.2em calc((1 - var(--p)) * 100%) -0.2em -0.2em);
+}
+.move-num .ghost {
+  -webkit-text-stroke-color: oklch(0.852 0.02 132 / 0.9);
+}
+.move-verb .ghost {
+  -webkit-text-stroke-color: oklch(0.572 0.019 150 / 0.55);
+}
+.move-num .fill {
+  color: var(--color-signal);
+  -webkit-text-stroke-color: var(--color-signal);
+}
+.move-verb .fill {
+  color: var(--color-ink);
+  -webkit-text-stroke-color: var(--color-ink);
+}
+.move:hover .move-verb .fill,
+.move:focus-visible .move-verb .fill {
+  color: var(--color-moss-deep);
+  -webkit-text-stroke-color: var(--color-moss-deep);
+}
+
+.move-rule {
+  display: block;
+  width: clamp(3rem, 8vw, 5.5rem);
+  height: 4px;
+  margin: clamp(0.85rem, 1.8vw, 1.3rem) 0 0;
+  background: var(--color-signal);
+  transform: scaleX(var(--p));
+  transform-origin: left;
+}
+.move-line {
+  margin: 0;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.55rem);
+  line-height: 1.42;
+  color: var(--color-ink-soft);
+  max-width: 40ch;
+  text-wrap: pretty;
+}
+.move-more {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.55s var(--ease-out-expo),
+    opacity 0.4s var(--ease-out-quint);
+}
+.move-more > span {
+  display: block;
+  overflow: hidden;
+  min-height: 0;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--color-ink-faint);
+  max-width: 42ch;
+}
+.move:hover .move-more,
+.move:focus-visible .move-more {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 0.85rem;
+}
+.move:focus-visible {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px oklch(0.7 0.088 122 / 0.55);
+}
+
+@media (min-width: 900px) {
+  .moves {
+    gap: clamp(2.4rem, 5vw, 4rem);
+  }
+  .move {
+    grid-template-columns:
+      clamp(4rem, 5vw, 6.5rem)
+      minmax(11rem, 0.8fr)
+      minmax(0, 1.15fr);
+    grid-template-areas: 'num head text';
+    column-gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .move-text {
+    padding-top: 0.4rem;
+  }
+  .move-line {
+    font-size: clamp(1.2rem, 0.9rem + 0.7vw, 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .move {
+    transform: none;
+    transition: none;
   }
 }
 
