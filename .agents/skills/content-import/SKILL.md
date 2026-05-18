@@ -99,10 +99,24 @@ formatting (bold, italics, headings, lists, blockquotes) to their Markdown
 equivalents. Do not rewrite, restructure, condense, or add anything.
 
 Handle embedded media as follows:
-- **Images**: convert to `![alt text](path)`. If the image is a local file in
-  the source folder, note it needs to be copied to `/public/img/writing/{slug}/`
-  and use that path. If it's a remote URL, keep the URL for now and flag it to
-  the user so they can decide whether to host it locally.
+- **Images in writing posts**: use standard Markdown image syntax. Existing
+  posts use the optional Markdown title field as the visible caption:
+  `![alt text](/img/writing/{slug}/image.png "Caption text")`.
+  - Use descriptive alt text for the image itself.
+  - If the source has a caption, preserve the caption text in the quoted title
+    field exactly, except for Markdown escaping needed to keep the syntax valid.
+  - If the source has no caption, omit the title field:
+    `![alt text](/img/writing/{slug}/image.png)`.
+  - Cover images usually omit captions. Inline explanatory screenshots and
+    illustrations usually include captions when the source provides one.
+  - Use straight double quotes around Markdown title captions unless the source
+    text forces escaping.
+  - If the image is inside a comparison table, keep the existing table pattern
+    and do not invent captions unless the source clearly supplies them.
+  - If the image is a local file in the source folder, note it needs to be
+    copied to `/public/img/writing/{slug}/` and use that path. If it's a remote
+    URL, keep the URL for now and flag it to the user so they can decide whether
+    to host it locally.
 - **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not
   remove or shorten them.
 - **Videos**: YouTube (and similar) can be embedded directly using an iframe in
@@ -143,7 +157,8 @@ one if there's nothing suitable.
 **Links**: `label::URL` format. Omit if no public links.
 
 **Images**: `/img/projects/{slug}.png::{alt text}` format. Omit if no images
-and note it to the user.
+and note it to the user. Project image metadata does not use Markdown title
+captions; put only a descriptive alt text after `::`.
 
 **Body**: Convert the source content to clean Markdown, preserving the text
 verbatim. Same words, same structure. Convert formatting to Markdown equivalents.
