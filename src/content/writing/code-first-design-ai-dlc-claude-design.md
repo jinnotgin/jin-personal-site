@@ -13,7 +13,7 @@ category: AI in practice
 
 ## The prompts behind the prompts
 
-After using it for a bit, I notice that Claude Design can consistently ship polished functional prototypes from the very *first* generation. This kind of consistent polish is very *suspicious*, and it’s not what you would expect from a single-shot user prompt.
+After using it for a bit, I notice that Claude Design can consistently ship polished functional prototypes from the very *first* generation. This kind of consistent polish is *very suspicious*, and it’s not what you would expect from a single-shot user prompt.
 
 ![Claude Design company intranet prototype](/img/writing/code-first-design-ai-dlc-claude-design/claude-design-company-intranet.png "You can try the live prototype that was built with Claude Design here: [Acme Intranet Prototype](https://jinnotgin.github.io/code-first-design/claude-design_company-intranet-home.html)")
 
