@@ -46,33 +46,18 @@ watch(
 	<header class="site-header">
 		<div
 			class="bar"
-			style="
-				padding-top: calc(var(--p-density, 0.9) * 0.78rem);
-				padding-bottom: calc(var(--p-density, 0.9) * 0.78rem);
-			"
 		>
-		<RouterLink
-			to="/"
-			class="wordmark"
-			aria-label="Jin — home"
+			<RouterLink
+				to="/"
+				class="wordmark"
+				aria-label="Jin — home"
 				@pointerenter="prefetchRoute('/')"
 				@focus="prefetchRoute('/')"
 			>
 				Jin<span class="dot" aria-hidden="true"></span>
 			</RouterLink>
 
-			<p
-				class="role"
-				style="
-					margin: 0 auto 0 0;
-					padding: 0;
-					max-width: none;
-					white-space: nowrap;
-					overflow: visible;
-				"
-			>
-				{{ site.role }}
-			</p>
+			<p class="role">{{ site.role }}</p>
 
 			<button
 				class="menu-toggle"
@@ -115,16 +100,17 @@ watch(
 	gap: 1.5rem;
 	max-width: 78rem;
 	margin: 0 auto;
-	padding: 1.05rem clamp(1.25rem, 4vw, 3.5rem) 0;
+	padding: 0.7rem clamp(1.25rem, 4vw, 3.5rem);
 }
 .wordmark {
+	min-height: 44px;
 	font-size: 1.5rem;
 	font-weight: 800;
-	letter-spacing: -0.03em;
+	letter-spacing: 0;
 	text-decoration: none;
 	color: var(--color-ink);
 	display: inline-flex;
-	align-items: baseline;
+	align-items: center;
 }
 .dot {
 	width: 7px;
@@ -134,12 +120,16 @@ watch(
 	margin-left: 3px;
 }
 .role {
-	max-width: 78rem;
-	margin: 0.25rem auto 0;
-	padding: 0 clamp(1.25rem, 4vw, 3.5rem) 0.95rem;
-	font-size: var(--text-xs);
+	min-width: 0;
+	max-width: 34rem;
+	margin: 0 auto 0 0;
+	padding: 0;
+	font-size: var(--text-sm);
 	letter-spacing: 0.02em;
 	color: var(--color-ink-faint);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .nav {
 	display: flex;
@@ -171,7 +161,8 @@ watch(
 	background: none;
 	border: 1px solid var(--color-hairline);
 	border-radius: var(--radius-md);
-	padding: 0.4rem 0.85rem;
+	min-height: 44px;
+	padding: 0.45rem 0.9rem;
 	color: var(--color-ink);
 	cursor: pointer;
 }

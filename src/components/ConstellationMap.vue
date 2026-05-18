@@ -527,7 +527,7 @@ onBeforeUnmount(() => {
 			>
 				<p class="trail-cue">
 					<span class="trail-cue-mark" aria-hidden="true"></span>
-					Tracing this pattern
+					Tracing this thread
 				</p>
 				<h3>{{ active.label }}</h3>
 				<p class="trail-blurb measure">{{ active.blurb }}</p>
@@ -750,9 +750,9 @@ onBeforeUnmount(() => {
 }
 .stack-mark {
 	flex: none;
-	font-size: var(--text-xs);
+	font-size: var(--text-sm);
 	font-weight: 600;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.02em;
 	color: var(--color-ink-faint);
 	transition:
 		color 0.25s var(--ease-out-quint),
@@ -792,10 +792,9 @@ onBeforeUnmount(() => {
 	align-items: center;
 	gap: 0.75rem;
 	margin: 0;
-	font-size: var(--text-xs);
+	font-size: var(--text-base);
 	font-weight: 600;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
+	letter-spacing: 0;
 	color: var(--color-moss-deep);
 }
 .trail-cue-mark {
@@ -822,10 +821,9 @@ onBeforeUnmount(() => {
 	gap: clamp(1.5rem, 4vw, 2rem);
 }
 .col-title {
-	font-size: var(--text-xs);
+	font-size: var(--text-sm);
 	font-weight: 700;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
+	letter-spacing: 0;
 	color: var(--color-moss-deep);
 	margin: 0 0 0.9rem;
 	padding-bottom: 0.5rem;
@@ -1203,10 +1201,9 @@ onBeforeUnmount(() => {
 }
 .thread-rail-eyebrow {
 	flex: none;
-	font-size: var(--text-xs);
+	font-size: var(--text-sm);
 	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
+	letter-spacing: 0;
 	color: var(--color-ink-faint);
 	border-right: 1px solid var(--color-hairline);
 	padding-right: clamp(0.6rem, 2vw, 1.4rem);
@@ -1248,7 +1245,8 @@ onBeforeUnmount(() => {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
-	padding: 0.35rem 0.15rem;
+	min-height: 44px;
+	padding: 0.45rem 0.15rem;
 	background: none;
 	border: 0;
 	cursor: pointer;
@@ -1295,8 +1293,12 @@ onBeforeUnmount(() => {
 }
 
 /* Receipts re-animate on each thread change so the cause is felt */
-.trail-head {
+/* trail-cue ("Tracing this thread") stays instant — only the title + blurb animate */
+.trail-head h3 {
 	animation: trail-head-in 0.56s var(--ease-out-expo) both;
+}
+.trail-blurb {
+	animation: trail-head-in 0.56s 0.04s var(--ease-out-expo) both;
 }
 .trail-grid {
 	animation: trail-in 0.64s 0.08s var(--ease-out-expo) both;

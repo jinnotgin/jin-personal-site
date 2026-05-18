@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 					<div class="hero-copy">
 						<p class="hero-intro">Hi, I’m Jin.</p>
 						<h1 class="hero-statement">
-							I track emerging signals, then build to understand them.
+							I track early signals, then build to understand them.
 						</h1>
 
 						<component
@@ -118,9 +118,13 @@ onBeforeUnmount(() => {
 		</section>
 
 		<section ref="method" class="method shell" aria-labelledby="method-title">
-			<h2 id="method-title" class="method-title">
-				I don’t trust ideas that never meet the work. I build until the tradeoffs show up.
-			</h2>
+			<header class="method-head">
+				<h2 id="method-title" class="method-title">Here’s how I do it.</h2>
+				<p class="method-lede">
+					I test ideas by putting them against real work, then watching where the tradeoffs
+					show up.
+				</p>
+			</header>
 
 			<ol class="moves">
 				<li class="move" tabindex="0">
@@ -159,7 +163,7 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="move-text">
 						<p class="move-line">
-							Real tools and prototypes with them, to learn what they actually change.
+							Real working tools and prototypes with them, to learn what they actually change.
 						</p>
 						<p class="move-more">
 							<span
@@ -257,7 +261,7 @@ onBeforeUnmount(() => {
 	font-family: var(--font-display);
 	font-size: clamp(1.45rem, 1.2rem + 1.1vw, 2rem);
 	font-weight: 700;
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 	line-height: 1.08;
 	color: var(--color-forest-ink);
 }
@@ -267,61 +271,51 @@ onBeforeUnmount(() => {
 	font-size: clamp(2.05rem, 1.3rem + 2.9vw, 3.65rem);
 	font-weight: 600;
 	line-height: 1.04;
-	letter-spacing: -0.026em;
+	letter-spacing: 0;
 	color: var(--color-forest-ink);
 	max-width: 24ch;
 	margin: 0;
 	text-wrap: balance;
 }
-.hero-turn {
-	display: block;
-	margin-top: 0.3em;
-	font-size: 0.58em;
-	line-height: 1.08;
-	color: var(--color-forest-soft);
-	font-weight: 500;
-}
 .hero-anchor {
 	font-weight: 800;
 	font-size: 1.2em;
-	letter-spacing: -0.04em;
+	letter-spacing: 0;
 	color: var(--color-signal);
 }
 
 .hero-building {
 	align-self: start;
-	display: inline-flex;
-	align-items: baseline;
-	gap: 0.6rem;
+	display: grid;
+	column-gap: 0.55rem;
+	row-gap: 0.45rem;
 	margin-top: 0.4rem;
-	padding-bottom: 3px;
+	padding-bottom: 0.55rem;
 	width: fit-content;
 	text-decoration: none;
-	border-bottom: 1px solid oklch(0.52 0.078 222 / 0.45);
+	border-bottom: 1px solid oklch(0.74 0.03 130 / 0.28);
 	order: 3;
-	transition: border-color 0.3s var(--ease-out-quint);
 }
 .hero-building-label {
-	font-size: var(--text-xs);
-	font-weight: 600;
-	letter-spacing: 0.16em;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	line-height: 1;
 	text-transform: uppercase;
 	color: var(--color-forest-soft);
 	white-space: nowrap;
 }
 .hero-building-name {
 	font-family: var(--font-display);
-	font-size: var(--text-lg);
+	font-size: var(--text-xl);
 	font-weight: 700;
-	letter-spacing: -0.02em;
+	letter-spacing: 0;
 	color: var(--color-river);
+	line-height: 1.12;
 }
 .hero-building-arrow {
 	color: var(--color-river);
 	transition: transform 0.32s var(--ease-out-expo);
-}
-.hero-building:hover {
-	border-color: var(--color-river);
 }
 .hero-building:hover .hero-building-arrow {
 	transform: translateX(4px);
@@ -332,7 +326,6 @@ onBeforeUnmount(() => {
 	box-shadow: 0 0 0 2px oklch(0.7 0.088 122 / 0.55);
 }
 .hero-building.is-static {
-	border-bottom-color: oklch(0.74 0.03 130 / 0.32);
 	pointer-events: none;
 }
 .hero-building.is-static .hero-building-name {
@@ -410,6 +403,11 @@ onBeforeUnmount(() => {
 		align-self: center;
 		order: initial;
 	}
+	.hero-building {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.7rem;
+	}
 }
 
 @keyframes hero-rise {
@@ -423,38 +421,31 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* ---- How I actually work: bold builder statement ---- */
+/* ---- How I actually work: compact setup, then the builder loop ---- */
 .method {
 	padding-top: clamp(4.5rem, 12vw, 9rem);
 	padding-bottom: clamp(4.5rem, 12vw, 9rem);
 }
-.method-eyebrow {
-	display: flex;
-	align-items: center;
-	gap: 0.7rem;
-	margin: 0 0 1.4rem;
-	font-size: var(--text-xs);
-	font-weight: 600;
-	letter-spacing: 0.2em;
-	text-transform: uppercase;
-	color: var(--color-moss-deep);
-}
-.method-eyebrow::before {
-	content: '';
-	width: 2rem;
-	height: 2px;
-	background: var(--color-moss);
+.method-head {
+	margin: 0 0 clamp(3rem, 8vw, 5.5rem);
+	max-width: 48rem;
 }
 .method-title {
 	font-family: var(--font-display);
-	font-size: clamp(2rem, 1.2rem + 3.4vw, 3.7rem);
+	font-size: var(--text-2xl);
 	font-weight: 700;
-	letter-spacing: -0.03em;
-	line-height: 1.04;
+	letter-spacing: 0;
+	line-height: 1.08;
 	color: var(--color-ink);
-	margin: 0 0 clamp(3rem, 8vw, 6rem);
-	max-width: 20ch;
+	margin: 0;
 	text-wrap: balance;
+}
+.method-lede {
+	margin: 0.9rem 0 0;
+	font-size: var(--text-lg);
+	line-height: 1.5;
+	color: var(--color-ink-soft);
+	max-width: 44ch;
 }
 
 /* --p: 0..1 scroll progress of one move. --lp: list progress (unused track). */
@@ -517,15 +508,15 @@ onBeforeUnmount(() => {
 }
 .move-num .ghost,
 .move-num .fill {
-	font-size: clamp(2.7rem, 1.6rem + 5vw, 6.4rem);
+	font-size: clamp(2.35rem, 1.7rem + 4vw, 4.2rem);
 	line-height: 0.82;
-	letter-spacing: -0.04em;
+	letter-spacing: 0;
 }
 .move-verb .ghost,
 .move-verb .fill {
-	font-size: clamp(2.3rem, 1.4rem + 4vw, 4.7rem);
+	font-size: clamp(2rem, 1.35rem + 4vw, 3.15rem);
 	line-height: 0.98;
-	letter-spacing: -0.035em;
+	letter-spacing: 0;
 }
 /* Ghost shows the not-yet-built right portion; fill shows the built left
    portion. They are clipped to complementary halves of the same box, so a
@@ -612,10 +603,10 @@ onBeforeUnmount(() => {
 	.move {
 		grid-template-columns:
 			clamp(4rem, 5vw, 6.5rem)
-			minmax(11rem, 0.8fr)
-			minmax(0, 1.15fr);
+			minmax(14rem, 0.95fr)
+			minmax(0, 1fr);
 		grid-template-areas: 'num head text';
-		column-gap: clamp(2rem, 5vw, 4.5rem);
+		column-gap: clamp(2.4rem, 5vw, 5rem);
 		align-items: start;
 	}
 	.move-text {
@@ -623,6 +614,14 @@ onBeforeUnmount(() => {
 	}
 	.move-line {
 		font-size: clamp(1.2rem, 0.9rem + 0.7vw, 1.5rem);
+	}
+	.move-num .ghost,
+	.move-num .fill {
+		font-size: clamp(2.7rem, 1.6rem + 5vw, 6.4rem);
+	}
+	.move-verb .ghost,
+	.move-verb .fill {
+		font-size: clamp(2.3rem, 1.4rem + 4vw, 4.7rem);
 	}
 }
 
@@ -673,6 +672,9 @@ onBeforeUnmount(() => {
 .latest-head h2 {
 	font-size: var(--text-2xl);
 }
+.latest-head .link {
+	white-space: nowrap;
+}
 .latest ul {
 	list-style: none;
 	margin: 0;
@@ -692,9 +694,8 @@ onBeforeUnmount(() => {
 	color: var(--color-moss-deep);
 }
 .latest-meta {
-	font-size: var(--text-xs);
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
+	font-size: var(--text-sm);
+	letter-spacing: 0.02em;
 	color: var(--color-ink-faint);
 }
 .latest-title {

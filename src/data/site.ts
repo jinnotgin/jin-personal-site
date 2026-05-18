@@ -1,7 +1,7 @@
 export const site = {
 	name: 'Jin',
 	formalName: 'Lin Jin',
-	role: 'Applied innovation · shaping digital and human systems',
+	role: 'Applied innovation, shaping digital and human systems',
 	/** Plain-credibility paragraph. Replace with Jin's own words. */
 	positioning:
 		'I work between emerging technology, organisational change, and the human systems underneath both. The work is turning ambiguous possibilities into practice teams can actually keep: applied AI, product and platform systems, and the facilitation that makes the change stick.',

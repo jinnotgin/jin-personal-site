@@ -21,23 +21,23 @@ colors:
   clay: "oklch(0.582 0.082 52)"
 typography:
   display:
-    fontFamily: "Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.7rem, 1.9rem + 4vw, 4.9rem)"
+    fontFamily: "Bricolage Grotesque, Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.85rem, 1.95rem + 4vw, 5rem)"
     fontWeight: 700
     lineHeight: 1.1
-    letterSpacing: "-0.018em"
+    letterSpacing: "0"
   headline:
-    fontFamily: "Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.2rem, 1.7rem + 2.5vw, 3.4rem)"
+    fontFamily: "Bricolage Grotesque, Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.28rem, 1.72rem + 2.4vw, 3.55rem)"
     fontWeight: 700
     lineHeight: 1.1
-    letterSpacing: "-0.018em"
+    letterSpacing: "0"
   title:
-    fontFamily: "Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.72rem, 1.45rem + 1.3vw, 2.4rem)"
+    fontFamily: "Bricolage Grotesque, Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.82rem, 1.5rem + 1.35vw, 2.45rem)"
     fontWeight: 700
     lineHeight: 1.1
-    letterSpacing: "-0.018em"
+    letterSpacing: "0"
   body:
     fontFamily: "Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.02rem"
@@ -45,7 +45,7 @@ typography:
     lineHeight: 1.62
   label:
     fontFamily: "Hanken Grotesk, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "0.78rem"
+    fontSize: "0.8rem"
     fontWeight: 600
     lineHeight: 1.4
     letterSpacing: "0.16em"
@@ -138,18 +138,18 @@ The palette is committed muted green on warm paper, with river blue for linkable
 
 ## 3. Typography
 
-**Display Font:** Hanken Grotesk (with ui-sans-serif, system-ui, sans-serif fallback)  
+**Display Font:** Bricolage Grotesque (with Hanken Grotesk, ui-sans-serif, system-ui, sans-serif fallback)  
 **Body Font:** Hanken Grotesk (with ui-sans-serif, system-ui, sans-serif fallback)  
 **Label/Mono Font:** Hanken Grotesk for labels; ui-monospace only for actual code.
 
-**Character:** The typography is practical, humane, and precise. Hanken Grotesk carries both interface and long-form reading so the site feels authored but not magazine-styled; Source Serif 4 appears only for reflective human notes.
+**Character:** The typography is practical, humane, and precise. Bricolage Grotesque carries major display moments with a workshop-made warmth, while Hanken Grotesk carries interface and long-form reading so the site feels authored but not magazine-styled; Source Serif 4 appears only for reflective human notes.
 
 ### Hierarchy
-- **Display** (700, `clamp(2.7rem, 1.9rem + 4vw, 4.9rem)`, 1.1): Large page headlines and rare first-viewport statements.
-- **Headline** (700, `clamp(2.2rem, 1.7rem + 2.5vw, 3.4rem)`, 1.1): Major section ideas such as the map introduction.
-- **Title** (700, `clamp(1.72rem, 1.45rem + 1.3vw, 2.4rem)`, 1.1): Trail heads, group titles, and article section heads.
+- **Display** (700, `clamp(2.85rem, 1.95rem + 4vw, 5rem)`, 1.1): Large page headlines and rare first-viewport statements.
+- **Headline** (700, `clamp(2.28rem, 1.72rem + 2.4vw, 3.55rem)`, 1.1): Major section ideas such as the map introduction.
+- **Title** (700, `clamp(1.82rem, 1.5rem + 1.35vw, 2.45rem)`, 1.1): Trail heads, group titles, and article section heads.
 - **Body** (400, `1.02rem`, 1.62): Default interface copy and readable content. Long-form prose can rise slightly and should stay around 65-75ch.
-- **Label** (600, `0.78rem`, `0.16em`, uppercase): Eyebrows and metadata. Use sparingly; labels are not a substitute for structure.
+- **Label** (600, `0.8rem`, `0.16em`, uppercase): Metadata only. Use sparingly; labels are not a substitute for structure.
 
 ### Named Rules
 

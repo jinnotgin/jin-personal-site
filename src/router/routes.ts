@@ -5,7 +5,7 @@ export const routes: RouteRecordRaw[] = [
 		path: '/',
 		name: 'home',
 		component: () => import('@/views/HomeView.vue'),
-		meta: { title: 'Jin - AI tools, public platforms, and small systems' },
+		meta: { title: 'Jin - Applied innovation, shaping digital and human systems' },
 	},
 	{
 		path: '/projects',
