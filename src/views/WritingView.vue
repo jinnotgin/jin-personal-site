@@ -145,7 +145,7 @@ watch([safePage, currentPage], ([safe, current]) => {
   height: clamp(8rem, 18vw, 14rem);
   margin-bottom: 2.5rem;
   border-radius: var(--radius-lg);
-  background-image: url('/img/writing-vignette.webp'),
+  background-image: url('/img/writing-vignette-v2.webp'),
     linear-gradient(
       170deg,
       var(--color-sage) 0%,
