@@ -1295,10 +1295,13 @@ onBeforeUnmount(() => {
 }
 
 /* Receipts re-animate on each thread change so the cause is felt */
-/* trail-cue stays instant — only title + blurb animate as one block */
+/* trail-cue stays instant — title, blurb, and grid animate as one block */
 .trail-head h3,
 .trail-blurb {
 	animation: trail-head-in 0.68s 0.06s var(--ease-out-expo) both;
+}
+.trail-grid {
+	animation: trail-head-in 0.72s 0.12s var(--ease-out-expo) both;
 }
 @keyframes trail-head-in {
 	from {
@@ -1313,7 +1316,8 @@ onBeforeUnmount(() => {
 
 @media (prefers-reduced-motion: reduce) {
 	.trail-head h3,
-	.trail-blurb {
+	.trail-blurb,
+	.trail-grid {
 		animation: none;
 		opacity: 1;
 		transform: none;
