@@ -25,7 +25,12 @@ export function renderMarkdown(markdown: string): string {
   renderer.image = ({ href, title, text }: Tokens.Image) => {
     const img = `<img src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" />`
     if (title) {
-      return `<figure>${img}<figcaption>${escapeHtml(title)}</figcaption></figure>`
+      const caption = marked.parseInline(title, {
+        async: false,
+        gfm: true,
+        renderer,
+      }) as string
+      return `<figure>${img}<figcaption>${caption}</figcaption></figure>`
     }
     return img
   }

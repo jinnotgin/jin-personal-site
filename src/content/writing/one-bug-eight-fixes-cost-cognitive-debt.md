@@ -1,7 +1,7 @@
 ---
 slug: one-bug-eight-fixes-cost-cognitive-debt
 title: One bug, eight fixes, and the cost of cognitive debt
-date: 2026-05-17
+date: 2026-05-15
 excerpt: AI can accelerate implementation and repairs, but it does not replace the deliberate thinking needed to catch requirements that were never stress-tested.
 tags: [ai, llm, engineering, promptpal, cognitive-debt, applied-ai]
 status: published
