@@ -438,7 +438,7 @@ onBeforeUnmount(() => {
 	color: color-mix(
 		in oklch,
 		var(--color-river),
-		var(--color-forest-soft) calc(var(--kw-active) * 75%)
+		var(--color-forest-soft) calc(var(--kw-active) * 85%)
 	);
 	opacity: calc(1 - var(--kw-active) * 0.28);
 	line-height: 1.12;
@@ -462,7 +462,7 @@ onBeforeUnmount(() => {
 	color: color-mix(
 		in oklch,
 		var(--color-signal),
-		var(--color-forest-soft) calc(var(--kw-active) * 75%)
+		var(--color-forest-soft) calc(var(--kw-active) * 85%)
 	);
 }
 
