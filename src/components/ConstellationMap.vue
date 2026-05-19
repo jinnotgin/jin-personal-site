@@ -64,6 +64,7 @@ let resizeObserver: ResizeObserver | undefined
 let switcherObserver: IntersectionObserver | undefined
 let endObserver: IntersectionObserver | undefined
 let reduceMotion = false
+let scrollFrame = 0
 
 function measureRailTop() {
 	const header = document.querySelector<HTMLElement>('.site-header')
@@ -78,6 +79,29 @@ function measureRailHeight() {
 function measureRailOverflow() {
 	const list = railListEl.value
 	railOverflowing.value = !!list && list.scrollWidth - list.clientWidth > 1
+}
+
+function updateRailVisibilityFromLayout() {
+	const switcherHeight = switcherEl.value?.getBoundingClientRect().height ?? 0
+	const revealLine = Math.round(railTop.value - (switcherHeight - RAIL_REVEAL_REMAINING))
+	const mapStartTop = mapStartEl.value?.getBoundingClientRect().top
+	if (mapStartTop !== undefined) {
+		pastSwitcher.value = mapStartTop < revealLine
+	}
+
+	const hideLine = railTop.value + RAIL_HIDE_OFFSET
+	const mapEndTop = mapEndEl.value?.getBoundingClientRect().top
+	if (mapEndTop !== undefined) {
+		pastTrail.value = mapEndTop < hideLine
+	}
+}
+
+function onScroll() {
+	if (scrollFrame) return
+	scrollFrame = window.requestAnimationFrame(() => {
+		scrollFrame = 0
+		updateRailVisibilityFromLayout()
+	})
 }
 
 // Rebuilt whenever the header height changes: both observers' top inset must
@@ -117,6 +141,8 @@ function buildObservers() {
 		{ threshold: 0, rootMargin: `-${hideLine}px 0px 0px 0px` },
 	)
 	if (mapEndEl.value) endObserver.observe(mapEndEl.value)
+
+	updateRailVisibilityFromLayout()
 }
 
 // Deliberate choice (click / keyboard focus): locks the selection so hover
@@ -387,6 +413,7 @@ onMounted(() => {
 	measureRailOverflow()
 	buildObservers()
 	window.addEventListener('resize', onResize)
+	window.addEventListener('scroll', onScroll, { passive: true })
 })
 
 function onResize() {
@@ -394,14 +421,17 @@ function onResize() {
 	measureRailHeight()
 	measureRailOverflow()
 	buildObservers()
+	updateRailVisibilityFromLayout()
 }
 
 onBeforeUnmount(() => {
 	window.cancelAnimationFrame(frame)
+	window.cancelAnimationFrame(scrollFrame)
 	resizeObserver?.disconnect()
 	switcherObserver?.disconnect()
 	endObserver?.disconnect()
 	window.removeEventListener('resize', onResize)
+	window.removeEventListener('scroll', onScroll)
 })
 </script>
 
