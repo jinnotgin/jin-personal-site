@@ -23,7 +23,7 @@ export default defineConfig({
     vueDevTools(),
   ],
   server: {
-    port: 5174,
+    port: 5465,
     strictPort: true,
   },
   resolve: {
