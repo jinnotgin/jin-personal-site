@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
+import posthog from 'posthog-js'
 import { getPost, listPosts, formatDate } from '@/lib/markdown'
 import { postSeo, writingIndexSeo } from '@/lib/seo'
 
@@ -10,235 +11,254 @@ const all = listPosts()
 const post = computed(() => getPost(String(route.params.slug)))
 useHead(computed(() => (post.value ? postSeo(post.value) : writingIndexSeo())))
 
-const idx = computed(() =>
-  all.findIndex((p) => p.slug === route.params.slug),
-)
+const idx = computed(() => all.findIndex((p) => p.slug === route.params.slug))
 const prev = computed(() => (idx.value > 0 ? all[idx.value - 1] : null))
 const next = computed(() =>
-  idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
+	idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
 )
 
+onMounted(() => {
+	if (post.value) {
+		posthog.capture('post_viewed', {
+			post_slug: post.value.slug,
+			post_title: post.value.title,
+			post_category: post.value.category,
+			reading_minutes: post.value.readingMinutes,
+		})
+	}
+})
+
+function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targetTitle: string) {
+	posthog.capture('post_pager_navigated', {
+		direction,
+		from_slug: String(route.params.slug),
+		to_slug: targetSlug,
+		to_title: targetTitle,
+	})
+}
 </script>
 
 <template>
-  <article class="shell shell--reading post" v-if="post">
-    <RouterLink to="/writing" class="back">← Writing</RouterLink>
+	<article class="shell shell--reading post" v-if="post">
+		<RouterLink to="/writing" class="back">← Writing</RouterLink>
 
-    <header class="head">
-      <p class="meta">
-        <time :datetime="post.date">{{ formatDate(post.date) }}</time>
-        <span aria-hidden="true">·</span>
-        <span class="cat">{{ post.category }}</span>
-        <span aria-hidden="true">·</span>
-        <span>{{ post.readingMinutes }} min read</span>
-      </p>
-      <h1>{{ post.title }}</h1>
-      <p class="excerpt note-serif">{{ post.excerpt }}</p>
-    </header>
+		<header class="head">
+			<p class="meta">
+				<time :datetime="post.date">{{ formatDate(post.date) }}</time>
+				<span aria-hidden="true">·</span>
+				<span class="cat">{{ post.category }}</span>
+				<span aria-hidden="true">·</span>
+				<span>{{ post.readingMinutes }} min read</span>
+			</p>
+			<h1>{{ post.title }}</h1>
+			<p class="excerpt note-serif">{{ post.excerpt }}</p>
+		</header>
 
-    <!-- Rendered from local Markdown via marked -->
-    <div class="prose" v-html="post.html"></div>
+		<!-- Rendered from local Markdown via marked -->
+		<div class="prose" v-html="post.html"></div>
 
-    <footer class="post-foot">
-      <ul class="tags">
-        <li v-for="t in post.tags" :key="t">#{{ t }}</li>
-      </ul>
+		<footer class="post-foot">
+			<ul class="tags">
+				<li v-for="t in post.tags" :key="t">#{{ t }}</li>
+			</ul>
 
-      <nav class="pager" aria-label="More writing">
-        <RouterLink
-          v-if="prev"
-          :to="`/writing/${prev.slug}`"
-          class="pager-link"
-        >
-          <span class="pager-dir">Newer</span>
-          <span class="pager-title">{{ prev.title }}</span>
-        </RouterLink>
-        <RouterLink
-          v-if="next"
-          :to="`/writing/${next.slug}`"
-          class="pager-link next"
-        >
-          <span class="pager-dir">Older</span>
-          <span class="pager-title">{{ next.title }}</span>
-        </RouterLink>
-      </nav>
-    </footer>
-  </article>
+			<nav class="pager" aria-label="More writing">
+				<RouterLink
+					v-if="prev"
+					:to="`/writing/${prev.slug}`"
+					class="pager-link"
+					@click="trackPagerClick('newer', prev.slug, prev.title)"
+				>
+					<span class="pager-dir">Newer</span>
+					<span class="pager-title">{{ prev.title }}</span>
+				</RouterLink>
+				<RouterLink
+					v-if="next"
+					:to="`/writing/${next.slug}`"
+					class="pager-link next"
+					@click="trackPagerClick('older', next.slug, next.title)"
+				>
+					<span class="pager-dir">Older</span>
+					<span class="pager-title">{{ next.title }}</span>
+				</RouterLink>
+			</nav>
+		</footer>
+	</article>
 
-  <div class="shell shell--reading" v-else>
-    <h1>No such note</h1>
-    <p class="lede">
-      That piece is not here.
-      <RouterLink to="/writing" class="link">All writing</RouterLink>.
-    </p>
-  </div>
+	<div class="shell shell--reading" v-else>
+		<h1>No such note</h1>
+		<p class="lede">
+			That piece is not here.
+			<RouterLink to="/writing" class="link">All writing</RouterLink>.
+		</p>
+	</div>
 </template>
 
 <style scoped>
 .back {
-  display: inline-block;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-ink-soft);
-  text-decoration: none;
-  margin-bottom: 2.5rem;
+	display: inline-block;
+	font-size: var(--text-sm);
+	font-weight: 600;
+	color: var(--color-ink-soft);
+	text-decoration: none;
+	margin-bottom: 2.5rem;
 }
 .back:hover {
-  color: var(--color-moss-deep);
+	color: var(--color-moss-deep);
 }
 .head {
-  margin-bottom: 2.75rem;
+	margin-bottom: 2.75rem;
 }
 .meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  font-size: var(--text-xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
-  margin: 0 0 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	font-size: var(--text-xs);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-ink-faint);
+	margin: 0 0 1rem;
 }
 .meta .cat {
-  color: var(--color-moss-deep);
-  font-weight: 700;
+	color: var(--color-moss-deep);
+	font-weight: 700;
 }
 .head h1 {
-  font-size: var(--text-3xl);
-  margin: 0;
+	font-size: var(--text-3xl);
+	margin: 0;
 }
 .excerpt {
-  margin: 1.2rem 0 0;
-  font-size: var(--text-xl);
-  line-height: 1.45;
+	margin: 1.2rem 0 0;
+	font-size: var(--text-xl);
+	line-height: 1.45;
 }
 .post-foot {
-  margin-top: 4rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-hairline);
+	margin-top: 4rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--color-hairline);
 }
 .tags {
-  list-style: none;
-  margin: 0 0 3rem;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  font-size: var(--text-sm);
-  color: var(--color-ink-faint);
+	list-style: none;
+	margin: 0 0 3rem;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	font-size: var(--text-sm);
+	color: var(--color-ink-faint);
 }
 .pager {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
 }
 .pager-link {
-  display: grid;
-  gap: 0.3rem;
-  text-decoration: none;
-  color: var(--color-ink);
+	display: grid;
+	gap: 0.3rem;
+	text-decoration: none;
+	color: var(--color-ink);
 }
 .pager-link.next {
-  text-align: right;
+	text-align: right;
 }
 .pager-dir {
-  font-size: var(--text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
+	font-size: var(--text-xs);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--color-ink-faint);
 }
 .pager-title {
-  font-weight: 700;
-  color: var(--color-river-deep);
+	font-weight: 700;
+	color: var(--color-river-deep);
 }
 .pager-link:hover .pager-title {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 @media (max-width: 620px) {
-  .pager {
-    grid-template-columns: 1fr;
-  }
-  .pager-link.next {
-    text-align: left;
-  }
+	.pager {
+		grid-template-columns: 1fr;
+	}
+	.pager-link.next {
+		text-align: left;
+	}
 }
 
 .prose :deep(img),
 .prose :deep(figure) {
-  display: block;
-  width: min(50rem, calc(100vw - 5rem));
-  height: auto;
-  margin: 2rem 50%;
-  transform: translateX(-50%);
+	display: block;
+	width: min(50rem, calc(100vw - 5rem));
+	height: auto;
+	margin: 2rem 50%;
+	transform: translateX(-50%);
 }
 .prose :deep(img) {
-  border: 1px solid var(--color-hairline);
-  background: var(--color-paper-raised);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+	border: 1px solid var(--color-hairline);
+	background: var(--color-paper-raised);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
 }
 .prose :deep(figure) {
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
+	margin-top: 2.5rem;
+	margin-bottom: 2.5rem;
 }
 .prose :deep(figure img) {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin: 0;
-  transform: none;
-  border: 1px solid var(--color-hairline);
-  background: var(--color-paper-raised);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 0;
+	transform: none;
+	border: 1px solid var(--color-hairline);
+	background: var(--color-paper-raised);
+	border-radius: var(--radius-lg);
+	overflow: hidden;
 }
 .prose :deep(figcaption) {
-  margin-top: 0.65rem;
-  font-size: var(--text-sm);
-  color: var(--color-ink-faint);
-  text-align: center;
-  font-style: italic;
-  line-height: 1.5;
+	margin-top: 0.65rem;
+	font-size: var(--text-sm);
+	color: var(--color-ink-faint);
+	text-align: center;
+	font-style: italic;
+	line-height: 1.5;
 }
 
 @media (max-width: 760px) {
-  .prose :deep(img),
-  .prose :deep(figure) {
-    width: 100%;
-    margin: 1.5rem 0;
-    transform: none;
-  }
+	.prose :deep(img),
+	.prose :deep(figure) {
+		width: 100%;
+		margin: 1.5rem 0;
+		transform: none;
+	}
 }
 
 .prose :deep(table) {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-sm);
-  margin: 2rem 0;
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--text-sm);
+	margin: 2rem 0;
+	display: block;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 }
 .prose :deep(thead) {
-  border-bottom: 2px solid var(--color-hairline);
+	border-bottom: 2px solid var(--color-hairline);
 }
 .prose :deep(th) {
-  text-align: left;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
-  padding: 0 1.25rem 0.65rem 0;
-  white-space: nowrap;
+	text-align: left;
+	font-size: var(--text-xs);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-ink-faint);
+	padding: 0 1.25rem 0.65rem 0;
+	white-space: nowrap;
 }
 .prose :deep(td) {
-  padding: 0.7rem 1.25rem 0.7rem 0;
-  vertical-align: top;
-  border-bottom: 1px solid var(--color-hairline);
-  line-height: 1.5;
+	padding: 0.7rem 1.25rem 0.7rem 0;
+	vertical-align: top;
+	border-bottom: 1px solid var(--color-hairline);
+	line-height: 1.5;
 }
 .prose :deep(tr:last-child td) {
-  border-bottom: none;
+	border-bottom: none;
 }
 </style>

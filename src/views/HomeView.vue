@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useHead } from '@unhead/vue'
+import posthog from 'posthog-js'
 import ConstellationMap from '@/components/ConstellationMap.vue'
 import { listPosts, formatDate } from '@/lib/markdown'
 import { listProjects, byMostRecentProject } from '@/lib/projects'
@@ -32,6 +33,16 @@ const building = (() => {
 			: listProjects().find((p) => p.slug === BUILDING)
 	return project ? { name: project.name, to: `/projects/${project.slug}` } : null
 })()
+
+function trackHeroFocusClick() {
+	if (building?.to) {
+		posthog.capture('hero_focus_clicked', { focus_name: building.name, focus_to: building.to })
+	}
+}
+
+function trackHomePostClick(slug: string, title: string) {
+	posthog.capture('home_post_clicked', { post_slug: slug, post_title: title })
+}
 
 const hero = ref<HTMLElement | null>(null)
 let heroRaf = 0
@@ -165,8 +176,8 @@ onBeforeUnmount(() => {
 					<div class="hero-copy">
 						<p class="hero-intro">Hi, I’m Jin.</p>
 						<h1 class="hero-statement">
-							I <span class="kw">track</span> early signals, then
-							<span class="kw">build</span> to <span class="kw">understand</span> them.
+							I <span class="kw">track</span> early signals, then <span class="kw">build</span> to
+							<span class="kw">understand</span> them.
 						</h1>
 
 						<component
@@ -175,6 +186,7 @@ onBeforeUnmount(() => {
 							:to="building.to"
 							class="hero-building"
 							:class="{ 'is-static': !building.to }"
+							@click="trackHeroFocusClick()"
 						>
 							<span class="hero-building-label">Current focus</span>
 							<span class="hero-building-name">{{ building.name }}</span>
@@ -201,8 +213,7 @@ onBeforeUnmount(() => {
 			<header class="method-head">
 				<h2 id="method-title" class="method-title">Here’s how I do it.</h2>
 				<p class="method-lede">
-					I test ideas by putting them against real work, then watching where the tradeoffs
-					show up.
+					I test ideas by putting them against real work, then watching where the tradeoffs show up.
 				</p>
 			</header>
 
@@ -223,8 +234,8 @@ onBeforeUnmount(() => {
 						<p class="move-line">Early signs while they are still unclear and messy.</p>
 						<p class="move-more">
 							<span
-								>I track where new signals and technologies change what teams can make, with
-								AI as one current example, and what makes them worth adopting.</span
+								>I track where new signals and technologies change what teams can make, with AI as
+								one current example, and what makes them worth adopting.</span
 							>
 						</p>
 					</div>
@@ -270,9 +281,7 @@ onBeforeUnmount(() => {
 							Their second and third-order effects on teams and organisations.
 						</p>
 						<p class="move-more">
-							<span
-								>Which trade-offs, unintended consequences, and strategic bets matter.</span
-							>
+							<span>Which trade-offs, unintended consequences, and strategic bets matter.</span>
 						</p>
 					</div>
 				</li>
@@ -297,7 +306,11 @@ onBeforeUnmount(() => {
 				</div>
 				<ul>
 					<li v-for="p in latest" :key="p.slug">
-						<RouterLink :to="`/writing/${p.slug}`" class="latest-link">
+						<RouterLink
+							:to="`/writing/${p.slug}`"
+							class="latest-link"
+							@click="trackHomePostClick(p.slug, p.title)"
+						>
 							<span class="latest-meta">{{ formatDate(p.date) }} · {{ p.category }}</span>
 							<span class="latest-title">{{ p.title }}</span>
 							<span class="latest-excerpt">{{ p.excerpt }}</span>

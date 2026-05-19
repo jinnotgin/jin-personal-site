@@ -44,3 +44,4 @@ playwright-report/
 .vscode/
 .impeccable/
 .claude/launch.json
+.env

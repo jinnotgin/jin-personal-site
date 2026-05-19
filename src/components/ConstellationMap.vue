@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import posthog from 'posthog-js'
 import { threads } from '@/data/threads'
 import { byMostRecentProject, projectsByThread } from '@/lib/projects'
 import { postsByThread, slugifyCategory } from '@/lib/markdown'
@@ -151,6 +152,8 @@ function commit(id: ThreadId) {
 	selected.value = id
 	committed.value = id
 	window.sessionStorage.setItem(SELECTED_THREAD_STORAGE_KEY, id)
+	const thread = threads.find((t) => t.id === id)
+	posthog.capture('thread_selected', { thread_id: id, thread_label: thread?.label })
 }
 
 // Switching from the rail changes content far above the fold, so bring the
@@ -455,12 +458,7 @@ onBeforeUnmount(() => {
 				</svg>
 
 				<div class="centre" :style="{ left: CX + '%', top: CY + '%' }" aria-hidden="true">
-					<img
-						class="centre-avatar"
-						src="/img/jin-portrait-square-800.jpg"
-						alt=""
-						loading="lazy"
-					/>
+					<img class="centre-avatar" src="/img/jin-portrait-square-800.jpg" alt="" loading="lazy" />
 				</div>
 
 				<div class="node-layer">
