@@ -36,7 +36,7 @@ But, even with progress visible, the processing time was still taking far longer
 
 Then something stranger happened. I tested with a small file, just 40 KB, expecting it to breeze through. It expanded to nearly 9 MB after conversion. I stared at the output for a moment before it clicked: Excel can sometimes apply invisible formatting to far more cells and columns than actually contain data. The spreadsheet looked small, but behind the scenes, it had formatting applied across thousands of empty columns. The converter was faithfully preserving all of it.
 
-![JSON output of an Excel file bloated by invisible formatting across empty columns](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/excel-empty-columns-expanded-output.png “How PromptPal sees an Excel file with invisible formatting applied across thousands of empty columns”)
+![JSON output of an Excel file bloated by invisible formatting across empty columns](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/excel-empty-columns-expanded-output.png "How PromptPal sees an Excel file with invisible formatting applied across thousands of empty columns")
 
 The fix was also straightforward here: strip out the empty content to cut the output size. But it also made me uneasy. How many users had uploaded files like this over the past five months without realising the converted version was bloated with nothing?
 
