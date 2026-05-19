@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes, scrollBehavior } from './routes'
+import { installScrollPositionStore, routes, scrollBehavior } from './routes'
 import { installNavigationProgress } from '@/lib/navigation'
 
 const router = createRouter({
@@ -9,6 +9,7 @@ const router = createRouter({
 })
 
 installNavigationProgress(router)
+installScrollPositionStore(router)
 
 router.afterEach((to) => {
   document.title = (to.meta.title as string) ?? 'Jin'

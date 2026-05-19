@@ -1,4 +1,33 @@
-import type { RouteRecordRaw, RouterScrollBehavior } from 'vue-router'
+import type { RouteRecordRaw, Router, RouterScrollBehavior } from 'vue-router'
+
+const PAGE_LEAVE_TRANSITION_MS = 180
+const scrollPositions = new Map<string, { left: number; top: number }>()
+const installedScrollRouters = new WeakSet<Router>()
+
+async function waitForRouteView() {
+	if (typeof window === 'undefined') return
+
+	await new Promise((resolve) => window.setTimeout(resolve, PAGE_LEAVE_TRANSITION_MS))
+	await new Promise((resolve) => window.requestAnimationFrame(resolve))
+	await new Promise((resolve) => window.requestAnimationFrame(resolve))
+}
+
+export function installScrollPositionStore(router: Router) {
+	if (typeof window === 'undefined') return
+	if (installedScrollRouters.has(router)) return
+	installedScrollRouters.add(router)
+
+	if ('scrollRestoration' in window.history) {
+		window.history.scrollRestoration = 'manual'
+	}
+
+	router.beforeEach((_to, from) => {
+		scrollPositions.set(from.fullPath, {
+			left: window.scrollX,
+			top: window.scrollY,
+		})
+	})
+}
 
 export const routes: RouteRecordRaw[] = [
 	{
@@ -74,9 +103,14 @@ export const routes: RouteRecordRaw[] = [
 ]
 
 export const scrollBehavior: RouterScrollBehavior = async (to, _from, savedPosition) => {
-	if (savedPosition) return savedPosition
-	if (to.hash) return { el: to.hash, behavior: 'smooth' }
+	await waitForRouteView()
 
-	await new Promise((resolve) => requestAnimationFrame(resolve))
-	return { top: 0, left: 0, behavior: 'instant' }
+	if (savedPosition) {
+		const rememberedPosition = scrollPositions.get(to.fullPath)
+		return rememberedPosition ?? savedPosition
+	}
+
+	if (to.hash) return { el: to.hash, behavior: 'auto' }
+
+	return { top: 0, left: 0, behavior: 'auto' }
 }
