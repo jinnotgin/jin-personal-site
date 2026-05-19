@@ -12,6 +12,10 @@ async function waitForRouteView() {
 	await new Promise((resolve) => window.requestAnimationFrame(resolve))
 }
 
+function isWritingIndexQueryNavigation(to: { name?: unknown; fullPath: string }, from: { name?: unknown; fullPath: string }) {
+	return to.name === 'writing' && from.name === 'writing' && to.fullPath !== from.fullPath
+}
+
 export function installScrollPositionStore(router: Router) {
 	if (typeof window === 'undefined') return
 	if (installedScrollRouters.has(router)) return
@@ -102,7 +106,11 @@ export const routes: RouteRecordRaw[] = [
 	},
 ]
 
-export const scrollBehavior: RouterScrollBehavior = async (to, _from, savedPosition) => {
+export const scrollBehavior: RouterScrollBehavior = async (to, from, savedPosition) => {
+	if (isWritingIndexQueryNavigation(to, from)) {
+		return { el: '.filters', top: 112, behavior: 'auto' }
+	}
+
 	await waitForRouteView()
 
 	if (savedPosition) {

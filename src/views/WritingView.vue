@@ -49,6 +49,8 @@ const visible = computed(() => {
 	return shown.value.slice(start, start + PAGE_SIZE)
 })
 
+const listTransitionKey = computed(() => `${filter.value}:${safePage.value}`)
+
 const hasPrev = computed(() => safePage.value > 1)
 const hasNext = computed(() => safePage.value < totalPages.value)
 
@@ -100,20 +102,22 @@ watch([safePage, currentPage], ([safe, current]) => {
 			</button>
 		</div>
 
-		<ul class="posts">
-			<li v-for="p in visible" :key="p.slug">
-				<RouterLink :to="`/writing/${p.slug}`" class="post">
-					<span class="post-meta">
-						<time :datetime="p.date">{{ formatDate(p.date) }}</time>
-						<span class="dot">·</span>
-						<span class="cat">{{ p.category }}</span>
-					</span>
-					<h2 class="post-title">{{ p.title }}</h2>
-					<p class="post-excerpt measure">{{ p.excerpt }}</p>
-					<span class="post-tags">{{ p.tags.join(' · ') }}</span>
-				</RouterLink>
-			</li>
-		</ul>
+		<Transition name="writing-list" mode="out-in">
+			<ul :key="listTransitionKey" class="posts">
+				<li v-for="p in visible" :key="p.slug">
+					<RouterLink :to="`/writing/${p.slug}`" class="post">
+						<span class="post-meta">
+							<time :datetime="p.date">{{ formatDate(p.date) }}</time>
+							<span class="dot">·</span>
+							<span class="cat">{{ p.category }}</span>
+						</span>
+						<h2 class="post-title">{{ p.title }}</h2>
+						<p class="post-excerpt measure">{{ p.excerpt }}</p>
+						<span class="post-tags">{{ p.tags.join(' · ') }}</span>
+					</RouterLink>
+				</li>
+			</ul>
+		</Transition>
 
 		<nav v-if="totalPages > 1" class="pagination" aria-label="Writing pages">
 			<RouterLink
@@ -196,6 +200,21 @@ watch([safePage, currentPage], ([safe, current]) => {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+}
+.writing-list-enter-active {
+	transition:
+		opacity 0.28s var(--ease-out-quint),
+		filter 0.28s var(--ease-out-quint);
+}
+.writing-list-leave-active {
+	transition: opacity 0.16s ease;
+}
+.writing-list-enter-from {
+	opacity: 0;
+	filter: blur(3px);
+}
+.writing-list-leave-to {
+	opacity: 0;
 }
 .posts li {
 	border-top: 1px solid var(--color-hairline);
@@ -297,5 +316,16 @@ watch([safePage, currentPage], ([safe, current]) => {
 .page-sep {
 	margin: 0 0.15rem;
 	opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.writing-list-enter-active,
+	.writing-list-leave-active {
+		transition: none;
+	}
+
+	.writing-list-enter-from {
+		filter: none;
+	}
 }
 </style>
