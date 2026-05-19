@@ -8,8 +8,6 @@ status: published
 category: AI in practice
 ---
 
-> *AI can accelerate implementation and repairs, but it does not replace the deliberate thinking needed to catch requirements that were never stress-tested.*
-
 It all started from a Teams message I received from a colleague.
 
 ![PromptPal showing two red error messages after a failed Excel upload](/img/writing/one-bug-eight-fixes-cost-cognitive-debt/promptpal-upload-error.png "Uh oh. Red means bad.")
