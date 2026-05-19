@@ -13,13 +13,18 @@ export const createApp = ViteSSG(
 		app.use(createPinia())
 
 		if (isClient) {
-			posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN || '', {
-				api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-				defaults: '2026-01-30',
-			})
+			const isLocalhost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
+			const posthogToken = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN
 
-			app.config.errorHandler = (err) => {
-				posthog.captureException(err)
+			if (!isLocalhost && posthogToken) {
+				posthog.init(posthogToken, {
+					api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+					defaults: '2026-01-30',
+				})
+
+				app.config.errorHandler = (err) => {
+					posthog.captureException(err)
+				}
 			}
 
 			router.afterEach((to) => {
