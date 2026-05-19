@@ -60,10 +60,11 @@ function applyHero() {
 			nearest = i
 		}
 	})
+	const lit = nearest >= 0 ? Math.max(0, Math.min(1, 1 - nearestDist / KW_RADIUS)) : 0
 	kwEls.forEach((kw, i) => {
-		const n = i === nearest ? Math.max(0, Math.min(1, 1 - nearestDist / KW_RADIUS)) : 0
-		kw.style.setProperty('--n', n.toFixed(3))
+		kw.style.setProperty('--n', (i === nearest ? lit : 0).toFixed(3))
 	})
+	el.style.setProperty('--kw-active', lit.toFixed(3))
 }
 
 function onHeroMove(e: PointerEvent) {
@@ -85,6 +86,7 @@ function onHeroLeave() {
 	el.style.setProperty('--hx', '0')
 	el.style.setProperty('--hy', '0')
 	el.style.setProperty('--ha', '0')
+	el.style.setProperty('--kw-active', '0')
 	for (const kw of kwEls) kw.style.setProperty('--n', '0')
 }
 
@@ -356,13 +358,12 @@ onBeforeUnmount(() => {
 }
 .hero-statement .kw {
 	--n: 0;
+	/* A lighter, lower-chroma signal so the hovered word reads as
+	   "illuminated" rather than sharing the focus line's solid accent. */
+	--kw-lit: oklch(0.79 0.115 126);
 	position: relative;
 	white-space: nowrap;
-	color: color-mix(
-		in oklch,
-		var(--color-forest-ink),
-		var(--color-signal) calc(var(--n) * 100%)
-	);
+	color: color-mix(in oklch, var(--color-forest-ink), var(--kw-lit) calc(var(--n) * 100%));
 	transition: --n 0.4s var(--ease-out-quint);
 }
 .hero-statement .kw::after {
@@ -373,7 +374,7 @@ onBeforeUnmount(() => {
 	bottom: -0.06em;
 	height: 2px;
 	border-radius: 2px;
-	background: var(--color-signal);
+	background: var(--kw-lit);
 	transform: scaleX(var(--n));
 	transform-origin: left;
 	opacity: calc(0.2 + var(--n) * 0.8);
@@ -421,7 +422,12 @@ onBeforeUnmount(() => {
 	font-size: var(--text-xl);
 	font-weight: 700;
 	letter-spacing: 0;
-	color: var(--color-river);
+	color: color-mix(
+		in oklch,
+		var(--color-river),
+		var(--color-forest-soft) calc(var(--kw-active) * 75%)
+	);
+	opacity: calc(1 - var(--kw-active) * 0.28);
 	line-height: 1.12;
 }
 .hero-building-arrow {
@@ -440,7 +446,11 @@ onBeforeUnmount(() => {
 	pointer-events: none;
 }
 .hero-building.is-static .hero-building-name {
-	color: var(--color-signal);
+	color: color-mix(
+		in oklch,
+		var(--color-signal),
+		var(--color-forest-soft) calc(var(--kw-active) * 75%)
+	);
 }
 
 .hero-portrait {
@@ -500,16 +510,23 @@ onBeforeUnmount(() => {
 	inherits: true;
 	initial-value: 0;
 }
+@property --kw-active {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
 
 .hero {
 	--hx: 0;
 	--hy: 0;
 	--ha: 0;
+	--kw-active: 0;
 	position: relative;
 	transition:
 		--hx 0.5s var(--ease-out-quint),
 		--hy 0.5s var(--ease-out-quint),
-		--ha 0.45s var(--ease-out-quint);
+		--ha 0.45s var(--ease-out-quint),
+		--kw-active 0.4s var(--ease-out-quint);
 }
 .hero-glow {
 	position: absolute;
