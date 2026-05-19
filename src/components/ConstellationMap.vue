@@ -59,6 +59,8 @@ const RAIL_REVEAL_REMAINING = 120
 // How many px before the trail's true end the rail should retire. Larger =
 // vanishes earlier (further from the writing section).
 const RAIL_HIDE_OFFSET = 120
+const STACK_SCROLL_DURATION_MS = 280
+const STACK_SCROLL_TRAIL_GAP = 28
 
 let frame = 0
 let resizeObserver: ResizeObserver | undefined
@@ -162,12 +164,47 @@ function commit(id: ThreadId) {
 function commitFromRail(id: ThreadId) {
 	commit(id)
 	requestAnimationFrame(() => {
-		trailHeadEl.value?.scrollIntoView({
-			behavior: reduceMotion ? 'auto' : 'smooth',
-			block: 'start',
-		})
+		scrollToTrailHeadFast()
 		scrollRailToActive()
 	})
+}
+
+function scrollToTrailHeadFast() {
+	const trailHead = trailHeadEl.value
+	if (!trailHead) return
+
+	const target =
+		trailHead.getBoundingClientRect().top +
+		window.scrollY -
+		(railTop.value + railHeight.value + STACK_SCROLL_TRAIL_GAP)
+
+	if (reduceMotion) {
+		window.scrollTo({ top: target, behavior: 'auto' })
+		return
+	}
+
+	const start = window.scrollY
+	const distance = target - start
+	const startedAt = performance.now()
+
+	function step(now: number) {
+		const progress = Math.min((now - startedAt) / STACK_SCROLL_DURATION_MS, 1)
+		const eased = 1 - Math.pow(1 - progress, 3)
+		window.scrollTo(0, start + distance * eased)
+		if (progress < 1) window.requestAnimationFrame(step)
+	}
+
+	window.requestAnimationFrame(step)
+}
+
+function commitFromStack(id: ThreadId) {
+	commit(id)
+
+	const isStackedLayout =
+		typeof window !== 'undefined' && window.matchMedia('(max-width: 879px)').matches
+	if (!isStackedLayout) return
+
+	requestAnimationFrame(scrollToTrailHeadFast)
 }
 
 // Keep the active rail item visible when the selection changes or the rail
@@ -498,7 +535,7 @@ onBeforeUnmount(() => {
 					}"
 					:style="{ '--i': i }"
 					:aria-pressed="t.id === selected"
-					@click="commit(t.id)"
+					@click="commitFromStack(t.id)"
 				>
 					<span class="stack-dot" aria-hidden="true"></span>
 					<span class="stack-text">
