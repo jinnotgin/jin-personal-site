@@ -344,17 +344,6 @@ onBeforeUnmount(() => {
 	width: min(15rem, 62vw);
 	align-self: center;
 	order: -1;
-}
-.hero-portrait::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(205deg, oklch(0.302 0.038 158 / 0.12), oklch(0.424 0.078 152 / 0.32));
-	opacity: 1;
-	transition: opacity 0.55s var(--ease-out-quint);
-	pointer-events: none;
-}
-.hero-portrait {
 	position: relative;
 }
 .hero-portrait img {
@@ -363,25 +352,6 @@ onBeforeUnmount(() => {
 	aspect-ratio: 1;
 	object-fit: cover;
 	object-position: 50% 42%;
-	filter: saturate(0.88) brightness(1.02) contrast(0.99);
-	transition: filter 0.55s var(--ease-out-quint);
-}
-.hero-portrait:hover img,
-.hero-portrait:focus-within img {
-	filter: saturate(1) brightness(1) contrast(1);
-}
-.hero-portrait:hover::after,
-.hero-portrait:focus-within::after {
-	opacity: 0;
-}
-
-@media (hover: none) {
-	.hero-portrait img {
-		filter: none;
-	}
-	.hero-portrait::after {
-		opacity: 0;
-	}
 }
 
 @media (min-width: 760px) {
