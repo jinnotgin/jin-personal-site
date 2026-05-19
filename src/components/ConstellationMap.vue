@@ -35,6 +35,7 @@ const canvasEl = ref<HTMLCanvasElement | null>(null)
 const switcherEl = ref<HTMLElement | null>(null)
 const mapStartEl = ref<HTMLElement | null>(null)
 const trailHeadEl = ref<HTMLElement | null>(null)
+const trailBlurbEl = ref<HTMLElement | null>(null)
 const railListEl = ref<HTMLElement | null>(null)
 const mapEndEl = ref<HTMLElement | null>(null)
 const pointer = ref({ x: 0.5, y: 0.5, active: false })
@@ -62,6 +63,7 @@ const RAIL_HIDE_OFFSET = 120
 const STACK_SCROLL_DURATION_MS = 280
 const STACK_SCROLL_TRAIL_GAP = 28
 const DESKTOP_NODE_SCROLL_GAP = 12
+const DESKTOP_DETAIL_VISIBLE_LINES = 3
 
 let frame = 0
 let resizeObserver: ResizeObserver | undefined
@@ -163,12 +165,18 @@ function isDesktopLayout() {
 	return typeof window !== 'undefined' && window.matchMedia('(min-width: 880px)').matches
 }
 
-function trailHeadIsVisible() {
-	const trailHead = trailHeadEl.value
-	if (!trailHead) return false
+function trailDetailIsVisible() {
+	const blurb = trailBlurbEl.value
+	if (!blurb) return false
 
-	const rect = trailHead.getBoundingClientRect()
-	return rect.top < window.innerHeight && rect.bottom > railTop.value
+	const rect = blurb.getBoundingClientRect()
+	const lineHeight = Number.parseFloat(window.getComputedStyle(blurb).lineHeight)
+	const targetDepth = Number.isFinite(lineHeight)
+		? lineHeight * DESKTOP_DETAIL_VISIBLE_LINES
+		: 84
+	const detailCheckpoint = rect.top + targetDepth
+
+	return detailCheckpoint <= window.innerHeight && detailCheckpoint > railTop.value
 }
 
 function scrollToDesktopMapTop() {
@@ -187,7 +195,7 @@ function scrollToDesktopMapTop() {
 function commitFromNode(id: ThreadId) {
 	commit(id)
 
-	if (!isDesktopLayout() || trailHeadIsVisible()) return
+	if (!isDesktopLayout() || trailDetailIsVisible()) return
 
 	requestAnimationFrame(scrollToDesktopMapTop)
 }
@@ -629,7 +637,7 @@ onBeforeUnmount(() => {
 					Tracing this thread
 				</p>
 				<h3>{{ active.label }}</h3>
-				<p class="trail-blurb measure">{{ active.blurb }}</p>
+				<p ref="trailBlurbEl" class="trail-blurb measure">{{ active.blurb }}</p>
 			</header>
 
 			<div class="trail-grid" :key="selected">
