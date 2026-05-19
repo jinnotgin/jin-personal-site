@@ -490,11 +490,11 @@ onBeforeUnmount(() => {
 			class="thread-rail"
 			:class="{ 'is-visible': railVisible }"
 			:style="{ top: railTop + 'px' }"
-			aria-label="Switch pattern"
+			aria-label="Switch thread"
 			:aria-hidden="!railVisible"
 		>
 			<div class="thread-rail-inner">
-				<span class="thread-rail-eyebrow" aria-hidden="true">Patterns</span>
+				<span class="thread-rail-eyebrow" aria-hidden="true">Threads</span>
 				<div ref="railListEl" class="thread-rail-list" :class="{ overflowing: railOverflowing }">
 					<button
 						v-for="t in threads"
@@ -1168,23 +1168,33 @@ onBeforeUnmount(() => {
 	left: 0;
 	right: 0;
 	z-index: 30;
+	/* A — lifted surface: same paper as the header, with the Lift Shadow
+	   doing all the figure-ground work so there is no sage tint band. */
 	background: var(--color-paper);
 	border-bottom: 1px solid var(--color-hairline);
+	box-shadow: 0 0 0 oklch(0.302 0.038 158 / 0);
 	opacity: 0;
 	visibility: hidden;
 	transform: translateY(-100%);
 	transition:
 		transform 0.42s var(--ease-out-quint),
 		opacity 0.32s var(--ease-out-quint),
+		box-shadow 0.42s var(--ease-out-quint),
 		visibility 0s linear 0.42s;
 }
 .thread-rail.is-visible {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY(0);
+	/* Sanctioned Lift Shadow, present only while the rail is live, so the
+	   reveal lands as a control arriving over the content. */
+	box-shadow:
+		0 1px 2px oklch(0.302 0.038 158 / 0.05),
+		0 10px 28px oklch(0.302 0.038 158 / 0.08);
 	transition:
 		transform 0.42s var(--ease-out-quint),
 		opacity 0.32s var(--ease-out-quint),
+		box-shadow 0.42s var(--ease-out-quint),
 		visibility 0s;
 }
 .thread-rail-inner {
@@ -1203,12 +1213,25 @@ onBeforeUnmount(() => {
 }
 .thread-rail-eyebrow {
 	flex: none;
-	font-size: var(--text-sm);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: var(--text-base);
 	font-weight: 700;
 	letter-spacing: 0;
-	color: var(--color-ink-faint);
-	border-right: 1px solid var(--color-hairline);
-	padding-right: clamp(0.6rem, 2vw, 1.4rem);
+	/* The word that explains the whole control should not be the faintest
+	   thing in it. Promoted one ink step, divider dropped for breathing room. */
+	color: var(--color-ink-soft);
+	padding-right: clamp(0.4rem, 1.5vw, 0.9rem);
+}
+/* Small moss tick: ties the rail's identity to the moss trail-cue below. */
+.thread-rail-eyebrow::before {
+	content: '';
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 99px;
+	background: var(--color-moss);
+	flex: none;
 }
 @media (max-width: 520px) {
 	.thread-rail-eyebrow {
@@ -1243,48 +1266,82 @@ onBeforeUnmount(() => {
 	display: none;
 }
 .rail-item {
+	position: relative;
 	flex: none;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
 	min-height: 44px;
-	padding: 0.45rem 0.15rem;
+	padding: 0.4rem 0.7rem;
 	background: none;
 	border: 0;
+	border-radius: var(--radius-md);
 	cursor: pointer;
 	font: inherit;
 	font-size: var(--text-sm);
 	font-weight: 600;
 	white-space: nowrap;
 	color: var(--color-ink-soft);
-	transition: color 0.18s var(--ease-out-quint);
+	transition:
+		color 0.18s var(--ease-out-quint),
+		background 0.18s var(--ease-out-quint);
 	scroll-snap-align: start;
 }
+/* Quiet rest affordance: a tappable region, not a caption. */
 .rail-item:hover {
 	color: var(--color-ink);
+	background: oklch(0.922 0.022 135 / 0.55);
+}
+/* B — connective tab indicator: a full-width moss underline pins the rail
+   to the thread being traced, echoing the moss trail-cue below it. */
+.rail-item::after {
+	content: '';
+	position: absolute;
+	left: 0.7rem;
+	right: 0.7rem;
+	bottom: 0;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--color-moss);
+	transform: scaleX(0);
+	transform-origin: left center;
+	opacity: 0;
+	transition:
+		transform 0.32s var(--ease-out-quint),
+		opacity 0.2s var(--ease-out-quint);
 }
 .rail-dot {
-	width: 7px;
-	height: 7px;
+	width: 8px;
+	height: 8px;
 	border-radius: 99px;
 	border: 1.5px solid var(--color-sage-deep);
 	transition:
-		background 0.2s var(--ease-out-quint),
-		border-color 0.2s var(--ease-out-quint);
+		background 0.22s var(--ease-out-quint),
+		border-color 0.22s var(--ease-out-quint),
+		transform 0.22s var(--ease-out-quint),
+		box-shadow 0.22s var(--ease-out-quint);
 }
 .rail-item.active {
 	color: var(--color-moss-deep);
 	font-weight: 700;
 }
-/* Pre-selected default: outlined moss, matching the map's hollow node so the
-   two switchers agree on "shown but not yet chosen". */
+.rail-item.active::after {
+	transform: scaleX(1);
+	opacity: 1;
+}
+/* C — carry the map's dot vocabulary: pre-selected default is an outlined
+   moss dot, matching the constellation's hollow node ("shown, not chosen"). */
 .rail-item.active .rail-dot {
 	border-color: var(--color-moss);
+	transform: scale(1.15);
 }
-/* A committed choice: solid fill, mirroring the map's filled active node. */
+/* A committed choice: solid fill + soft ring, mirroring the filled active
+   node on the map so the rail reads as the same control. */
 .rail-item.committed .rail-dot {
 	background: var(--color-moss);
 	border-color: var(--color-moss);
+	transform: scale(1.2);
+	box-shadow: 0 0 0 3px oklch(0.52 0.087 150 / 0.12);
 }
 @media (prefers-reduced-motion: reduce) {
 	.thread-rail,
