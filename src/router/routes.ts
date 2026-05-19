@@ -73,8 +73,10 @@ export const routes: RouteRecordRaw[] = [
 	},
 ]
 
-export const scrollBehavior: RouterScrollBehavior = (to, _from, savedPosition) => {
+export const scrollBehavior: RouterScrollBehavior = async (to, _from, savedPosition) => {
 	if (savedPosition) return savedPosition
 	if (to.hash) return { el: to.hash, behavior: 'smooth' }
-	return { top: 0 }
+
+	await new Promise((resolve) => requestAnimationFrame(resolve))
+	return { top: 0, left: 0, behavior: 'instant' }
 }
