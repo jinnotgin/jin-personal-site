@@ -61,6 +61,7 @@ const RAIL_REVEAL_REMAINING = 120
 const RAIL_HIDE_OFFSET = 120
 const STACK_SCROLL_DURATION_MS = 280
 const STACK_SCROLL_TRAIL_GAP = 28
+const DESKTOP_NODE_SCROLL_GAP = 12
 
 let frame = 0
 let resizeObserver: ResizeObserver | undefined
@@ -156,6 +157,39 @@ function commit(id: ThreadId) {
 	window.sessionStorage.setItem(SELECTED_THREAD_STORAGE_KEY, id)
 	const thread = threads.find((t) => t.id === id)
 	posthog.capture('thread_selected', { thread_id: id, thread_label: thread?.label })
+}
+
+function isDesktopLayout() {
+	return typeof window !== 'undefined' && window.matchMedia('(min-width: 880px)').matches
+}
+
+function trailHeadIsVisible() {
+	const trailHead = trailHeadEl.value
+	if (!trailHead) return false
+
+	const rect = trailHead.getBoundingClientRect()
+	return rect.top < window.innerHeight && rect.bottom > railTop.value
+}
+
+function scrollToDesktopMapTop() {
+	const switcher = switcherEl.value
+	if (!switcher) return
+
+	const target =
+		switcher.getBoundingClientRect().top + window.scrollY - (railTop.value + DESKTOP_NODE_SCROLL_GAP)
+
+	window.scrollTo({
+		top: target,
+		behavior: reduceMotion ? 'auto' : 'smooth',
+	})
+}
+
+function commitFromNode(id: ThreadId) {
+	commit(id)
+
+	if (!isDesktopLayout() || trailHeadIsVisible()) return
+
+	requestAnimationFrame(scrollToDesktopMapTop)
 }
 
 // Switching from the rail changes content far above the fold, so bring the
@@ -513,7 +547,7 @@ onBeforeUnmount(() => {
 						]"
 						:style="{ left: n.x + '%', top: n.y + '%' }"
 						:aria-pressed="n.id === committed"
-						@click="commit(n.id)"
+						@click="commitFromNode(n.id)"
 						@focus="commit(n.id)"
 						@pointerenter="preview(n.id)"
 					>
