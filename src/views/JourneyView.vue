@@ -24,7 +24,12 @@ import { threadById } from '@/data/threads'
         <div class="what">
           <h2>{{ j.role }}</h2>
           <p class="org">{{ j.org }}</p>
-          <p class="summary">{{ j.summary }}</p>
+          <div v-if="Array.isArray(j.summary)" class="summary">
+            <p v-for="paragraph in j.summary" :key="paragraph">
+              {{ paragraph }}
+            </p>
+          </div>
+          <p v-else class="summary">{{ j.summary }}</p>
           <ul class="threads">
             <li v-for="tid in j.threads" :key="tid">
               {{ threadById(tid)?.label }}
@@ -97,6 +102,12 @@ import { threadById } from '@/data/threads'
   color: var(--color-ink-soft);
   line-height: 1.6;
   max-width: 60ch;
+}
+.summary p {
+  margin: 0;
+}
+.summary p + p {
+  margin-top: 0.85rem;
 }
 .threads {
   list-style: none;

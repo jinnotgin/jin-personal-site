@@ -68,7 +68,7 @@ export interface JourneyEntry {
   period: string
   role: string
   org: string
-  summary: string
+  summary: string | string[]
   threads: ThreadId[]
 }
 
