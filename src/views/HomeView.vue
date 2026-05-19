@@ -33,6 +33,61 @@ const building = (() => {
 	return project ? { name: project.name, to: `/projects/${project.slug}` } : null
 })()
 
+const hero = ref<HTMLElement | null>(null)
+let heroRaf = 0
+let heroPt = { x: 0, y: 0 }
+let heroClient = { x: 0, y: 0 }
+let kwEls: HTMLElement[] = []
+const KW_RADIUS = 150
+
+function applyHero() {
+	heroRaf = 0
+	const el = hero.value
+	if (!el) return
+	el.style.setProperty('--hx', heroPt.x.toFixed(4))
+	el.style.setProperty('--hy', heroPt.y.toFixed(4))
+	let nearest = -1
+	let nearestDist = Infinity
+	kwEls.forEach((kw, i) => {
+		const b = kw.getBoundingClientRect()
+		const cx = Math.max(b.left, Math.min(heroClient.x, b.right))
+		const cy = Math.max(b.top, Math.min(heroClient.y, b.bottom))
+		const dx = heroClient.x - cx
+		const dy = heroClient.y - cy
+		const d = Math.sqrt(dx * dx + dy * dy)
+		if (d < nearestDist) {
+			nearestDist = d
+			nearest = i
+		}
+	})
+	kwEls.forEach((kw, i) => {
+		const n = i === nearest ? Math.max(0, Math.min(1, 1 - nearestDist / KW_RADIUS)) : 0
+		kw.style.setProperty('--n', n.toFixed(3))
+	})
+}
+
+function onHeroMove(e: PointerEvent) {
+	const el = hero.value
+	if (!el) return
+	const r = el.getBoundingClientRect()
+	heroPt.x = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1))
+	heroPt.y = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1))
+	heroClient.x = e.clientX
+	heroClient.y = e.clientY
+	el.style.setProperty('--ha', '1')
+	if (!heroRaf) heroRaf = requestAnimationFrame(applyHero)
+}
+
+function onHeroLeave() {
+	const el = hero.value
+	if (!el) return
+	heroPt = { x: 0, y: 0 }
+	el.style.setProperty('--hx', '0')
+	el.style.setProperty('--hy', '0')
+	el.style.setProperty('--ha', '0')
+	for (const kw of kwEls) kw.style.setProperty('--n', '0')
+}
+
 const method = ref<HTMLElement | null>(null)
 let raf = 0
 let moveEls: HTMLElement[] = []
@@ -62,6 +117,17 @@ function onScroll() {
 }
 
 onMounted(() => {
+	const heroEl = hero.value
+	if (
+		heroEl &&
+		window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+		!window.matchMedia('(prefers-reduced-motion: reduce)').matches
+	) {
+		kwEls = Array.from(heroEl.querySelectorAll<HTMLElement>('.kw'))
+		heroEl.addEventListener('pointermove', onHeroMove, { passive: true })
+		heroEl.addEventListener('pointerleave', onHeroLeave, { passive: true })
+	}
+
 	const el = method.value
 	if (!el) return
 	moveEls = Array.from(el.querySelectorAll<HTMLElement>('.move'))
@@ -79,18 +145,26 @@ onBeforeUnmount(() => {
 	window.removeEventListener('scroll', onScroll)
 	window.removeEventListener('resize', onScroll)
 	if (raf) cancelAnimationFrame(raf)
+	const heroEl = hero.value
+	if (heroEl) {
+		heroEl.removeEventListener('pointermove', onHeroMove)
+		heroEl.removeEventListener('pointerleave', onHeroLeave)
+	}
+	if (heroRaf) cancelAnimationFrame(heroRaf)
 })
 </script>
 
 <template>
 	<div class="home">
-		<section class="hero">
+		<section ref="hero" class="hero">
+			<div class="hero-glow" aria-hidden="true"></div>
 			<div class="hero-inner shell">
 				<div class="hero-body">
 					<div class="hero-copy">
 						<p class="hero-intro">Hi, I’m Jin.</p>
 						<h1 class="hero-statement">
-							I track early signals, then build to understand them.
+							I <span class="kw">track</span> early signals, then
+							<span class="kw">build</span> to <span class="kw">understand</span> them.
 						</h1>
 
 						<component
@@ -147,8 +221,8 @@ onBeforeUnmount(() => {
 						<p class="move-line">Early signs while they are still unclear and messy.</p>
 						<p class="move-more">
 							<span
-								>I look for where AI changes what teams can make, where it can become relevant,
-								and what has to be true before it is worth adopting.</span
+								>I track where new signals and technologies change what teams can make, with
+								AI as one current example, and what makes them worth adopting.</span
 							>
 						</p>
 					</div>
@@ -253,7 +327,6 @@ onBeforeUnmount(() => {
 	display: grid;
 	gap: clamp(1.6rem, 5vw, 3rem);
 	align-items: center;
-	animation: hero-rise 0.9s var(--ease-out-expo) 0.08s both;
 }
 .hero-copy {
 	display: contents;
@@ -280,6 +353,40 @@ onBeforeUnmount(() => {
 	max-width: 24ch;
 	margin: 0;
 	text-wrap: balance;
+}
+.hero-statement .kw {
+	--n: 0;
+	position: relative;
+	white-space: nowrap;
+	color: color-mix(
+		in oklch,
+		var(--color-forest-ink),
+		var(--color-signal) calc(var(--n) * 100%)
+	);
+	transition: --n 0.4s var(--ease-out-quint);
+}
+.hero-statement .kw::after {
+	content: '';
+	position: absolute;
+	left: -0.04em;
+	right: -0.04em;
+	bottom: -0.06em;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--color-signal);
+	transform: scaleX(var(--n));
+	transform-origin: left;
+	opacity: calc(0.2 + var(--n) * 0.8);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+	.hero-statement .kw {
+		color: inherit;
+		transition: none;
+	}
+	.hero-statement .kw::after {
+		display: none;
+	}
 }
 .hero-anchor {
 	font-weight: 800;
@@ -377,14 +484,69 @@ onBeforeUnmount(() => {
 	}
 }
 
-@keyframes hero-rise {
-	from {
-		opacity: 0;
-		transform: translateY(1.4rem);
+/* ---- Pointer-reactive hero: parallax depth + a tracked signal glow ---- */
+@property --hx {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+@property --hy {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+@property --ha {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
+
+.hero {
+	--hx: 0;
+	--hy: 0;
+	--ha: 0;
+	position: relative;
+	transition:
+		--hx 0.5s var(--ease-out-quint),
+		--hy 0.5s var(--ease-out-quint),
+		--ha 0.45s var(--ease-out-quint);
+}
+.hero-glow {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background: radial-gradient(
+		22rem 22rem at calc(50% + var(--hx) * 42%) calc(50% + var(--hy) * 46%),
+		oklch(0.7 0.088 122 / calc(0.1 * var(--ha))),
+		transparent 70%
+	);
+}
+.hero-inner {
+	position: relative;
+	z-index: 1;
+}
+.hero-portrait {
+	transform: translate3d(calc(var(--hx) * 7px), calc(var(--hy) * 7px), 0);
+	transition: transform 0.4s var(--ease-out-quint);
+	will-change: transform;
+}
+.hero-portrait img {
+	transform: translate3d(calc(var(--hx) * -3.2%), calc(var(--hy) * -3.2%), 0) scale(1.07);
+	transition: transform 0.5s var(--ease-out-quint);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+	.hero {
+		transition: none;
 	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
+	.hero-glow {
+		display: none;
+	}
+	.hero-portrait,
+	.hero-portrait img {
+		transform: none;
+		transition: none;
 	}
 }
 
@@ -419,6 +581,11 @@ onBeforeUnmount(() => {
 @property --p {
 	syntax: '<number>';
 	inherits: true;
+	initial-value: 0;
+}
+@property --n {
+	syntax: '<number>';
+	inherits: false;
 	initial-value: 0;
 }
 
