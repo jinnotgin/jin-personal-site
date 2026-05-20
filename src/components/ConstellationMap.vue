@@ -1102,7 +1102,7 @@ onBeforeUnmount(() => {
 		white-space: normal;
 		text-align: center;
 		width: max-content;
-		max-width: 8.5rem;
+		max-width: 6.8rem;
 		font-size: var(--text-sm);
 		line-height: 1.2;
 	}
