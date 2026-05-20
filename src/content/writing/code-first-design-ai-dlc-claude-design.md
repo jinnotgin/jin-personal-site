@@ -13,7 +13,7 @@ category: AI in practice
 
 ## The prompts behind the prompts
 
-After using it for a bit, I notice that Claude Design can consistently ship polished functional prototypes from the very *first* generation. This kind of consistent polish is *very suspicious*, and it’s not what you would expect from a single-shot user prompt.
+After using it for a bit, I notice that Claude Design can consistently ship polished functional prototypes from the *very first* generation. This kind of consistent polish is *very suspicious*, and it’s not what you would expect from a single-shot user prompt.
 
 ![Claude Design company intranet prototype](/img/writing/code-first-design-ai-dlc-claude-design/claude-design-company-intranet.png "You can try the live prototype that was built with Claude Design here: [Acme Intranet Prototype](https://jinnotgin.github.io/code-first-design/claude-design_company-intranet-home.html)")
 
@@ -40,14 +40,14 @@ There's a practical problem, though. Claude Design is in research preview, and t
 
 That was my experience too. Within 2 hours, I’ve used up all my usage for the entire week. Yes, I only had a $20 USD Claude plan. Sure, I was using Claude Opus 4.7, the most powerful model. But that doesn’t change how painful these limits feel.
 
-If this were a client project with a deadline approaching, we can’t be having people being blocked by usage limits, right? Even if we use the $200 plan, what happens if they users get stuck after say, 2 days?
+If this were a client project with a deadline approaching, we can’t be having people being blocked by usage limits, right? Even if we use the $200 plan, what happens if the users get stuck after, say, 2 days?
 
 So, that pushed me to look at alternatives.
 
 
 ## Open source to the rescue… or not?
 
-[Open Design](https://opendesigner.io/) is an open-source competitor to Claude Design. It's local-first, bring-your-own-AI alternative that runs on whatever coding agent you already use: [Claude Code](https://www.anthropic.com/claude-code), [Codex](https://openai.com/index/codex/), [Gemini CLI](https://geminicli.com/), and others. It ships with its own design systems, and prompt engineering (e.g. anti-AI-slop checklist).
+[Open Design](https://opendesigner.io/) is an open-source competitor to Claude Design. It's a local-first, bring-your-own-AI alternative that runs on whatever coding agent you already use: [Claude Code](https://www.anthropic.com/claude-code), [Codex](https://openai.com/index/codex/), [Gemini CLI](https://geminicli.com/), and others. It ships with its own design systems, and prompt engineering (e.g. anti-AI-slop checklist).
 
 ![Open Design interface](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-031304.png "Open Design looks awfully similar to Claude Design 🤫")
 
@@ -84,11 +84,11 @@ That search led me to [Impeccable](https://impeccable.style/).
 
 ![Impeccable skill writing example](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-032734.png "A small snippet into their very extensive skill writing")
 
-I looked into the prompt writing behind Impeccable, and it was *impeccably thorough*. Besides being really opinionated about many aspects of design, its additional value is in what it *forbids*. It catalogues 27 anti-patterns, the lazy defaults many model falls into: purple gradients, nested cards, low-contrast labels, etc. It names them and steers the AI to avoid them.
+I looked into the prompt writing behind Impeccable, and it was *impeccably thorough*. Besides being really opinionated about many aspects of design, its additional value is in what it *forbids*. It catalogues 27 anti-patterns, the lazy defaults many models fall into: purple gradients, nested cards, low-contrast labels, etc. It names them and steers the AI to avoid them.
 
 ![Impeccable website design example](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-034815.png "An example from the Impeccable website")
 
-I would imagine that most layman will prompt with simple language like "make it look good and modern", because they don't have terms like *tinted neutrals*, *vertical rhythm*, or *fluid type scale with optical sizing*. Impeccable closes that vocabulary gap. The design capability was already in the model. The prompts were just too vague to reach it.
+I would imagine that most laypeople will prompt with simple language like "make it look good and modern", because they don't have terms like *tinted neutrals*, *vertical rhythm*, or *fluid type scale with optical sizing*. Impeccable closes that vocabulary gap. The design capability was already in the model. The prompts were just too vague to reach it.
 
 I tested this by pointing Claude Code and Codex at [my personal site](https://itsjin.com/) with Impeccable loaded as a skill. After several rounds of direction and iteration, the results were strong. Definitely not a single-prompt kind of magic, but still amazing after several back-and-forth.
 
@@ -96,7 +96,7 @@ I tested this by pointing Claude Code and Codex at [my personal site](https://it
 
 ![Personal site after redesign](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-033103.png "After")
 
-This unlocks a new path forward, by pairing AI coding tools (Claude Code or Codex) with agents skills like Impeccable for design work. That's code-based design without the lock-in to Claude Design. Of course, you won’t get some of niceties of Claude Design (e.g. being able to draw & annotate on the website), but at least there’s a way forward.
+This unlocks a new path forward, by pairing AI coding tools (Claude Code or Codex) with agent skills like Impeccable for design work. That's code-based design without the lock-in to Claude Design. Of course, you won’t get some of the niceties of Claude Design (e.g. being able to draw & annotate on the website), but at least there’s a way forward.
 
 
 ## Claude Design's prompts are still gold though
