@@ -50,7 +50,7 @@ watch(
 			<RouterLink
 				to="/"
 				class="wordmark"
-				aria-label="Jin — home"
+				aria-label="Jin, home"
 				@pointerenter="prefetchRoute('/')"
 				@focus="prefetchRoute('/')"
 			>

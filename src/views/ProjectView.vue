@@ -68,7 +68,7 @@ function trackExternalLinkClick(label: string, href: string) {
 				</ul>
 			</div>
 			<div v-if="project.links?.length">
-				<p class="meta-label">Receipts</p>
+				<p class="meta-label">Links & Resources</p>
 				<ul class="links">
 					<li v-for="l in project.links" :key="l.href">
 						<a

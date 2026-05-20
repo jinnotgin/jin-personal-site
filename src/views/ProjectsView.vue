@@ -38,7 +38,7 @@ const counts = computed(() => {
 		<div class="banner" aria-hidden="true"></div>
 
 		<header class="page-head">
-			<h1>Projects and tools, grouped by why they existed.</h1>
+			<h1>Projects and tools, grouped by core threads.</h1>
 			<p class="lede">
 				{{ counts.total }} projects, {{ counts.active }} still active. Some are tools you can try
 				out; some are written case studies from work that cannot be publicly demoed.
