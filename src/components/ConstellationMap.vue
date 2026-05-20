@@ -66,8 +66,8 @@ const RAIL_REVEAL_REMAINING = 120
 // How many px before the trail's true end the rail should retire. Larger =
 // vanishes earlier (further from the writing section).
 const RAIL_HIDE_OFFSET = 120
-const STACK_SCROLL_DURATION_MS = 280
-const STACK_SCROLL_TRAIL_GAP = 28
+const RAIL_TRAIL_SCROLL_DURATION_MS = 280
+const TRAIL_HEAD_SCROLL_GAP = 28
 const DESKTOP_NODE_SCROLL_GAP = 12
 const DESKTOP_DETAIL_VISIBLE_LINES = 3
 
@@ -129,7 +129,7 @@ function buildObservers() {
 	// REMAINING is the px of switcher still wanted on screen at that moment. A
 	// positive rootMargin top grows the root upward so the sentinel must travel
 	// further to exit it. Height and layout are re-measured so this tracks
-	// whichever component (desktop constellation vs mobile stack) is live.
+	// whichever constellation layout is live.
 	const switcherHeight = switcherEl.value?.getBoundingClientRect().height ?? 0
 	const revealLine = Math.round(railTop.value - (switcherHeight - RAIL_REVEAL_REMAINING))
 	switcherObserver = new IntersectionObserver(
@@ -202,7 +202,7 @@ function commitFromNode(id: ThreadId) {
 	commit(id)
 
 	if (isMobile.value) {
-		requestAnimationFrame(scrollToTrailHeadFast)
+		requestAnimationFrame(scrollToTrailHeadSmooth)
 	} else if (!isDesktopLayout() || trailDetailIsVisible()) {
 		return
 	} else {
@@ -221,14 +221,30 @@ function commitFromRail(id: ThreadId) {
 	})
 }
 
-function scrollToTrailHeadFast() {
+function trailHeadScrollTarget() {
 	const trailHead = trailHeadEl.value
-	if (!trailHead) return
+	if (!trailHead) return null
 
-	const target =
+	return (
 		trailHead.getBoundingClientRect().top +
 		window.scrollY -
-		(railTop.value + railHeight.value + STACK_SCROLL_TRAIL_GAP)
+		(railTop.value + railHeight.value + TRAIL_HEAD_SCROLL_GAP)
+	)
+}
+
+function scrollToTrailHeadSmooth() {
+	const target = trailHeadScrollTarget()
+	if (target === null) return
+
+	window.scrollTo({
+		top: target,
+		behavior: reduceMotion ? 'auto' : 'smooth',
+	})
+}
+
+function scrollToTrailHeadFast() {
+	const target = trailHeadScrollTarget()
+	if (target === null) return
 
 	if (reduceMotion) {
 		window.scrollTo({ top: target, behavior: 'auto' })
@@ -240,7 +256,7 @@ function scrollToTrailHeadFast() {
 	const startedAt = performance.now()
 
 	function step(now: number) {
-		const progress = Math.min((now - startedAt) / STACK_SCROLL_DURATION_MS, 1)
+		const progress = Math.min((now - startedAt) / RAIL_TRAIL_SCROLL_DURATION_MS, 1)
 		const eased = 1 - Math.pow(1 - progress, 3)
 		window.scrollTo(0, start + distance * eased)
 		if (progress < 1) window.requestAnimationFrame(step)
@@ -1350,5 +1366,4 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* No stack animations needed as stacked list is removed */
 </style>
