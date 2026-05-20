@@ -40,6 +40,78 @@ const railListEl = ref<HTMLElement | null>(null)
 const mapEndEl = ref<HTMLElement | null>(null)
 const pointer = ref({ x: 0.5, y: 0.5, active: false })
 
+const mobileCanvasEl = ref<HTMLCanvasElement | null>(null)
+const mobilePointer = ref({ x: 0.5, y: 0.5, active: false })
+const stackDotsY = ref<number[]>([])
+const stackDotX = ref<number>(0)
+
+interface MobileParticle {
+	x: number
+	y: number
+	vx: number
+	vy: number
+	size: number
+	alpha: number
+	baseAlpha: number
+	speed: number
+	angle: number
+}
+
+const mobileParticles = ref<MobileParticle[]>([])
+
+function initMobileParticles() {
+	const particlesList: MobileParticle[] = []
+	for (let i = 0; i < 20; i++) {
+		particlesList.push({
+			x: Math.random() * 100,
+			y: Math.random() * 400,
+			vx: (Math.random() - 0.5) * 0.4,
+			vy: (Math.random() - 0.5) * 0.4,
+			size: Math.random() * 1.8 + 0.8,
+			alpha: Math.random() * 0.4 + 0.1,
+			baseAlpha: Math.random() * 0.4 + 0.1,
+			speed: Math.random() * 0.02 + 0.005,
+			angle: Math.random() * Math.PI * 2
+		})
+	}
+	mobileParticles.value = particlesList
+}
+
+function measureStackDots() {
+	const container = switcherEl.value?.querySelector('.stacked')
+	if (!container) return
+	const dots = container.querySelectorAll('.stack-dot')
+	const containerRect = container.getBoundingClientRect()
+	const ys: number[] = []
+	let computedX = 0
+	dots.forEach((dot) => {
+		const rect = dot.getBoundingClientRect()
+		const y = rect.top - containerRect.top + rect.height / 2
+		ys.push(y)
+		if (computedX === 0) {
+			computedX = rect.left - containerRect.left + rect.width / 2
+		}
+	})
+	stackDotsY.value = ys
+	stackDotX.value = computedX
+}
+
+function trackMobilePointer(event: PointerEvent) {
+	const container = switcherEl.value?.querySelector('.stacked')
+	if (!container) return
+
+	const rect = container.getBoundingClientRect()
+	mobilePointer.value = {
+		x: (event.clientX - rect.left) / rect.width,
+		y: (event.clientY - rect.top) / rect.height,
+		active: true,
+	}
+}
+
+function releaseMobilePointer() {
+	mobilePointer.value = { ...mobilePointer.value, active: false }
+}
+
 // The sticky rail is a second copy of the switcher. It is live only in the
 // window between "the map has scrolled out of comfortable reach" and "the
 // reader has left the trail entirely" (i.e. entered the writing section).
@@ -389,6 +461,24 @@ function prepareCanvas() {
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 }
 
+function prepareMobileCanvas() {
+	const canvas = mobileCanvasEl.value
+	const container = switcherEl.value?.querySelector('.stacked')
+	if (!canvas || !container) return
+
+	const rect = container.getBoundingClientRect()
+	const dpr = Math.min(window.devicePixelRatio || 1, 2)
+	canvas.width = Math.round(rect.width * dpr)
+	canvas.height = Math.round(rect.height * dpr)
+	canvas.style.width = `${rect.width}px`
+	canvas.style.height = `${rect.height}px`
+
+	const ctx = canvas.getContext('2d')
+	if (!ctx) return
+
+	ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+}
+
 function drawConstellation(time: number) {
 	const canvas = canvasEl.value
 	const field = fieldEl.value
@@ -460,8 +550,140 @@ function drawConstellation(time: number) {
 	})
 }
 
+function drawMobileConstellation(time: number) {
+	const canvas = mobileCanvasEl.value
+	const container = switcherEl.value?.querySelector('.stacked')
+	const ctx = canvas?.getContext('2d')
+	if (!canvas || !container || !ctx || stackDotsY.value.length === 0) return
+
+	const rect = container.getBoundingClientRect()
+	const width = rect.width
+	const height = rect.height
+	ctx.clearRect(0, 0, width, height)
+
+	const xPos = stackDotX.value
+	const ys = stackDotsY.value
+	const activeIndex = threads.findIndex((t) => t.id === selected.value)
+
+	const drift = reduceMotion ? 0 : time * 0.001
+
+	// 1. Draw glowing connecting wires between dots
+	ctx.beginPath()
+	for (let i = 0; i < ys.length - 1; i++) {
+		const y1 = ys[i]!
+		const y2 = ys[i + 1]!
+		const midY = (y1 + y2) / 2
+
+		const wiggle = reduceMotion ? 0 : Math.sin(drift * 2 + i) * 3
+		const controlX = xPos + wiggle
+		
+		ctx.moveTo(xPos, y1)
+		ctx.quadraticCurveTo(controlX, midY, xPos, y2)
+	}
+
+	ctx.strokeStyle = 'rgba(176, 204, 177, 0.4)'
+	ctx.lineWidth = 1.5
+	ctx.stroke()
+
+	// Highlight the active path (leading to/from the active node)
+	if (activeIndex !== -1) {
+		ctx.beginPath()
+		
+		for (let i = 0; i < ys.length - 1; i++) {
+			const y1 = ys[i]!
+			const y2 = ys[i + 1]!
+			const midY = (y1 + y2) / 2
+			const isSegmentActive = i === activeIndex || i === activeIndex - 1
+			
+			if (isSegmentActive) {
+				const wiggle = reduceMotion ? 0 : Math.sin(drift * 2 + i) * 3
+				const controlX = xPos + wiggle
+				ctx.moveTo(xPos, y1)
+				ctx.quadraticCurveTo(controlX, midY, xPos, y2)
+			}
+		}
+		
+		ctx.strokeStyle = 'rgba(56, 128, 82, 0.78)'
+		ctx.lineWidth = 2.5
+		ctx.stroke()
+
+		// Draw a pulse wave traveling along the active path
+		if (!reduceMotion) {
+			const pulseY = ys[activeIndex]!
+			const pulseGlow = ctx.createRadialGradient(xPos, pulseY, 0, xPos, pulseY, 20)
+			pulseGlow.addColorStop(0, 'rgba(56, 128, 82, 0.35)')
+			pulseGlow.addColorStop(1, 'rgba(56, 128, 82, 0)')
+			ctx.fillStyle = pulseGlow
+			ctx.beginPath()
+			ctx.arc(xPos, pulseY, 20 + Math.sin(drift * 6) * 4, 0, Math.PI * 2)
+			ctx.fill()
+		}
+	}
+
+	// 2. Draw active dot glowing aura/ripple
+	if (activeIndex !== -1) {
+		const activeY = ys[activeIndex]!
+		
+		const glow = ctx.createRadialGradient(xPos, activeY, 0, xPos, activeY, 32)
+		glow.addColorStop(0, 'rgba(92, 143, 98, 0.16)')
+		glow.addColorStop(0.5, 'rgba(92, 143, 98, 0.06)')
+		glow.addColorStop(1, 'rgba(92, 143, 98, 0)')
+		ctx.fillStyle = glow
+		ctx.beginPath()
+		ctx.arc(xPos, activeY, 32, 0, Math.PI * 2)
+		ctx.fill()
+	}
+
+	// 3. Draw particles
+	const targetX = mobilePointer.value.active ? mobilePointer.value.x * width : xPos
+	const targetY = mobilePointer.value.active 
+		? mobilePointer.value.y * height 
+		: (activeIndex !== -1 ? ys[activeIndex]! : height / 2)
+
+	mobileParticles.value.forEach((p, idx) => {
+		if (!reduceMotion) {
+			p.angle += p.speed
+			const driftY = Math.sin(p.angle) * 0.15
+
+			const dx = targetX - (p.x / 100) * width
+			const dy = targetY - p.y
+			const dist = Math.sqrt(dx * dx + dy * dy)
+			
+			const pullStrength = mobilePointer.value.active ? 0.05 : 0.02
+			if (dist > 5) {
+				p.vx += (dx / dist) * pullStrength
+				p.vy += (dy / dist) * pullStrength
+			}
+
+			p.vx *= 0.94
+			p.vy *= 0.94
+			p.x += (p.vx / width) * 100
+			p.y += p.vy + driftY
+		}
+
+		if (p.x < 0) { p.x = 0; p.vx *= -1 }
+		if (p.x > 100) { p.x = 100; p.vx *= -1 }
+		if (p.y < 0) { p.y = 0; p.vy *= -1 }
+		if (p.y > height) { p.y = height; p.vy *= -1 }
+
+		const px = (p.x / 100) * width
+		const py = p.y
+		
+		ctx.beginPath()
+		ctx.arc(px, py, p.size, 0, Math.PI * 2)
+		
+		const alpha = activeIndex !== -1 
+			? p.alpha * (1 + 0.4 * Math.sin(drift * 4 + idx)) 
+			: p.alpha
+		
+		ctx.fillStyle = `rgba(56, 128, 82, ${alpha})`
+		ctx.fill()
+	})
+}
+
 function animate(time = 0) {
 	drawConstellation(time)
+	drawMobileConstellation(time)
 	if (!reduceMotion) {
 		frame = window.requestAnimationFrame(animate)
 	}
@@ -470,6 +692,8 @@ function animate(time = 0) {
 function restartAnimation() {
 	window.cancelAnimationFrame(frame)
 	prepareCanvas()
+	prepareMobileCanvas()
+	measureStackDots()
 	animate()
 }
 
@@ -485,9 +709,13 @@ watch(selected, () => {
 
 onMounted(() => {
 	reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+	initMobileParticles()
 	prepareCanvas()
+	prepareMobileCanvas()
+	measureStackDots()
+
 	resizeObserver = new ResizeObserver(restartAnimation)
-	if (fieldEl.value) resizeObserver.observe(fieldEl.value)
+	if (switcherEl.value) resizeObserver.observe(switcherEl.value)
 	animate()
 
 	measureRailTop()
@@ -504,6 +732,8 @@ function onResize() {
 	measureRailOverflow()
 	buildObservers()
 	updateRailVisibilityFromLayout()
+	measureStackDots()
+	prepareMobileCanvas()
 }
 
 onBeforeUnmount(() => {
@@ -566,7 +796,13 @@ onBeforeUnmount(() => {
 			</div>
 
 			<!-- Stacked index: same threads, source of truth on narrow screens -->
-			<div class="stacked">
+			<div
+				class="stacked"
+				:class="{ 'stacked--canvas-active': !reduceMotion && mobileCanvasEl }"
+				@pointermove="trackMobilePointer"
+				@pointerleave="releaseMobilePointer"
+			>
+				<canvas ref="mobileCanvasEl" class="stacked-canvas" aria-hidden="true"></canvas>
 				<button
 					v-for="(t, i) in threads"
 					:key="t.id"
@@ -729,6 +965,21 @@ onBeforeUnmount(() => {
 	position: relative;
 	display: grid;
 	border-top: 1px solid var(--color-hairline);
+}
+
+.stacked-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 0;
+	opacity: 0.85;
+}
+
+.stacked--canvas-active .stack-dot::before,
+.stacked--canvas-active .stack-dot::after {
+	display: none;
 }
 
 .stack-item {
