@@ -40,76 +40,10 @@ const railListEl = ref<HTMLElement | null>(null)
 const mapEndEl = ref<HTMLElement | null>(null)
 const pointer = ref({ x: 0.5, y: 0.5, active: false })
 
-const mobileCanvasEl = ref<HTMLCanvasElement | null>(null)
-const mobilePointer = ref({ x: 0.5, y: 0.5, active: false })
-const stackDotsY = ref<number[]>([])
-const stackDotX = ref<number>(0)
+const isMobile = ref(false)
 
-interface MobileParticle {
-	x: number
-	y: number
-	vx: number
-	vy: number
-	size: number
-	alpha: number
-	baseAlpha: number
-	speed: number
-	angle: number
-}
-
-const mobileParticles = ref<MobileParticle[]>([])
-
-function initMobileParticles() {
-	const particlesList: MobileParticle[] = []
-	for (let i = 0; i < 20; i++) {
-		particlesList.push({
-			x: Math.random() * 100,
-			y: Math.random() * 400,
-			vx: (Math.random() - 0.5) * 0.4,
-			vy: (Math.random() - 0.5) * 0.4,
-			size: Math.random() * 1.8 + 0.8,
-			alpha: Math.random() * 0.4 + 0.1,
-			baseAlpha: Math.random() * 0.4 + 0.1,
-			speed: Math.random() * 0.02 + 0.005,
-			angle: Math.random() * Math.PI * 2
-		})
-	}
-	mobileParticles.value = particlesList
-}
-
-function measureStackDots() {
-	const container = switcherEl.value?.querySelector('.stacked')
-	if (!container) return
-	const dots = container.querySelectorAll('.stack-dot')
-	const containerRect = container.getBoundingClientRect()
-	const ys: number[] = []
-	let computedX = 0
-	dots.forEach((dot) => {
-		const rect = dot.getBoundingClientRect()
-		const y = rect.top - containerRect.top + rect.height / 2
-		ys.push(y)
-		if (computedX === 0) {
-			computedX = rect.left - containerRect.left + rect.width / 2
-		}
-	})
-	stackDotsY.value = ys
-	stackDotX.value = computedX
-}
-
-function trackMobilePointer(event: PointerEvent) {
-	const container = switcherEl.value?.querySelector('.stacked')
-	if (!container) return
-
-	const rect = container.getBoundingClientRect()
-	mobilePointer.value = {
-		x: (event.clientX - rect.left) / rect.width,
-		y: (event.clientY - rect.top) / rect.height,
-		active: true,
-	}
-}
-
-function releaseMobilePointer() {
-	mobilePointer.value = { ...mobilePointer.value, active: false }
+function checkIfMobile() {
+	isMobile.value = typeof window !== 'undefined' && window.innerWidth < 880
 }
 
 // The sticky rail is a second copy of the switcher. It is live only in the
@@ -267,9 +201,13 @@ function scrollToDesktopMapTop() {
 function commitFromNode(id: ThreadId) {
 	commit(id)
 
-	if (!isDesktopLayout() || trailDetailIsVisible()) return
-
-	requestAnimationFrame(scrollToDesktopMapTop)
+	if (isMobile.value) {
+		requestAnimationFrame(scrollToTrailHeadFast)
+	} else if (!isDesktopLayout() || trailDetailIsVisible()) {
+		return
+	} else {
+		requestAnimationFrame(scrollToDesktopMapTop)
+	}
 }
 
 // Switching from the rail changes content far above the fold, so bring the
@@ -309,16 +247,6 @@ function scrollToTrailHeadFast() {
 	}
 
 	window.requestAnimationFrame(step)
-}
-
-function commitFromStack(id: ThreadId) {
-	commit(id)
-
-	const isStackedLayout =
-		typeof window !== 'undefined' && window.matchMedia('(max-width: 879px)').matches
-	if (!isStackedLayout) return
-
-	requestAnimationFrame(scrollToTrailHeadFast)
 }
 
 // Keep the active rail item visible when the selection changes or the rail
@@ -380,17 +308,38 @@ function releasePointer() {
 	pointer.value = { ...pointer.value, active: false }
 }
 
-const nodes = computed(() =>
-	threads.map((t) => {
-		const rad = (t.angle * Math.PI) / 180
-		return {
-			...t,
-			x: CX + RX * Math.cos(rad),
-			y: CY + RY * Math.sin(rad),
-			placement: labelPlacement(CX + RX * Math.cos(rad), CY + RY * Math.sin(rad)),
+const nodes = computed(() => {
+	const mobileCoords = [
+		{ x: 16, y: 38, placement: 'right' },
+		{ x: 84, y: 38, placement: 'left' },
+		{ x: 50, y: 59, placement: 'bottom' },
+		{ x: 16, y: 80, placement: 'right' },
+		{ x: 84, y: 80, placement: 'left' }
+	]
+
+	return threads.map((t, index) => {
+		if (isMobile.value) {
+			const coords = mobileCoords[index] || { x: 50, y: 50, placement: 'bottom' }
+			return {
+				...t,
+				x: coords.x,
+				y: coords.y,
+				placement: coords.placement as 'top' | 'right' | 'bottom' | 'left'
+			}
+		} else {
+			const rad = (t.angle * Math.PI) / 180
+			return {
+				...t,
+				x: CX + RX * Math.cos(rad),
+				y: CY + RY * Math.sin(rad),
+				placement: labelPlacement(CX + RX * Math.cos(rad), CY + RY * Math.sin(rad)),
+			}
 		}
-	}),
-)
+	})
+})
+
+const currentCX = computed(() => isMobile.value ? 50 : CX)
+const currentCY = computed(() => isMobile.value ? 14 : CY)
 
 const active = computed(() => threads.find((t) => t.id === selected.value)!)
 
@@ -405,9 +354,11 @@ const trail = computed(() => {
 })
 
 function curve(x: number, y: number): string {
-	const mx = (CX + x) / 2
-	const my = (CY + y) / 2 - 7
-	return `M ${CX} ${CY} Q ${mx} ${my} ${x} ${y}`
+	const cx = currentCX.value
+	const cy = currentCY.value
+	const mx = (cx + x) / 2
+	const my = (cy + y) / 2 - (isMobile.value ? 2 : 7)
+	return `M ${cx} ${cy} Q ${mx} ${my} ${x} ${y}`
 }
 
 function canvasCurve(
@@ -417,24 +368,28 @@ function canvasCurve(
 	x: number,
 	y: number,
 ) {
-	const startX = (CX / 100) * width
-	const startY = (CY / 100) * height
+	const cx = currentCX.value
+	const cy = currentCY.value
+	const startX = (cx / 100) * width
+	const startY = (cy / 100) * height
 	const endX = (x / 100) * width
 	const endY = (y / 100) * height
-	const controlX = ((CX + x) / 200) * width
-	const controlY = (((CY + y) / 2 - 7) / 100) * height
+	const controlX = ((cx + x) / 200) * width
+	const controlY = (((cy + y) / 2 - (isMobile.value ? 2 : 7)) / 100) * height
 
 	ctx.moveTo(startX, startY)
 	ctx.quadraticCurveTo(controlX, controlY, endX, endY)
 }
 
 function pointOnCurve(width: number, height: number, x: number, y: number, t: number) {
-	const startX = (CX / 100) * width
-	const startY = (CY / 100) * height
+	const cx = currentCX.value
+	const cy = currentCY.value
+	const startX = (cx / 100) * width
+	const startY = (cy / 100) * height
 	const endX = (x / 100) * width
 	const endY = (y / 100) * height
-	const controlX = ((CX + x) / 200) * width
-	const controlY = (((CY + y) / 2 - 7) / 100) * height
+	const controlX = ((cx + x) / 200) * width
+	const controlY = (((cy + y) / 2 - (isMobile.value ? 2 : 7)) / 100) * height
 	const inv = 1 - t
 
 	return {
@@ -449,24 +404,6 @@ function prepareCanvas() {
 	if (!canvas || !field) return
 
 	const rect = field.getBoundingClientRect()
-	const dpr = Math.min(window.devicePixelRatio || 1, 2)
-	canvas.width = Math.round(rect.width * dpr)
-	canvas.height = Math.round(rect.height * dpr)
-	canvas.style.width = `${rect.width}px`
-	canvas.style.height = `${rect.height}px`
-
-	const ctx = canvas.getContext('2d')
-	if (!ctx) return
-
-	ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-}
-
-function prepareMobileCanvas() {
-	const canvas = mobileCanvasEl.value
-	const container = switcherEl.value?.querySelector('.stacked')
-	if (!canvas || !container) return
-
-	const rect = container.getBoundingClientRect()
 	const dpr = Math.min(window.devicePixelRatio || 1, 2)
 	canvas.width = Math.round(rect.width * dpr)
 	canvas.height = Math.round(rect.height * dpr)
@@ -501,7 +438,7 @@ function drawConstellation(time: number) {
 			0,
 			pointerX,
 			pointerY,
-			Math.max(width, height) * 0.36,
+			Math.max(width, height) * (isMobile.value ? 0.2 : 0.36),
 		)
 		glow.addColorStop(0, 'rgba(92, 143, 98, 0.07)')
 		glow.addColorStop(0.58, 'rgba(92, 143, 98, 0.022)')
@@ -538,10 +475,10 @@ function drawConstellation(time: number) {
 		const dx = pointerX - nodeX
 		const dy = pointerY - nodeY
 		const distance = Math.sqrt(dx * dx + dy * dy)
-		const pull = pointer.value.active ? Math.max(0, 1 - distance / 220) : 0
+		const pull = pointer.value.active ? Math.max(0, 1 - distance / (isMobile.value ? 120 : 220)) : 0
 
 		ctx.beginPath()
-		ctx.arc(nodeX, nodeY, isActive ? 13 : 9 + pull * 7, 0, Math.PI * 2)
+		ctx.arc(nodeX, nodeY, isActive ? 13 : 9 + pull * (isMobile.value ? 4 : 7), 0, Math.PI * 2)
 		ctx.strokeStyle = isActive
 			? 'rgba(56, 128, 82, 0.2)'
 			: `rgba(56, 128, 82, ${0.05 + pull * 0.16})`
@@ -550,140 +487,8 @@ function drawConstellation(time: number) {
 	})
 }
 
-function drawMobileConstellation(time: number) {
-	const canvas = mobileCanvasEl.value
-	const container = switcherEl.value?.querySelector('.stacked')
-	const ctx = canvas?.getContext('2d')
-	if (!canvas || !container || !ctx || stackDotsY.value.length === 0) return
-
-	const rect = container.getBoundingClientRect()
-	const width = rect.width
-	const height = rect.height
-	ctx.clearRect(0, 0, width, height)
-
-	const xPos = stackDotX.value
-	const ys = stackDotsY.value
-	const activeIndex = threads.findIndex((t) => t.id === selected.value)
-
-	const drift = reduceMotion ? 0 : time * 0.001
-
-	// 1. Draw glowing connecting wires between dots
-	ctx.beginPath()
-	for (let i = 0; i < ys.length - 1; i++) {
-		const y1 = ys[i]!
-		const y2 = ys[i + 1]!
-		const midY = (y1 + y2) / 2
-
-		const wiggle = reduceMotion ? 0 : Math.sin(drift * 2 + i) * 3
-		const controlX = xPos + wiggle
-		
-		ctx.moveTo(xPos, y1)
-		ctx.quadraticCurveTo(controlX, midY, xPos, y2)
-	}
-
-	ctx.strokeStyle = 'rgba(176, 204, 177, 0.4)'
-	ctx.lineWidth = 1.5
-	ctx.stroke()
-
-	// Highlight the active path (leading to/from the active node)
-	if (activeIndex !== -1) {
-		ctx.beginPath()
-		
-		for (let i = 0; i < ys.length - 1; i++) {
-			const y1 = ys[i]!
-			const y2 = ys[i + 1]!
-			const midY = (y1 + y2) / 2
-			const isSegmentActive = i === activeIndex || i === activeIndex - 1
-			
-			if (isSegmentActive) {
-				const wiggle = reduceMotion ? 0 : Math.sin(drift * 2 + i) * 3
-				const controlX = xPos + wiggle
-				ctx.moveTo(xPos, y1)
-				ctx.quadraticCurveTo(controlX, midY, xPos, y2)
-			}
-		}
-		
-		ctx.strokeStyle = 'rgba(56, 128, 82, 0.78)'
-		ctx.lineWidth = 2.5
-		ctx.stroke()
-
-		// Draw a pulse wave traveling along the active path
-		if (!reduceMotion) {
-			const pulseY = ys[activeIndex]!
-			const pulseGlow = ctx.createRadialGradient(xPos, pulseY, 0, xPos, pulseY, 20)
-			pulseGlow.addColorStop(0, 'rgba(56, 128, 82, 0.35)')
-			pulseGlow.addColorStop(1, 'rgba(56, 128, 82, 0)')
-			ctx.fillStyle = pulseGlow
-			ctx.beginPath()
-			ctx.arc(xPos, pulseY, 20 + Math.sin(drift * 6) * 4, 0, Math.PI * 2)
-			ctx.fill()
-		}
-	}
-
-	// 2. Draw active dot glowing aura/ripple
-	if (activeIndex !== -1) {
-		const activeY = ys[activeIndex]!
-		
-		const glow = ctx.createRadialGradient(xPos, activeY, 0, xPos, activeY, 32)
-		glow.addColorStop(0, 'rgba(92, 143, 98, 0.16)')
-		glow.addColorStop(0.5, 'rgba(92, 143, 98, 0.06)')
-		glow.addColorStop(1, 'rgba(92, 143, 98, 0)')
-		ctx.fillStyle = glow
-		ctx.beginPath()
-		ctx.arc(xPos, activeY, 32, 0, Math.PI * 2)
-		ctx.fill()
-	}
-
-	// 3. Draw particles
-	const targetX = mobilePointer.value.active ? mobilePointer.value.x * width : xPos
-	const targetY = mobilePointer.value.active 
-		? mobilePointer.value.y * height 
-		: (activeIndex !== -1 ? ys[activeIndex]! : height / 2)
-
-	mobileParticles.value.forEach((p, idx) => {
-		if (!reduceMotion) {
-			p.angle += p.speed
-			const driftY = Math.sin(p.angle) * 0.15
-
-			const dx = targetX - (p.x / 100) * width
-			const dy = targetY - p.y
-			const dist = Math.sqrt(dx * dx + dy * dy)
-			
-			const pullStrength = mobilePointer.value.active ? 0.05 : 0.02
-			if (dist > 5) {
-				p.vx += (dx / dist) * pullStrength
-				p.vy += (dy / dist) * pullStrength
-			}
-
-			p.vx *= 0.94
-			p.vy *= 0.94
-			p.x += (p.vx / width) * 100
-			p.y += p.vy + driftY
-		}
-
-		if (p.x < 0) { p.x = 0; p.vx *= -1 }
-		if (p.x > 100) { p.x = 100; p.vx *= -1 }
-		if (p.y < 0) { p.y = 0; p.vy *= -1 }
-		if (p.y > height) { p.y = height; p.vy *= -1 }
-
-		const px = (p.x / 100) * width
-		const py = p.y
-		
-		ctx.beginPath()
-		ctx.arc(px, py, p.size, 0, Math.PI * 2)
-		
-		const alpha = activeIndex !== -1 
-			? p.alpha * (1 + 0.4 * Math.sin(drift * 4 + idx)) 
-			: p.alpha
-		
-		ctx.fillStyle = `rgba(56, 128, 82, ${alpha})`
-		ctx.fill()
-	})
-}
-
 function animate(time = 0) {
 	drawConstellation(time)
-	drawMobileConstellation(time)
 	if (!reduceMotion) {
 		frame = window.requestAnimationFrame(animate)
 	}
@@ -692,8 +497,6 @@ function animate(time = 0) {
 function restartAnimation() {
 	window.cancelAnimationFrame(frame)
 	prepareCanvas()
-	prepareMobileCanvas()
-	measureStackDots()
 	animate()
 }
 
@@ -709,10 +512,8 @@ watch(selected, () => {
 
 onMounted(() => {
 	reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-	initMobileParticles()
+	checkIfMobile()
 	prepareCanvas()
-	prepareMobileCanvas()
-	measureStackDots()
 
 	resizeObserver = new ResizeObserver(restartAnimation)
 	if (switcherEl.value) resizeObserver.observe(switcherEl.value)
@@ -727,13 +528,12 @@ onMounted(() => {
 })
 
 function onResize() {
+	checkIfMobile()
 	measureRailTop()
 	measureRailHeight()
 	measureRailOverflow()
 	buildObservers()
 	updateRailVisibilityFromLayout()
-	measureStackDots()
-	prepareMobileCanvas()
 }
 
 onBeforeUnmount(() => {
@@ -766,7 +566,7 @@ onBeforeUnmount(() => {
 					/>
 				</svg>
 
-				<div class="centre" :style="{ left: CX + '%', top: CY + '%' }" aria-hidden="true">
+				<div class="centre" :style="{ left: currentCX + '%', top: currentCY + '%' }" aria-hidden="true">
 					<img class="centre-avatar" src="/img/jin-portrait-square-800.jpg" alt="" loading="lazy" />
 				</div>
 
@@ -793,37 +593,6 @@ onBeforeUnmount(() => {
 						<span class="node-label">{{ n.label }}</span>
 					</button>
 				</div>
-			</div>
-
-			<!-- Stacked index: same threads, source of truth on narrow screens -->
-			<div
-				class="stacked"
-				:class="{ 'stacked--canvas-active': !reduceMotion && mobileCanvasEl }"
-				@pointermove="trackMobilePointer"
-				@pointerleave="releaseMobilePointer"
-			>
-				<canvas ref="mobileCanvasEl" class="stacked-canvas" aria-hidden="true"></canvas>
-				<button
-					v-for="(t, i) in threads"
-					:key="t.id"
-					class="stack-item"
-					:class="{
-						'stack-item--active': t.id === selected,
-						'stack-item--committed': t.id === committed,
-					}"
-					:style="{ '--i': i }"
-					:aria-pressed="t.id === selected"
-					@click="commitFromStack(t.id)"
-				>
-					<span class="stack-dot" aria-hidden="true"></span>
-					<span class="stack-text">
-						<span class="stack-label">{{ t.label }}</span>
-						<span class="stack-line">{{ t.line }}</span>
-					</span>
-					<span class="stack-mark" aria-hidden="true">
-						{{ t.id === selected ? 'Tracing below' : 'Trace' }}
-					</span>
-				</button>
 			</div>
 		</div>
 
@@ -956,184 +725,245 @@ onBeforeUnmount(() => {
 	margin-top: clamp(1.25rem, 3vw, 2.25rem);
 }
 
-/* ---------- base / narrow: stacked index is the truth ---------- */
+/* ---------- constellation base styles ---------- */
 .field {
-	display: none;
-}
-
-.stacked {
 	position: relative;
-	display: grid;
-	border-top: 1px solid var(--color-hairline);
+	width: min(100%, 70rem);
+	aspect-ratio: 2.72 / 1;
+	max-height: 24.5rem;
+	margin: 0.2rem auto 0;
+	isolation: isolate;
+	overflow: hidden;
 }
 
-.stacked-canvas {
+.field-canvas {
 	position: absolute;
 	inset: 0;
+	z-index: 0;
 	width: 100%;
 	height: 100%;
 	pointer-events: none;
-	z-index: 0;
-	opacity: 0.85;
+	opacity: 0.76;
 }
 
-.stacked--canvas-active .stack-dot::before,
-.stacked--canvas-active .stack-dot::after {
-	display: none;
+.wires {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	opacity: 0.12;
+}
+.wire {
+	fill: none;
+	stroke: var(--color-sage-deep);
+	stroke-width: 1.6;
+	vector-effect: non-scaling-stroke;
+	transition:
+		stroke 0.4s var(--ease-out-quint),
+		stroke-width 0.4s var(--ease-out-quint);
+}
+.wire.lit {
+	stroke: var(--color-moss);
+	stroke-width: 3;
+	opacity: 0.24;
 }
 
-.stack-item {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 0.75rem;
-	text-align: left;
-	padding: 0.72rem 0.4rem 0.72rem 0.9rem;
+.centre {
+	position: absolute;
+	z-index: 2;
+	transform: translate(-50%, -50%);
+	width: clamp(4.8rem, 8vw, 6.7rem);
+	aspect-ratio: 1;
+	border-radius: 999px;
+	padding: 0.18rem;
+	background: var(--color-paper);
+	overflow: hidden;
+	box-shadow:
+		0 0 0 1px var(--color-hairline),
+		0 0 0 0.3rem oklch(0.968 0.013 95 / 0.78),
+		0 0 2.2rem var(--color-paper);
+}
+.centre-avatar {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	object-fit: cover;
+	object-position: 50% 42%;
+	scale: 1.15;
+	filter: saturate(0.92) brightness(1.02) contrast(0.98);
+}
+
+.node-layer {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+}
+.node {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	display: grid;
+	place-items: center;
+	width: min(22rem, 32vw);
+	height: 5.5rem;
 	background: none;
 	border: 0;
-	border-bottom: 1px solid var(--color-hairline);
+	border-radius: var(--radius-md);
 	cursor: pointer;
 	font: inherit;
-	color: var(--color-ink);
-	z-index: 1;
-	transition:
-		background 0.25s var(--ease-out-quint),
-		transform 0.12s var(--ease-out-quint);
-	/* Staggered entry animation */
-	animation: stack-enter 0.48s calc(var(--i) * 60ms) var(--ease-out-expo) both;
+	color: var(--color-ink-soft);
+	touch-action: manipulation;
+	will-change: transform;
 }
-
-/* --- Node dot: echoes the constellation nodes --- */
-.stack-dot {
-	position: relative;
-	flex: none;
-	width: 10px;
-	height: 10px;
-	border-radius: 99px;
-	border: 2px solid var(--color-sage-deep);
-	background: var(--color-paper);
-	z-index: 3;
-	transition:
-		background 0.3s var(--ease-out-quint),
-		border-color 0.3s var(--ease-out-quint),
-		transform 0.3s var(--ease-out-quint),
-		box-shadow 0.3s var(--ease-out-quint);
+.node--right {
+	width: min(35rem, 42vw);
+	transform: translate(-28%, -50%);
 }
-/* Vertical thread segments above and below each dot */
-.stack-dot::before,
-.stack-dot::after {
-	content: '';
+.node--left {
+	width: min(35rem, 42vw);
+	transform: translate(-72%, -50%);
+}
+.node--top,
+.node--bottom {
+	height: 7.6rem;
+}
+.node-dot {
 	position: absolute;
 	left: 50%;
-	width: 1px;
-	background: var(--color-sage-deep);
-	opacity: 0.45;
-	transform: translateX(-50%);
-	pointer-events: none;
-}
-.stack-dot::before {
-	bottom: calc(100% + 2px);
-	height: 2rem;
-}
-.stack-dot::after {
-	top: calc(100% + 2px);
-	height: 2rem;
-}
-/* First item: no line above */
-.stack-item:first-child .stack-dot::before {
-	display: none;
-}
-/* Last item: no line below */
-.stack-item:last-child .stack-dot::after {
-	display: none;
-}
-
-.stack-text {
-	display: flex;
-	flex-direction: column;
-	gap: 0.15rem;
-	min-width: 0;
-	flex: 1;
-}
-.stack-item:hover {
-	background: oklch(0.922 0.022 135 / 0.5);
-}
-.stack-item:hover .stack-dot {
-	border-color: var(--color-moss);
-	transform: scale(1.15);
-}
-
-/* --- Touch press feedback --- */
-.stack-item:active {
-	transform: scale(0.985);
-	transition-duration: 0.08s;
-}
-
-/* --- Active state: sage bg + filled dot --- */
-.stack-item--active {
-	background: var(--color-sage);
-}
-.stack-item--active .stack-label {
-	color: var(--color-moss-deep);
-}
-.stack-item--active .stack-dot {
-	background: var(--color-sage);
-	border-color: var(--color-moss);
-	transform: scale(1.1);
-	box-shadow: 0 0 0 3px oklch(0.52 0.087 150 / 0.1);
-}
-
-/* --- Committed state: solid filled dot + breathing --- */
-.stack-item--committed .stack-dot {
-	background: var(--color-moss);
-	border-color: var(--color-moss);
-	transform: scale(1.15);
-	box-shadow: 0 0 0 4px oklch(0.52 0.087 150 / 0.12);
-	animation: stack-dot-breathe 3s ease-in-out infinite;
-}
-
-.stack-label {
-	font-size: var(--text-lg);
-	font-weight: 700;
-	transition: color 0.25s var(--ease-out-quint);
-}
-.stack-line {
-	font-size: var(--text-sm);
-	color: var(--color-ink-soft);
-	display: none;
-}
-.stack-item--active .stack-line {
-	display: block;
-}
-.stack-mark {
-	flex: none;
-	font-size: var(--text-sm);
-	font-weight: 600;
-	letter-spacing: 0.02em;
-	color: var(--color-ink-faint);
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 14px;
+	height: 14px;
+	border-radius: 99px;
+	background: var(--color-paper);
+	border: 2px solid var(--color-sage-deep);
+	box-shadow: 0 0 0 7px var(--color-paper);
 	transition:
-		color 0.25s var(--ease-out-quint),
+		border-color 0.3s var(--ease-out-quint),
+		background 0.3s var(--ease-out-quint),
 		transform 0.3s var(--ease-out-quint),
-		opacity 0.3s var(--ease-out-quint);
+		box-shadow 0.3s var(--ease-out-quint);
+	will-change: transform;
 }
-.stack-mark::after {
-	content: ' \203A';
+.node-label {
+	position: absolute;
+	max-width: 12rem;
+	font-size: var(--text-base);
+	font-weight: 600;
+	line-height: 1.3;
+	text-shadow:
+		0 0 0.35rem var(--color-paper),
+		0 0 0.9rem var(--color-paper),
+		0 0 1.4rem var(--color-paper);
+	transition: color 0.2s var(--ease-out-quint);
 }
-.stack-item--active .stack-mark {
-	color: var(--color-moss-deep);
+.node--top .node-label {
+	bottom: calc(50% + 1.55rem);
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: 15rem;
+	white-space: nowrap;
+}
+.node--right .node-label {
+	top: 50%;
+	left: calc(28% + 2rem);
+	transform: translateY(-50%);
+	text-align: left;
+}
+.node--bottom .node-label {
+	top: calc(50% + 1.55rem);
+	left: 50%;
+	transform: translateX(-50%);
+	max-width: 15rem;
+	white-space: nowrap;
+}
+.node--left .node-label {
+	top: 50%;
+	right: calc(28% + 2rem);
+	transform: translateY(-50%);
+	text-align: right;
+}
+.node--right .node-dot {
+	left: 28%;
+}
+.node--left .node-dot {
+	left: 72%;
+}
+.node:hover .node-dot,
+.node:focus-visible .node-dot {
+	border-color: var(--color-moss);
+	box-shadow:
+		0 0 0 7px var(--color-paper),
+		0 0 0 12px oklch(0.52 0.087 150 / 0.08);
+	transform: translate(-50%, -50%) scale(1.22);
+}
+.node:hover .node-label,
+.node:focus-visible .node-label {
+	color: var(--color-ink);
+}
+.node.active .node-dot {
+	background: var(--color-moss);
+	border-color: var(--color-moss);
+	box-shadow:
+		0 0 0 7px var(--color-paper),
+		0 0 0 12px oklch(0.52 0.087 150 / 0.09);
+	transform: translate(-50%, -50%) scale(1.18);
+}
+.node.active .node-label {
+	color: var(--color-ink);
 	font-weight: 700;
-	animation: stack-mark-in 0.4s var(--ease-out-expo) both;
-}
-.stack-item--active .stack-mark::after {
-	content: ' \2193';
 }
 
-/* --- Active dot thread segments turn moss --- */
-.stack-item--active .stack-dot::before,
-.stack-item--active .stack-dot::after {
-	background: var(--color-moss);
-	opacity: 0.35;
+/* Pre-selected default: this thread is shown, but the visitor hasn't
+   chosen it yet. Reads as a hollow "suggested" marker rather than the
+   solid fill of a committed choice, and stays steerable by hover. */
+.node.active.preselected .node-dot {
+	background: var(--color-paper);
+	border-color: var(--color-moss);
+	box-shadow:
+		0 0 0 7px var(--color-paper),
+		0 0 0 12px oklch(0.52 0.087 150 / 0.05);
+	transform: translate(-50%, -50%) scale(1.1);
+}
+.node.active.preselected .node-label {
+	color: var(--color-ink-soft);
+	font-weight: 600;
+}
+
+/* Resting invitation: unpicked dots breathe so the map reads as touchable
+   without an imperative. Stops once the visitor has engaged. */
+.node.inviting .node-dot::after {
+	content: '';
+	position: absolute;
+	inset: -5px;
+	border-radius: 99px;
+	border: 1px solid var(--color-moss);
+	pointer-events: none;
+	animation: node-invite 3s var(--ease-out-quint) infinite;
+}
+@keyframes node-invite {
+	0% {
+		opacity: 0.5;
+		transform: scale(0.6);
+	}
+	70%,
+	100% {
+		opacity: 0;
+		transform: scale(1.3);
+	}
+}
+.node:hover .node-dot::after,
+.node:focus-visible .node-dot::after {
+	animation: none;
+	opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+	.node.inviting .node-dot::after {
+		animation: none;
+		opacity: 0.35;
+		transform: scale(1);
+	}
 }
 
 /* ---------- trail (all sizes) ---------- */
@@ -1251,14 +1081,33 @@ onBeforeUnmount(() => {
 	.trail-all-link {
 		text-align: right;
 	}
+
+	.field {
+		aspect-ratio: auto;
+		height: clamp(34rem, 130vw, 42rem);
+		max-height: none;
+	}
+
+	.centre {
+		width: 4.8rem;
+	}
+
+	.node {
+		width: min(22rem, 64vw);
+		height: 4.5rem;
+	}
+
+	.node--right .node-label {
+		left: calc(28% + 1.1rem);
+	}
+
+	.node--left .node-label {
+		right: calc(28% + 1.1rem);
+	}
 }
 
 /* ---------- wide: the constellation appears ---------- */
 @media (min-width: 880px) {
-	.stacked {
-		display: none;
-	}
-
 	.trail-note {
 		display: block;
 	}
@@ -1271,246 +1120,6 @@ onBeforeUnmount(() => {
 	.trail-grid {
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 		gap: clamp(1.5rem, 4vw, 2rem) 2.5rem;
-	}
-	.field {
-		display: block;
-		position: relative;
-		width: min(100%, 70rem);
-		aspect-ratio: 2.72 / 1;
-		max-height: 24.5rem;
-		margin: 0.2rem auto 0;
-		isolation: isolate;
-		overflow: hidden;
-	}
-
-	.field-canvas {
-		position: absolute;
-		inset: 0;
-		z-index: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-		opacity: 0.76;
-	}
-
-	.wires {
-		position: absolute;
-		inset: 0;
-		z-index: 1;
-		width: 100%;
-		height: 100%;
-		opacity: 0.12;
-	}
-	.wire {
-		fill: none;
-		stroke: var(--color-sage-deep);
-		stroke-width: 1.6;
-		vector-effect: non-scaling-stroke;
-		transition:
-			stroke 0.4s var(--ease-out-quint),
-			stroke-width 0.4s var(--ease-out-quint);
-	}
-	.wire.lit {
-		stroke: var(--color-moss);
-		stroke-width: 3;
-		opacity: 0.24;
-	}
-
-	.centre {
-		position: absolute;
-		z-index: 2;
-		transform: translate(-50%, -50%);
-		width: clamp(4.8rem, 8vw, 6.7rem);
-		aspect-ratio: 1;
-		border-radius: 999px;
-		padding: 0.18rem;
-		background: var(--color-paper);
-		overflow: hidden;
-		box-shadow:
-			0 0 0 1px var(--color-hairline),
-			0 0 0 0.3rem oklch(0.968 0.013 95 / 0.78),
-			0 0 2.2rem var(--color-paper);
-	}
-	.centre-avatar {
-		display: block;
-		width: 100%;
-		height: 100%;
-		border-radius: inherit;
-		object-fit: cover;
-		object-position: 50% 42%;
-		scale: 1.15;
-		filter: saturate(0.92) brightness(1.02) contrast(0.98);
-	}
-
-	.node-layer {
-		position: absolute;
-		inset: 0;
-		z-index: 3;
-	}
-	.node {
-		position: absolute;
-		transform: translate(-50%, -50%);
-		display: grid;
-		place-items: center;
-		width: min(22rem, 32vw);
-		height: 5.5rem;
-		background: none;
-		border: 0;
-		border-radius: var(--radius-md);
-		cursor: pointer;
-		font: inherit;
-		color: var(--color-ink-soft);
-		touch-action: manipulation;
-		will-change: transform;
-	}
-	.node--right {
-		width: min(35rem, 42vw);
-		transform: translate(-28%, -50%);
-	}
-	.node--left {
-		width: min(35rem, 42vw);
-		transform: translate(-72%, -50%);
-	}
-	.node--top,
-	.node--bottom {
-		height: 7.6rem;
-	}
-	.node-dot {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 14px;
-		height: 14px;
-		border-radius: 99px;
-		background: var(--color-paper);
-		border: 2px solid var(--color-sage-deep);
-		box-shadow: 0 0 0 7px var(--color-paper);
-		transition:
-			border-color 0.3s var(--ease-out-quint),
-			background 0.3s var(--ease-out-quint),
-			transform 0.3s var(--ease-out-quint),
-			box-shadow 0.3s var(--ease-out-quint);
-		will-change: transform;
-	}
-	.node-label {
-		position: absolute;
-		max-width: 12rem;
-		font-size: var(--text-base);
-		font-weight: 600;
-		line-height: 1.3;
-		text-shadow:
-			0 0 0.35rem var(--color-paper),
-			0 0 0.9rem var(--color-paper),
-			0 0 1.4rem var(--color-paper);
-		transition: color 0.2s var(--ease-out-quint);
-	}
-	.node--top .node-label {
-		bottom: calc(50% + 1.55rem);
-		left: 50%;
-		transform: translateX(-50%);
-		max-width: 15rem;
-		white-space: nowrap;
-	}
-	.node--right .node-label {
-		top: 50%;
-		left: calc(28% + 2rem);
-		transform: translateY(-50%);
-		text-align: left;
-	}
-	.node--bottom .node-label {
-		top: calc(50% + 1.55rem);
-		left: 50%;
-		transform: translateX(-50%);
-		max-width: 15rem;
-		white-space: nowrap;
-	}
-	.node--left .node-label {
-		top: 50%;
-		right: calc(28% + 2rem);
-		transform: translateY(-50%);
-		text-align: right;
-	}
-	.node--right .node-dot {
-		left: 28%;
-	}
-	.node--left .node-dot {
-		left: 72%;
-	}
-	.node:hover .node-dot,
-	.node:focus-visible .node-dot {
-		border-color: var(--color-moss);
-		box-shadow:
-			0 0 0 7px var(--color-paper),
-			0 0 0 12px oklch(0.52 0.087 150 / 0.08);
-		transform: translate(-50%, -50%) scale(1.22);
-	}
-	.node:hover .node-label,
-	.node:focus-visible .node-label {
-		color: var(--color-ink);
-	}
-	.node.active .node-dot {
-		background: var(--color-moss);
-		border-color: var(--color-moss);
-		box-shadow:
-			0 0 0 7px var(--color-paper),
-			0 0 0 12px oklch(0.52 0.087 150 / 0.09);
-		transform: translate(-50%, -50%) scale(1.18);
-	}
-	.node.active .node-label {
-		color: var(--color-ink);
-		font-weight: 700;
-	}
-
-	/* Pre-selected default: this thread is shown, but the visitor hasn't
-     chosen it yet. Reads as a hollow "suggested" marker rather than the
-     solid fill of a committed choice, and stays steerable by hover. */
-	.node.active.preselected .node-dot {
-		background: var(--color-paper);
-		border-color: var(--color-moss);
-		box-shadow:
-			0 0 0 7px var(--color-paper),
-			0 0 0 12px oklch(0.52 0.087 150 / 0.05);
-		transform: translate(-50%, -50%) scale(1.1);
-	}
-	.node.active.preselected .node-label {
-		color: var(--color-ink-soft);
-		font-weight: 600;
-	}
-
-	/* Resting invitation: unpicked dots breathe so the map reads as touchable
-     without an imperative. Stops once the visitor has engaged. */
-	.node.inviting .node-dot::after {
-		content: '';
-		position: absolute;
-		inset: -5px;
-		border-radius: 99px;
-		border: 1px solid var(--color-moss);
-		pointer-events: none;
-		animation: node-invite 3s var(--ease-out-quint) infinite;
-	}
-	@keyframes node-invite {
-		0% {
-			opacity: 0.5;
-			transform: scale(0.6);
-		}
-		70%,
-		100% {
-			opacity: 0;
-			transform: scale(1.3);
-		}
-	}
-	.node:hover .node-dot::after,
-	.node:focus-visible .node-dot::after {
-		animation: none;
-		opacity: 0;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.node.inviting .node-dot::after {
-			animation: none;
-			opacity: 0.35;
-			transform: scale(1);
-		}
 	}
 }
 
@@ -1739,55 +1348,5 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* ---------- mobile stacked index animations ---------- */
-@keyframes stack-enter {
-	from {
-		opacity: 0;
-		transform: translateY(0.7rem);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-@keyframes stack-dot-breathe {
-	0%,
-	100% {
-		box-shadow: 0 0 0 3px oklch(0.52 0.087 150 / 0.1);
-		transform: scale(1.1);
-	}
-	50% {
-		box-shadow: 0 0 0 5px oklch(0.52 0.087 150 / 0.06);
-		transform: scale(1.2);
-	}
-}
-
-@keyframes stack-mark-in {
-	from {
-		opacity: 0;
-		transform: translateY(-3px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* ---------- reduced motion: mobile stacked ---------- */
-@media (prefers-reduced-motion: reduce) {
-	.stack-item {
-		animation: none;
-		opacity: 1;
-		transform: none;
-	}
-	.stack-item--committed .stack-dot {
-		animation: none;
-	}
-	.stack-item--active .stack-mark {
-		animation: none;
-		opacity: 1;
-		transform: none;
-	}
-}
+/* No stack animations needed as stacked list is removed */
 </style>
