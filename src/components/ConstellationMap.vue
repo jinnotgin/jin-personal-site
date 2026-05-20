@@ -310,11 +310,11 @@ function releasePointer() {
 
 const nodes = computed(() => {
 	const mobileCoords = [
-		{ x: 16, y: 38, placement: 'right' },
-		{ x: 84, y: 38, placement: 'left' },
-		{ x: 50, y: 59, placement: 'bottom' },
-		{ x: 16, y: 80, placement: 'right' },
-		{ x: 84, y: 80, placement: 'left' }
+		{ x: 25, y: 36, placement: 'bottom' },
+		{ x: 75, y: 36, placement: 'bottom' },
+		{ x: 50, y: 58, placement: 'bottom' },
+		{ x: 25, y: 80, placement: 'bottom' },
+		{ x: 75, y: 80, placement: 'bottom' }
 	]
 
 	return threads.map((t, index) => {
@@ -1097,12 +1097,14 @@ onBeforeUnmount(() => {
 		height: 4.5rem;
 	}
 
-	.node--right .node-label {
-		left: calc(28% + 1.1rem);
-	}
-
-	.node--left .node-label {
-		right: calc(28% + 1.1rem);
+	.node--bottom .node-label,
+	.node--top .node-label {
+		white-space: normal;
+		text-align: center;
+		width: max-content;
+		max-width: 8.5rem;
+		font-size: var(--text-sm);
+		line-height: 1.2;
 	}
 }
 
