@@ -312,9 +312,9 @@ const nodes = computed(() => {
 	const mobileCoords = [
 		{ x: 25, y: 36, placement: 'bottom' },
 		{ x: 75, y: 36, placement: 'bottom' },
-		{ x: 50, y: 58, placement: 'bottom' },
-		{ x: 25, y: 80, placement: 'bottom' },
-		{ x: 75, y: 80, placement: 'bottom' }
+		{ x: 50, y: 62, placement: 'bottom' },
+		{ x: 25, y: 88, placement: 'bottom' },
+		{ x: 75, y: 88, placement: 'bottom' }
 	]
 
 	return threads.map((t, index) => {
@@ -339,7 +339,7 @@ const nodes = computed(() => {
 })
 
 const currentCX = computed(() => isMobile.value ? 50 : CX)
-const currentCY = computed(() => isMobile.value ? 14 : CY)
+const currentCY = computed(() => isMobile.value ? 10 : CY)
 
 const active = computed(() => threads.find((t) => t.id === selected.value)!)
 
@@ -1084,7 +1084,7 @@ onBeforeUnmount(() => {
 
 	.field {
 		aspect-ratio: auto;
-		height: clamp(34rem, 130vw, 42rem);
+		height: clamp(26rem, 100vw, 34rem);
 		max-height: none;
 	}
 
