@@ -761,6 +761,11 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce), (hover: none) {
+	.move:hover .move-verb .fill,
+	.move:focus-visible .move-verb .fill {
+		color: var(--color-ink);
+		-webkit-text-stroke-color: var(--color-ink);
+	}
 	.move-more {
 		grid-template-rows: 1fr;
 		opacity: 1;
