@@ -21,7 +21,7 @@ For me, a lot of this felt oddly hollow. I think I finally understand why, and i
 
 ## What courses are good at
 
-A course is a series of classes, and each class provides its lesson in a specific way. Someone who already understands a subject packages that understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
+A course works by packaging someone else's understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
 
 But it only works on one condition: the subject being taught has to be timeless enough.
 
@@ -32,7 +32,7 @@ Courses are great for stable, slow-moving, well-understood things, which, until 
 
 ## But topics like AI are evolving quickly
 
-For something like AI, this field isn't a settled subject, and the advice keeps shifting. Not long ago, the standard tip to squeeze better answers out of an AI model was to add "Let's think step by step" to your prompt, or by opening with a persona like "You are a world-class expert in...". Both were taught as essential prompting know-how, yet newer AI models these days can now reason on their own and no longer need such "techniques".
+For something like AI, the field is not settled and the advice keeps shifting. Not long ago, people were taught to add "Let's think step by step" or open with personas like "You are a world-class expert in...". Those were treated as essential prompting know-how. Newer models can now reason on their own and often need less of that scaffolding.
 
 Things move even faster in the space of AI tools. There's a constant churn of new ways to work: [Figma Make](https://www.figma.com/blog/figma-make-general-availability/), then [Claude Design](https://www.anthropic.com/news/claude-design-anthropic-labs), then [Figma Agents](https://www.figma.com/blog/the-figma-agent-is-here/), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begins.
 
@@ -49,27 +49,27 @@ I know "Play" sounds like a soft word for a serious problem. But take a few step
 
 Hand a child a tablet. No one sits them down and walks them through the grid of apps, or demonstrates how swiping differs from tapping, or explains what the home button does. They just poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
 
-And here's what makes this more than cute: the surface underneath them never stays still. Apps update. Layouts change with OS updates. New ones appear, old ones vanish. The thing they mastered last week might look different today. There is no settled version of the user interface to be taught, and yet the child doesn't care. They just play again. They've learned something deeper than any single interface: how to feel their way through an unfamiliar one.
+And here's what makes this more than cute: the surface underneath them never stays still. Apps update, layouts change, new ones appear, old ones vanish. The thing they mastered last week might look different today. There is no settled version of the user interface to be taught, and yet the child doesn't care. They just play again. They've learned something deeper than any single interface: how to feel their way through an unfamiliar one.
 
 ![Illustration of play as a child-like figure exploring shifting abstract tiles](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-1-play-loop.png "When the surface keeps changing, play teaches you how to feel your way through the unfamiliar.")
 
 Play looks inefficient because it's full of mistakes. But when a subject is still shifting and changing, the mistakes aren't waste. They're the only signal you've got, because reality is the only thing that actually knows the answer.
 
-This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/) pulled on at [a recent talk on human-centred AI by Lorong AI](https://luma.com/7ni74a2k). He co-founded the design firm Fjord and spent more than two decades shaping digital services. Someone with that much craft behind him could easily have talked about process or rigour. Instead, he talked about the importance of play, and his theory that the future of work will be playful.
+This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/) pulled on at [a recent talk on human-centred AI by Lorong AI](https://luma.com/7ni74a2k). With his experience at Fjord and Accenture Song, he could easily have talked about process or rigour. Instead, he talked about play, and his theory that the future of work will be playful.
 
 
 ## But play is for children
 
 There's an obvious objection here, and it's the gut feeling that play is something we file under "childish behaviour". Adults are supposed to have grown out of it.
 
-Look at how we act at work. We show up as "professionals". We execute tasks, follow processes, move tickets across a board, report against KPIs. Every one of those is the lesson mode in office clothes: a known outcome, a defined path, a clear definition of done. There's no place on a performance review for "spent three weeks playing with a new tool, shipped nothing, but now actually understands it". And when play does sneak into adult work, we quietly rename it into something that sounds more responsible. We call it research, or exploration, or a pilot.
+Look at how we act at work. We show up as "professionals". We execute tasks, follow processes, move tickets across a board, report against KPIs. All of that is lesson mode in office clothes: a known outcome, a defined path, a clear definition of done. There's no place on a performance review for "spent three weeks playing with a new tool, shipped nothing, but now actually understands it". And when play does sneak into adult work, we quietly rename it into something that sounds more responsible. We call it research, or exploration, or a pilot.
 
 So the exact mode a shifting subject demands is the one professional life has trained us to suppress. We didn't lose the ability to play. We were taught, gently and constantly, that it isn't what serious people do.
 
 
 ## Play runs on agency
 
-Play has a requirement of its own, and that's where [Philip Man](https://www.linkedin.com/in/philkcman/?utm_source=luma) comes in. Also speaking at the same talk, Philip heads the newly formed Innovation Office at GovTech, focused on prototyping the next generation of public services. His background runs through IDEO and BCG Digital Ventures, and he kept coming back to two ideas: intention and agency.
+Play has a requirement of its own, and that's where [Philip Man](https://www.linkedin.com/in/philkcman/?utm_source=luma) comes in. Also speaking at the same talk, Philip heads GovTech's newly formed Innovation Office, focused on prototyping the next generation of public services. He kept coming back to two ideas: intention and agency.
 
 Agency, the way he frames it, is the space between intent and action. It's not just permission to act. It's the room to act early, on an unfinished idea, and to be corrected by whatever happens next. Take that room away and you don't have play anymore. You've got a lesson with extra steps, where someone has already decided what the right outcome is and you're just walking toward it.
 
@@ -94,7 +94,7 @@ I just want to point out that we use the same word for our people. And we tend t
 ## Developing people, or containing them?
 
 
-Look again at what "development" usually means for adults at work. A defined curriculum. An approved course. A certificate at the end. From Coursera to corporate learning vendors to national upskilling programmes, the whole training industry shares one assumption: that the thing worth learning can be packaged into a syllabus with a measurable outcome. And inside organisations, "developing our people" usually means reaching for that same contained, well-specified path.
+Look again at what "development" usually means for adults at work: a defined curriculum, an approved course, a certificate at the end. From Coursera to corporate learning vendors to national upskilling programmes, the whole training industry shares one assumption: that the thing worth learning can be packaged into a syllabus with a measurable outcome.
 
 Like spec-driven development, this is reassuring precisely because it's legible, plannable, and accountable. You can point at the syllabus and say, *look, this is what we're doing for them*.
 
@@ -111,6 +111,4 @@ Our entire learning setup (courses, certificates, KPIs, credits) was designed fo
 
 ![Illustration of institutional learning frames with an empty space for play](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
-A course can only carry you as far as someone has already mapped. Past that line, the only way forward is to play. And play doesn't need permission so much as it needs space: real problems, real stakes, and structures that treat dead ends as lessons rather than failures.
-
-If we're serious about developing people for a world that won't hold still, the question isn't which course to send them on. It's what we have to build so they can learn the way the subject actually demands.
+A course can only carry you as far as someone has already mapped. Past that line, the work is no longer to deliver the right lesson. It is to design the conditions where playful learning can actually happen.
