@@ -75,7 +75,7 @@ In the context of AI coding agents, a [skill](https://agentskills.io/home) is a 
 
 If the AI model is the engine, and the harness is the car frame, then skills are the driver's manual taped to the dashboard. The engine has the power. The frame holds it together. But the manual is what tells the engine *where to go* and *what to avoid*.
 
-That search led me to [Impeccable](https://impeccable.style/), created by [Paul Bakaus](https://github.com/pbakaus/impeccable), is a design skill for AI coding agents. It ships with a library of design reference files covering areas like typography, colour, motion, spatial design, interaction patterns, responsive behaviour, and UX writing. By invoking this skill when using AI agents, the agent will be able to pick design references to load based on the task at hand.
+That search led me to [Impeccable](https://impeccable.style/), a design skill for AI coding agents created by [Paul Bakaus](https://github.com/pbakaus/impeccable). It ships with a library of design reference files covering areas like typography, colour, motion, spatial design, interaction patterns, responsive behaviour, and UX writing. By invoking this skill when using AI agents, the agent will be able to pick design references to load based on the task at hand.
 
 ![Impeccable skill writing example](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-032734.png "A small snippet into their very extensive skill writing")
 
