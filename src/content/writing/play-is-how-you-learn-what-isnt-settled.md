@@ -19,7 +19,7 @@ So when AI became the thing everyone was suddenly supposed to learn, the machine
 For me, a lot of this felt oddly hollow. I think I finally understand why, and it comes down to two very different ways of learning something.
 
 
-## When going for courses shines
+## What courses are good at
 
 A course is a series of clases, and each class provide its lesson in a specific way. Someone who already understands a subject packages that understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
 
@@ -36,9 +36,9 @@ For something like AI, this field isn't a settled subject, and the advice keeps 
 
 Things move even faster in the sapce of AI tools. There's a constant churn of new ways to work: [Figma Make](https://www.figma.com/blog/figma-make-general-availability/), then [Claude Design](https://www.anthropic.com/news/claude-design-anthropic-labs), then [Figma Agents](https://www.figma.com/blog/the-figma-agent-is-here/), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begin.
 
-This isn't the fault of the course, or of whoever wrote it. It's that we reached for a lesson when the subject couldn't be lessoned yet. There's no settled answer to package up, because the timeless understanding doesn't exist yet in a form anyone could hand you.
+This isn't the fault of the course, or of whoever wrote it. The course may still be useful as a starting point. The problem is mistaking the starting point for the whole journey. There's no settled answer to package up, because the timeless understanding doesn't exist yet in a form anyone could hand you.
 
-So, when there's nobody left who can teach you something, there's only one teacher left. And that's *reality itself*.
+So after instruction has taken you as far as it can, another teacher has to take over: *reality itself*.
 
 
 ## The other way to learn
@@ -98,7 +98,7 @@ Look again at what "development" usually means for adults at work. A defined cur
 
 Like spec-driven development, this is reassuring precisely because it's legible, plannable, and accountable. You can point at the syllabus and say, *look, this is what we're doing for them*.
 
-Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are the wrong tool. Such subjects demands play, not lessons. Yet everyone keeps reaching for the contained path, and is puzzled when the training doesn't stick.
+Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, but the play is where the real judgment forms. Yet everyone keeps reaching for the contained path, and is puzzled when the training doesn't stick.
 
 True learning and development, for a world that keeps moving, would mean widening agency instead of narrowing it. Giving people real problems, real stakes, and real permission to be wrong. Letting reality do some of the teaching. The uncomfortable part is that this is much harder to package. You can't fully spec it, you can't cleanly certify it, and you can't point at a syllabus afterward to prove it happened.
 
