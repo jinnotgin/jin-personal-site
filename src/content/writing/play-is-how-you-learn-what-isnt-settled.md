@@ -113,4 +113,4 @@ Our entire learning setup (courses, certificates, KPIs, credits) was designed fo
 
 A course can only carry you as far as someone has already mapped. Past that line, the only way forward is to play. And play doesn't need permission so much as it needs space: real problems, real stakes, and structures that treat dead ends as learnings rather than failure.
 
-If we're serious about developing people for a world that won't hold still, the question isn't which course to send them on. It's what we'd have to build so they could learn the way the subject actually demands.
+If we're serious about developing people for a world that won't hold still, the question isn't which course to send them on. It's what we have to build so they could learn the way the subject actually demands.
