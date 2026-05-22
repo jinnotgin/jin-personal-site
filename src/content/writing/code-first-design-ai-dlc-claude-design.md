@@ -66,7 +66,7 @@ Yes I know, I changed two variables at once: the harness and the model. A proper
 
 But yet, the designer or developer sitting with a deadline isn't going to run controlled experiments. Most won't want to swap models or compare outputs across model providers. They want to describe what they need and get something usable back.
 
-We already know from early adopters that [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7) and [Gemini 3.1 Pro](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/) are ahead of the pack for frontend visuals generation. Leaning on that strength is a reasonable default. But even a strong model needs good direction, and direction is where the next piece comes in.
+We already know from early adopters that [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7) and [Gemini 3.1 Pro](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/) are ahead of the pack for frontend visuals generation. But even a strong model needs good direction, and direction is where the next piece comes in.
 
 
 ## And hence, my search for “skills”
@@ -75,16 +75,11 @@ In the context of AI coding agents, a [skill](https://agentskills.io/home) is a 
 
 If the AI model is the engine, and the harness is the car frame, then skills are the driver's manual taped to the dashboard. The engine has the power. The frame holds it together. But the manual is what tells the engine *where to go* and *what to avoid*.
 
-That search led me to [Impeccable](https://impeccable.style/).
-
-
-## Impeccable
-
-[Impeccable](https://impeccable.style/), created by [Paul Bakaus](https://github.com/pbakaus/impeccable), is a design skill for AI coding agents. It ships with a library of design reference files covering areas like typography, colour, motion, spatial design, interaction patterns, responsive behaviour, and UX writing. The agent picks which references to load based on the task at hand. Before you type a single instruction, the model has already been briefed on how professional design actually works.
+That search led me to [Impeccable](https://impeccable.style/), created by [Paul Bakaus](https://github.com/pbakaus/impeccable), is a design skill for AI coding agents. It ships with a library of design reference files covering areas like typography, colour, motion, spatial design, interaction patterns, responsive behaviour, and UX writing. By invoking this skill when using AI agents, the agent will be able to pick design references to load based on the task at hand.
 
 ![Impeccable skill writing example](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-032734.png "A small snippet into their very extensive skill writing")
 
-I looked into the prompt writing behind Impeccable, and it was *impeccably thorough*. Besides being really opinionated about many aspects of design, its additional value is in what it *forbids*. It catalogues 27 anti-patterns, the lazy defaults many models fall into: purple gradients, nested cards, low-contrast labels, etc. It names them and steers the AI to avoid them.
+I looked into the prompt writing behind Impeccable, and it was *impeccably thorough*. Besides being really opinionated about many aspects of UI/UX design, its additional value is in what it *forbids*. It catalogues 27 anti-patterns, the lazy defaults many models fall into: purple gradients, nested cards, low-contrast labels, etc. It names them and steers the AI to avoid them.
 
 ![Impeccable website design example](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-034815.png "An example from the Impeccable website")
 

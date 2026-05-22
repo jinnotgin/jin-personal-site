@@ -3,14 +3,14 @@ slug: play-is-how-you-learn-what-isnt-settled
 title: Play is how you learn what no one has figured out yet
 date: 2026-05-25
 excerpt: There are two ways to learn: from a teacher with the answer, or by playing until you work it out. AI needs the second, yet we default to choosing the first.
-tags: [ai, learning, play, agency, agentic-ai, applied-ai, signals]
+tags: [ai, learning, play, agency, agentic-ai, applied-ai, signals, ai-adoption, workplace-learning, experimentation, future-of-work, judgment]
 status: published
 category: Learning and judgment
 ---
 
 ![Illustrated cover showing a contained course path ending at a closed doorway](/img/writing/play-is-how-you-learn-what-isnt-settled/cover.png "Courses work best when someone has already mapped the path. The problem with AI is that the map keeps changing.")
 
-In Singapore, when something new and important shows up, it seems like many of us default to a familar pattern of behaviour: finding a training course to attend.
+In Singapore, when something new and important shows up, it seems like many of us default to a familiar pattern of behaviour: finding a training course to attend.
 
 It's a national habit, and the whole apparatus is there to make it easy: SkillsFuture credits to spend, Coursera and Udemy a click away, Training Providers with a catalogue and a certificate waiting at the end. 
 
@@ -21,20 +21,20 @@ For me, a lot of this felt oddly hollow. I think I finally understand why, and i
 
 ## What courses are good at
 
-A course is a series of clases, and each class provide its lesson in a specific way. Someone who already understands a subject packages that understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
+A course is a series of classes, and each class provides its lesson in a specific way. Someone who already understands a subject packages that understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
 
 But it only works on one condition: the subject being taught has to be timeless enough.
 
 Newton's Laws of Motion can be taught well because someone already holds the answer, and the answer will remain true across time. The syllabus written this year is still right next year, and the examiner knows what a "correct answer" looks like. 
 
-Going for courses are great for stable, slow-moving, well-understood things, which, until pretty recently, covered most of what a person needed to learn.
+Courses are great for stable, slow-moving, well-understood things, which, until pretty recently, covered most of what a person needed to learn.
 
 
 ## But topics like AI are evolving quickly
 
-For something like AI, this field isn't a settled subject, and the advice keeps shifting. Not long ago, the standard tip to squeeze better answers out of an AI model was to add "Let's think step by step" to your prompt, or by opening with a persona like "You are a world-class expert in...". Both were taught as essential prompting know-how, yet, newer AI models these days can now reason  on their own and no longer need such "techniques".
+For something like AI, this field isn't a settled subject, and the advice keeps shifting. Not long ago, the standard tip to squeeze better answers out of an AI model was to add "Let's think step by step" to your prompt, or by opening with a persona like "You are a world-class expert in...". Both were taught as essential prompting know-how, yet newer AI models these days can now reason on their own and no longer need such "techniques".
 
-Things move even faster in the sapce of AI tools. There's a constant churn of new ways to work: [Figma Make](https://www.figma.com/blog/figma-make-general-availability/), then [Claude Design](https://www.anthropic.com/news/claude-design-anthropic-labs), then [Figma Agents](https://www.figma.com/blog/the-figma-agent-is-here/), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begin.
+Things move even faster in the space of AI tools. There's a constant churn of new ways to work: [Figma Make](https://www.figma.com/blog/figma-make-general-availability/), then [Claude Design](https://www.anthropic.com/news/claude-design-anthropic-labs), then [Figma Agents](https://www.figma.com/blog/the-figma-agent-is-here/), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begins.
 
 This isn't the fault of the course, or of whoever wrote it. The course may still be useful as a starting point. The problem is mistaking the starting point for the whole journey. There's no settled answer to package up, because the timeless understanding doesn't exist yet in a form anyone could hand you.
 
@@ -55,7 +55,7 @@ And here's what makes this more than cute: the surface underneath them never sta
 
 Play looks inefficient because it's full of mistakes. But when a subject is still shifting and changing, the mistakes aren't waste. They're the only signal you've got, because reality is the only thing that actually knows the answer.
 
-This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/), pulled on at [a talk on human-centred AI (by Lorong AI) that I went to recently](https://luma.com/7ni74a2k). He co-founded the design firm Fjord and spent more than two decades shaping digital services. Someone with that much craft behind him could easily have talked about process or rigour. Instead, he talked about the importance of play, and how his theory of how the future of work will be a playful one.
+This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/) pulled on at [a recent talk on human-centred AI by Lorong AI](https://luma.com/7ni74a2k). He co-founded the design firm Fjord and spent more than two decades shaping digital services. Someone with that much craft behind him could easily have talked about process or rigour. Instead, he talked about the importance of play, and his theory that the future of work will be playful.
 
 
 ## But play is for children
@@ -84,7 +84,7 @@ I see this in my own work. I didn't learn to build software with AI from a cours
 
 Here's a strange echo. Agency is also the word the AI industry has landed on for its most capable systems. An [agentic AI system](https://www.ibm.com/think/topics/agentic-ai) is software given room to act toward a goal, to take steps and make choices instead of waiting for instruction at every turn.
 
-And a lot of the careful work is happening right now is to "contain" that agency. [Spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), for example, asks you to define the inputs, outputs, constraints, and edge cases up front, so the model builds against something close to a finished blueprint. One effect of that is to shrink the model's room to wander. Less agency, fewer surprises.
+And a lot of the careful work happening right now is to "contain" that agency. [Spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), for example, asks you to define the inputs, outputs, constraints, and edge cases up front, so the model builds against something close to a finished blueprint. One effect of that is to shrink the model's room to wander. Less agency, fewer surprises.
 
 We do this for good reasons. The more room a system has to act, the more room it has to be wrong and "hallucinate", and someone has to answer for what it did. Containing agency buys us safety and accountability. For an AI system running in production, that trade-off is often a sensible one.
 
@@ -98,7 +98,7 @@ Look again at what "development" usually means for adults at work. A defined cur
 
 Like spec-driven development, this is reassuring precisely because it's legible, plannable, and accountable. You can point at the syllabus and say, *look, this is what we're doing for them*.
 
-Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, but the play is where the real judgment forms. Yet everyone keeps reaching for the contained path, and is puzzled when the training doesn't stick.
+Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, but the play is where the real judgment forms. Yet everyone keeps reaching for the contained path and is puzzled when the training doesn't stick.
 
 True learning and development, for a world that keeps moving, would mean widening agency instead of narrowing it. Giving people real problems, real stakes, and real permission to be wrong. Letting reality do some of the teaching. The uncomfortable part is that this is much harder to package. You can't fully spec it, you can't cleanly certify it, and you can't point at a syllabus afterward to prove it happened.
 
@@ -107,10 +107,10 @@ True learning and development, for a world that keeps moving, would mean widenin
 
 With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice. We've just never built the infrastructure for anything else.
 
-Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system just never made room for playing, because it never had to.
+Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system just never made room for play, because it never had to.
 
 ![Illustration of institutional learning frames with an empty space for play](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
-A course can only carry you as far as someone has already mapped. Past that line, the only way forward is to play. And play doesn't need permission so much as it needs space: real problems, real stakes, and structures that treat dead ends as learnings rather than failure.
+A course can only carry you as far as someone has already mapped. Past that line, the only way forward is to play. And play doesn't need permission so much as it needs space: real problems, real stakes, and structures that treat dead ends as lessons rather than failures.
 
-If we're serious about developing people for a world that won't hold still, the question isn't which course to send them on. It's what we have to build so they could learn the way the subject actually demands.
+If we're serious about developing people for a world that won't hold still, the question isn't which course to send them on. It's what we have to build so they can learn the way the subject actually demands.
