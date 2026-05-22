@@ -8,6 +8,8 @@ status: published
 category: Learning and judgment
 ---
 
+![Illustrated cover showing a contained course path ending at a closed doorway](/img/writing/play-is-how-you-learn-what-isnt-settled/cover.png "Courses work best when someone has already mapped the path. The problem with AI is that the map keeps changing.")
+
 In Singapore, when something new and important shows up, it seems like many of us default to a familar pattern of behaviour: finding a training course to attend.
 
 It's a national habit, and the whole apparatus is there to make it easy: SkillsFuture credits to spend, Coursera and Udemy a click away, Training Providers with a catalogue and a certificate waiting at the end. 
@@ -49,6 +51,8 @@ Hand a child a tablet. No one sits them down and walks them through the grid of 
 
 And here's what makes this more than cute: the surface underneath them never stays still. Apps update. Layouts change with OS updates. New ones appear, old ones vanish. The thing they mastered last week might look different today. There is no settled version of the user interface to be taught, and yet the child doesn't care. They just play again. They've learned something deeper than any single interface: how to feel their way through an unfamiliar one.
 
+![Illustration of play as a child-like figure exploring shifting abstract tiles](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-1-play-loop.png "When the surface keeps changing, play teaches you how to feel your way through the unfamiliar.")
+
 Play looks inefficient because it's full of mistakes. But when a subject is still shifting and changing, the mistakes aren't waste. They're the only signal you've got, because reality is the only thing that actually knows the answer.
 
 This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/), pulled on at [a talk on human-centred AI (by Lorong AI) that I went to recently](https://luma.com/7ni74a2k). He co-founded the design firm Fjord and spent more than two decades shaping digital services. Someone with that much craft behind him could easily have talked about process or rigour. Instead, he talked about the importance of play, and how his theory of how the future of work will be a playful one.
@@ -68,6 +72,8 @@ So the exact mode a shifting subject demands is the one professional life has tr
 Play has a requirement of its own, and that's where [Philip Man](https://www.linkedin.com/in/philkcman/?utm_source=luma) comes in. Also speaking at the same talk, Philip heads the newly formed Innovation Office at GovTech, focused on prototyping the next generation of public services. His background runs through IDEO and BCG Digital Ventures, and he kept coming back to two ideas: intention and agency.
 
 Agency, the way he frames it, is the space between intent and action. It's not just permission to act. It's the room to act early, on an unfinished idea, and to be corrected by whatever happens next. Take that room away and you don't have play anymore. You've got a lesson with extra steps, where someone has already decided what the right outcome is and you're just walking toward it.
+
+![Illustration of agency as the open space between intention and action](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-2-agency.png "Agency is the space to try, notice what happens, and adjust.")
 
 So learning something genuinely new isn't really about finding the right course. It's about whether you have the agency to play your way into it.
 
@@ -102,6 +108,8 @@ True learning and development, for a world that keeps moving, would mean widenin
 With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice. We've just never built the infrastructure for anything else.
 
 Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system just never made room for playing, because it never had to.
+
+![Illustration of institutional learning frames with an empty space for play](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
 A course can only carry you as far as someone has already mapped. Past that line, the only way forward is to play. And play doesn't need permission so much as it needs space: real problems, real stakes, and structures that treat dead ends as learnings rather than failure.
 
