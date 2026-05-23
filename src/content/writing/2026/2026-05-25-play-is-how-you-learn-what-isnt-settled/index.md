@@ -109,7 +109,7 @@ True learning and development, for a world that keeps moving, would mean widenin
 
 With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice. We've just never built the infrastructure for anything else.
 
-Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system just never made room for play, because it never had to.
+Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system left little room for play, because the subjects it was built for never demanded it.
 
 ![Illustration of institutional learning frames with an empty space for play](./inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
