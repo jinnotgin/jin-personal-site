@@ -58,8 +58,8 @@ The technical shape is intentionally small:
 - Vue Router owns the site map, redirects, page titles, and static route list.
 - Markdown files hold long-form writing and project content, with parsing
   handled in `src/lib/`.
-- Tailwind CSS 4 is available through the Vite plugin, alongside site-specific
-  global CSS in `src/main.css`.
+- Native CSS cascade layers, design tokens, and shared global styles live in
+  `src/main.css`.
 - Pinia is available for shared state if the site needs richer client-side
   behavior, though most content is static and file-driven.
 - TypeScript, ESLint, oxlint, and Prettier form the current quality and
