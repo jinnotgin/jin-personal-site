@@ -70,8 +70,8 @@ The main flow is:
 
 1. Route definitions live in `src/router/routes.ts`.
 2. Core profile, navigation, and contact details live in `src/data/site.ts`.
-3. Writing entries live as Markdown files in `src/content/writing/`.
-4. Project entries live as Markdown files in `src/content/projects/`.
+3. Writing entries live as dated `index.md` files under `src/content/writing/`.
+4. Project entries live as project-folder `index.md` files under `src/content/projects/`.
 5. Shared data for journey, shelf, threads, and workbench-style content lives
    in `src/data/`.
 6. Vue views in `src/views/` render each top-level section.
@@ -84,11 +84,16 @@ Most site updates should start with content. The site is meant to keep evolving
 as new work, essays, prototypes, references, and reflections are added over
 time.
 
-For a writing update, add or edit a Markdown file in `src/content/writing/`,
-place any supporting images under the matching `public/img/writing/` folder,
-and confirm the article appears in the writing index and generated post route.
+For a writing update, add or edit
+`src/content/writing/{year}/{date}-{slug}/index.md`, place any supporting
+images next to that file, reference them with relative Markdown paths such as
+`./cover.jpg`, and confirm the article appears in the writing index and
+generated post route. Public URLs still come from the frontmatter `slug`, not
+from the dated folder name.
 
-For a project update, add or edit a Markdown file in `src/content/projects/`.
+For a project update, add or edit `src/content/projects/{slug}/index.md`, place
+any project assets next to that file, and reference frontmatter images with
+relative paths such as `./screenshot.png`.
 Project list behavior and derived project metadata are handled through
 `src/lib/projects.ts` and the relevant views.
 

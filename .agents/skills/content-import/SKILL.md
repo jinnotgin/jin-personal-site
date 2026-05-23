@@ -5,10 +5,10 @@ description: Use this skill whenever the user wants to import existing content �
 
 # Content Import
 
-You are helping import existing content into Jin's personal site. Content lives as Markdown files with YAML frontmatter in one of two directories:
+You are helping import existing content into Jin's personal site. Content lives as Markdown files with YAML frontmatter in one of two folder shapes:
 
-- **Writing posts** → `src/content/writing/{slug}.md`
-- **Projects** → `src/content/projects/{slug}.md`
+- **Writing posts** → `src/content/writing/{year}/{date}-{slug}/index.md`
+- **Projects** → `src/content/projects/{slug}/index.md`
 
 The repo root is `/Users/ufinity/Documents/GitHub/jin-personal-site`.
 
@@ -48,16 +48,17 @@ If the answer is obvious from the source material, make a suggestion — don't a
 ### For a WRITING POST
 
 Frontmatter template:
+
 ```yaml
 ---
-slug: {slug}
-title: {title — taken verbatim from source}
-date: {publication date from source, or today in YYYY-MM-DD if unknown}
-excerpt: {1–2 sentence excerpt — taken verbatim from source if possible}
-tags: [{descriptive tags}, {thread-id(s)}]
+slug: { slug }
+title: { title — taken verbatim from source }
+date: { publication date from source, or today in YYYY-MM-DD if unknown }
+excerpt: { 1–2 sentence excerpt — taken verbatim from source if possible }
+tags: [{ descriptive tags }, { thread-id(s) }]
 status: published
-category: {category}
-source: {URL if originally published elsewhere, e.g. a LinkedIn article}
+category: { category }
+source: { URL if originally published elsewhere, e.g. a LinkedIn article }
 ---
 ```
 
@@ -76,18 +77,24 @@ source: {URL if originally published elsewhere, e.g. a LinkedIn article}
 **Body**: Convert the source content to clean Markdown. Preserve the text verbatim — same words, same structure, same paragraph breaks. Convert formatting (bold, italics, headings, lists, blockquotes) to their Markdown equivalents. Do not rewrite, restructure, condense, or add anything.
 
 Handle embedded media as follows:
-- **Images in writing posts**: use standard Markdown image syntax. Existing posts use the optional Markdown title field as the visible caption: `![alt text](/img/writing/{slug}/image.png "Caption text")`.
+
+- **Images in writing posts**: colocate local image files beside the post `index.md` and use standard Markdown image syntax with relative paths. Existing posts use the optional Markdown title field as the visible caption: `![alt text](./image.png "Caption text")`.
   - Use descriptive alt text for the image itself.
   - If the source has a caption, preserve the caption text in the quoted title field exactly, except for Markdown escaping needed to keep the syntax valid.
-  - If the source has no caption, omit the title field: `![alt text](/img/writing/{slug}/image.png)`.
+  - If the source has no caption, omit the title field: `![alt text](./image.png)`.
   - Cover images usually omit captions. Inline explanatory screenshots and illustrations usually include captions when the source provides one.
   - Use straight double quotes around Markdown title captions unless the source text forces escaping.
   - If the image is inside a comparison table, keep the existing table pattern and do not invent captions unless the source clearly supplies them.
-  - If the image is a local file in the source folder, note it needs to be copied to `/public/img/writing/{slug}/` and use that path. If it's a remote URL, keep the URL for now and flag it to the user so they can decide whether to host it locally.
+  - If the image is a local file in the source folder, copy it into the same folder as `index.md` and use a relative `./filename.ext` path. If it's a remote URL, keep the URL for now and flag it to the user so they can decide whether to host it locally.
 - **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not remove or shorten them.
 - **Videos**: YouTube (and similar) can be embedded directly using an iframe in the Markdown body:
   ```html
-  <iframe src="https://www.youtube-nocookie.com/embed/{VIDEO_ID}" title="{title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <iframe
+  	src="https://www.youtube-nocookie.com/embed/{VIDEO_ID}"
+  	title="{title}"
+  	allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  	allowfullscreen
+  ></iframe>
   ```
   Extract the video ID from the URL (e.g. `watch?v=ABC123` → `ABC123`) and use the `youtube-nocookie.com/embed/` form. For non-YouTube videos that can't be iframed, fall back to a plain link and flag it to the user.
 
@@ -96,6 +103,7 @@ Handle embedded media as follows:
 ### For a PROJECT
 
 Frontmatter template:
+
 ```yaml
 ---
 slug: {slug}
@@ -106,7 +114,7 @@ status: {active or archived}
 intent: {one sentence — taken from source if possible}
 stack: [{technology, approach, or domain tags}]
 links: [{Label::https://url}, ...]
-images: [/img/projects/{slug}.png::{descriptive alt text}]
+images: [./{image-filename}.png::{descriptive alt text}]
 ---
 ```
 
@@ -118,7 +126,7 @@ images: [/img/projects/{slug}.png::{descriptive alt text}]
 
 **Links**: `label::URL` format. Omit if no public links.
 
-**Images**: `/img/projects/{slug}.png::{alt text}` format. Omit if no images and note it to the user. Project image metadata does not use Markdown title captions; put only a descriptive alt text after `::`.
+**Images**: `./{image-filename}.png::{alt text}` format, with the image file colocated beside the project `index.md`. Omit if no images and note it to the user. Project image metadata does not use Markdown title captions; put only a descriptive alt text after `::`.
 
 **Body**: Convert the source content to clean Markdown, preserving the text verbatim. Same words, same structure. Convert formatting to Markdown equivalents. Apply the same media handling rules as for writing posts (images, links, videos).
 
@@ -127,8 +135,9 @@ images: [/img/projects/{slug}.png::{descriptive alt text}]
 ## Step 4 — Write the file
 
 Write the completed Markdown file to:
-- Writing: `src/content/writing/{slug}.md`
-- Project: `src/content/projects/{slug}.md`
+
+- Writing: `src/content/writing/{year}/{date}-{slug}/index.md`
+- Project: `src/content/projects/{slug}/index.md`
 
 Show the user the frontmatter (not the full body, unless they ask) and confirm it looks right before finishing.
 
@@ -138,7 +147,7 @@ Show the user the frontmatter (not the full body, unless they ask) and confirm i
 
 If the post or project references images:
 
-- Writing post images go in `/public/img/writing/{slug}/`
-- Project images go in `/public/img/projects/`
+- Writing post images go beside the writing `index.md`
+- Project images go beside the project `index.md`
 
 Note the exact paths the frontmatter expects so the user knows where to drop the files.
