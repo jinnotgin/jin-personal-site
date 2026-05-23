@@ -1,36 +1,24 @@
 ---
 name: content-import
-description: >
-  Use this skill whenever the user wants to import existing content — exported
-  docs, LinkedIn articles, notes, drafts — into the jin-personal-site repo as a
-  writing post or project entry. Triggers on requests like "import this into my
-  site", "add this to my site", "convert this to a post", "create a project
-  entry for X", or any time the user points at a folder or file and wants it
-  published as content. The skill handles format conversion to Markdown,
-  frontmatter generation, thread tagging, and file placement — without touching
-  the original writing.
+description: Use this skill whenever the user wants to import existing content — exported docs, LinkedIn articles, notes, drafts — into the jin-personal-site repo as a writing post or project entry. Triggers on requests like "import this into my site", "add this to my site", "convert this to a post", "create a project entry for X", or any time the user points at a folder or file and wants it published as content. The skill handles format conversion to Markdown, frontmatter generation, thread tagging, and file placement — without touching the original writing.
 ---
 
 # Content Import
 
-You are helping import existing content into Jin's personal site. Content lives
-as Markdown files with YAML frontmatter in one of two directories:
+You are helping import existing content into Jin's personal site. Content lives as Markdown files with YAML frontmatter in one of two directories:
 
 - **Writing posts** → `src/content/writing/{slug}.md`
 - **Projects** → `src/content/projects/{slug}.md`
 
 The repo root is `/Users/ufinity/Documents/GitHub/jin-personal-site`.
 
-**The goal is faithful conversion, not editing.** Preserve the source text
-exactly — wording, structure, tone, sentence length, everything. Your job is to
-produce correct Markdown and frontmatter, not to improve the writing.
+**The goal is faithful conversion, not editing.** Preserve the source text exactly — wording, structure, tone, sentence length, everything. Your job is to produce correct Markdown and frontmatter, not to improve the writing.
 
 ---
 
 ## Step 1 — Read the source material
 
-The user will give you a folder path (or individual files). Read everything in
-it: exported docs, raw text, HTML, links, image filenames, whatever is there.
+The user will give you a folder path (or individual files). Read everything in it: exported docs, raw text, HTML, links, image filenames, whatever is there.
 
 If the folder doesn't exist or is empty, tell the user and stop.
 
@@ -40,8 +28,7 @@ If the folder doesn't exist or is empty, tell the user and stop.
 
 Ask the user two things (you can ask both at once):
 
-1. **Type**: Is this a **writing post** (an essay, article, reflection) or a
-   **project** (a built thing — tool, product, system)?
+1. **Type**: Is this a **writing post** (an essay, article, reflection) or a **project** (a built thing — tool, product, system)?
 
 2. **Thread(s)**: Which of the five threads does it belong to?
    - `applied-ai` — AI tools and workflows, real constraints, agentic coding
@@ -52,8 +39,7 @@ Ask the user two things (you can ask both at once):
 
    Both writing posts and projects can belong to **multiple threads**.
 
-If the answer is obvious from the source material, make a suggestion — don't
-ask for things you already know.
+If the answer is obvious from the source material, make a suggestion — don't ask for things you already know.
 
 ---
 
@@ -79,54 +65,31 @@ source: {URL if originally published elsewhere, e.g. a LinkedIn article}
 
 **Title**: Use the title exactly as it appears in the source. Don't rephrase it.
 
-**Excerpt**: Pull directly from the source — an opening line, standfirst, or
-summary that was already written. Only write one yourself if there is genuinely
-nothing to pull from.
+**Excerpt**: Pull directly from the source — an opening line, standfirst, or summary that was already written. Only write one yourself if there is genuinely nothing to pull from.
 
-**Tags**: 3–6 descriptive tags reflecting the subject (e.g. `ai`, `llm`,
-`product`, `engineering`), then the thread ID(s) appended at the end. The
-thread IDs are what wire the post to homepage threads — don't skip them.
+**Tags**: 3–6 descriptive tags reflecting the subject (e.g. `ai`, `llm`, `product`, `engineering`), then the thread ID(s) appended at the end. The thread IDs are what wire the post to homepage threads — don't skip them.
 
-**Category**: Use an existing category if appropriate. Current categories:
-`AI in practice`. Use `Notes` as the fallback.
+**Category**: Use an existing category if appropriate. Current categories: `AI in practice`. Use `Notes` as the fallback.
 
-**Source**: Include if originally published elsewhere (LinkedIn, a blog, etc.).
-Omit the field entirely if it's original to this site.
+**Source**: Include if originally published elsewhere (LinkedIn, a blog, etc.). Omit the field entirely if it's original to this site.
 
-**Body**: Convert the source content to clean Markdown. Preserve the text
-verbatim — same words, same structure, same paragraph breaks. Convert
-formatting (bold, italics, headings, lists, blockquotes) to their Markdown
-equivalents. Do not rewrite, restructure, condense, or add anything.
+**Body**: Convert the source content to clean Markdown. Preserve the text verbatim — same words, same structure, same paragraph breaks. Convert formatting (bold, italics, headings, lists, blockquotes) to their Markdown equivalents. Do not rewrite, restructure, condense, or add anything.
 
 Handle embedded media as follows:
-- **Images in writing posts**: use standard Markdown image syntax. Existing
-  posts use the optional Markdown title field as the visible caption:
-  `![alt text](/img/writing/{slug}/image.png "Caption text")`.
+- **Images in writing posts**: use standard Markdown image syntax. Existing posts use the optional Markdown title field as the visible caption: `![alt text](/img/writing/{slug}/image.png "Caption text")`.
   - Use descriptive alt text for the image itself.
-  - If the source has a caption, preserve the caption text in the quoted title
-    field exactly, except for Markdown escaping needed to keep the syntax valid.
-  - If the source has no caption, omit the title field:
-    `![alt text](/img/writing/{slug}/image.png)`.
-  - Cover images usually omit captions. Inline explanatory screenshots and
-    illustrations usually include captions when the source provides one.
-  - Use straight double quotes around Markdown title captions unless the source
-    text forces escaping.
-  - If the image is inside a comparison table, keep the existing table pattern
-    and do not invent captions unless the source clearly supplies them.
-  - If the image is a local file in the source folder, note it needs to be
-    copied to `/public/img/writing/{slug}/` and use that path. If it's a remote
-    URL, keep the URL for now and flag it to the user so they can decide whether
-    to host it locally.
-- **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not
-  remove or shorten them.
-- **Videos**: YouTube (and similar) can be embedded directly using an iframe in
-  the Markdown body:
+  - If the source has a caption, preserve the caption text in the quoted title field exactly, except for Markdown escaping needed to keep the syntax valid.
+  - If the source has no caption, omit the title field: `![alt text](/img/writing/{slug}/image.png)`.
+  - Cover images usually omit captions. Inline explanatory screenshots and illustrations usually include captions when the source provides one.
+  - Use straight double quotes around Markdown title captions unless the source text forces escaping.
+  - If the image is inside a comparison table, keep the existing table pattern and do not invent captions unless the source clearly supplies them.
+  - If the image is a local file in the source folder, note it needs to be copied to `/public/img/writing/{slug}/` and use that path. If it's a remote URL, keep the URL for now and flag it to the user so they can decide whether to host it locally.
+- **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not remove or shorten them.
+- **Videos**: YouTube (and similar) can be embedded directly using an iframe in the Markdown body:
   ```html
   <iframe src="https://www.youtube-nocookie.com/embed/{VIDEO_ID}" title="{title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
   ```
-  Extract the video ID from the URL (e.g. `watch?v=ABC123` → `ABC123`) and use
-  the `youtube-nocookie.com/embed/` form. For non-YouTube videos that can't be
-  iframed, fall back to a plain link and flag it to the user.
+  Extract the video ID from the URL (e.g. `watch?v=ABC123` → `ABC123`) and use the `youtube-nocookie.com/embed/` form. For non-YouTube videos that can't be iframed, fall back to a plain link and flag it to the user.
 
 ---
 
@@ -149,20 +112,15 @@ images: [/img/projects/{slug}.png::{descriptive alt text}]
 
 **Slug**: Short, lowercase, hyphenated. Usually the project name.
 
-**Intent**: Pull from the source if there's a one-line description. Only write
-one if there's nothing suitable.
+**Intent**: Pull from the source if there's a one-line description. Only write one if there's nothing suitable.
 
 **Stack**: The meaningful technical or domain elements from the source.
 
 **Links**: `label::URL` format. Omit if no public links.
 
-**Images**: `/img/projects/{slug}.png::{alt text}` format. Omit if no images
-and note it to the user. Project image metadata does not use Markdown title
-captions; put only a descriptive alt text after `::`.
+**Images**: `/img/projects/{slug}.png::{alt text}` format. Omit if no images and note it to the user. Project image metadata does not use Markdown title captions; put only a descriptive alt text after `::`.
 
-**Body**: Convert the source content to clean Markdown, preserving the text
-verbatim. Same words, same structure. Convert formatting to Markdown equivalents.
-Apply the same media handling rules as for writing posts (images, links, videos).
+**Body**: Convert the source content to clean Markdown, preserving the text verbatim. Same words, same structure. Convert formatting to Markdown equivalents. Apply the same media handling rules as for writing posts (images, links, videos).
 
 ---
 
@@ -172,8 +130,7 @@ Write the completed Markdown file to:
 - Writing: `src/content/writing/{slug}.md`
 - Project: `src/content/projects/{slug}.md`
 
-Show the user the frontmatter (not the full body, unless they ask) and confirm
-it looks right before finishing.
+Show the user the frontmatter (not the full body, unless they ask) and confirm it looks right before finishing.
 
 ---
 
@@ -184,5 +141,4 @@ If the post or project references images:
 - Writing post images go in `/public/img/writing/{slug}/`
 - Project images go in `/public/img/projects/`
 
-Note the exact paths the frontmatter expects so the user knows where to drop
-the files.
+Note the exact paths the frontmatter expects so the user knows where to drop the files.

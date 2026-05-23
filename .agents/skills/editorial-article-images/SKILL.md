@@ -7,23 +7,15 @@ description: Generate original image prompts and art direction for editorial art
 
 ## Purpose
 
-Create article images that look designed, printed, and intentional: mid-century
-editorial poster language reinterpreted for contemporary essays, newsletters,
-and longform web writing. Prefer tactile illustration, strong silhouettes, warm
-paper texture, geometric abstraction, and human-scale metaphors.
+Create article images that look designed, printed, and intentional: mid-century editorial poster language reinterpreted for contemporary essays, newsletters, and longform web writing. Prefer tactile illustration, strong silhouettes, warm paper texture, geometric abstraction, and human-scale metaphors.
 
-Do not aim for photorealism, generative-AI gloss, stock editorial sameness, or
-tech cliche. Images should support writing, not overpower it. They may be used
-as hero images, inline illustrations, section breaks, social previews, or
-article cards.
+Do not aim for photorealism, generative-AI gloss, stock editorial sameness, or tech cliche. Images should support writing, not overpower it. They may be used as hero images, inline illustrations, section breaks, social previews, or article cards.
 
 ## Palette First
 
 Before writing prompts, ask the user what color palette they want.
 
-If the user already provides a palette, use it directly and keep the image to no
-more than four main colors. If they do not know, offer 3-5 concise palette
-directions instead of defaulting silently.
+If the user already provides a palette, use it directly and keep the image to no more than four main colors. If they do not know, offer 3-5 concise palette directions instead of defaulting silently.
 
 Example palette options:
 
@@ -35,13 +27,11 @@ Example palette options:
 
 Once a palette is chosen, include it explicitly in every image prompt.
 
-Avoid one-note palettes. Use restrained contrast, but make sure the image has
-enough distinction to work at article-card and social-preview sizes.
+Avoid one-note palettes. Use restrained contrast, but make sure the image has enough distinction to work at article-card and social-preview sizes.
 
 ## Prompt Formula
 
-Start with this structure and adapt subject, composition, palette, and article
-placement:
+Start with this structure and adapt subject, composition, palette, and article placement:
 
 ```text
 A vintage-modern editorial illustration of [subject/metaphor], composed for [article use case: hero image / inline essay illustration / article card / social preview], with [negative-space direction if needed], [chosen color palette]. Bold simplified shapes, subtle risograph grain, screenprint texture, crisp edges, poetic humanist mood, no photorealism, no UI, no technology cliches, no text, no logo.
@@ -67,16 +57,11 @@ Make the composition readable as a small article thumbnail as well as a large he
 
 ## Image Direction
 
-Always preserve breathing room. Article images often sit near headlines, decks,
-captions, author metadata, or social-card crops, so explicitly request open
-zones: "leave the top third mostly open," "keep the left 45% quiet," "subject
-occupies the lower right quadrant," or "avoid important details near the edges."
+Always preserve breathing room. Article images often sit near headlines, decks, captions, author metadata, or social-card crops, so explicitly request open zones: "leave the top third mostly open," "keep the left 45% quiet," "subject occupies the lower right quadrant," or "avoid important details near the edges."
 
 Use no more than four main colors in one image.
 
-Texture should be subtle: risograph grain, screenprint halftone softness, slight
-paper tooth, imperfect ink edges, and very light vintage poster wear. Do not
-make it dirty, grungy, or distressed unless asked.
+Texture should be subtle: risograph grain, screenprint halftone softness, slight paper tooth, imperfect ink edges, and very light vintage poster wear. Do not make it dirty, grungy, or distressed unless asked.
 
 Prefer simple metaphors:
 
@@ -94,14 +79,9 @@ Prefer simple metaphors:
 - Table/workbench: practice, craft, collaboration.
 - Garden/greenhouse: conditions, care, emergence.
 
-Never request or accept images centered on robots, robot hands, glowing neural
-networks, circuit boards, holograms, blue tech panels, generic AI brains,
-chatbot bubbles, dashboards, futuristic UI, laptops, corporate meeting rooms,
-stock photography, glossy 3D renders, cyberpunk, fake text, logos, watermarks,
-or baked-in labels.
+Never request or accept images centered on robots, robot hands, glowing neural networks, circuit boards, holograms, blue tech panels, generic AI brains, chatbot bubbles, dashboards, futuristic UI, laptops, corporate meeting rooms, stock photography, glossy 3D renders, cyberpunk, fake text, logos, watermarks, or baked-in labels.
 
-If using a brain/tree/system metaphor, make it stylized and poster-like, not
-medical, sci-fi, or literal tech.
+If using a brain/tree/system metaphor, make it stylized and poster-like, not medical, sci-fi, or literal tech.
 
 ## Article Use Cases
 
