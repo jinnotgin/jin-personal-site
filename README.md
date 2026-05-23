@@ -53,8 +53,10 @@ The important project convention is that the Markdown frontmatter is the source
 of public identity. Folder names help keep the archive organized, but published
 writing and project URLs come from each file's `slug`.
 
-The build currently pre-renders the top-level site sections. Markdown-backed
-detail pages are routed by Vue and hydrated from the bundled content modules.
+The build pre-renders the top-level site sections and Markdown-backed writing
+and project detail pages. Generated detail routes come from each Markdown file's
+frontmatter `slug`, matching the public URL convention used by the Vue content
+loaders.
 
 ## Content Process
 

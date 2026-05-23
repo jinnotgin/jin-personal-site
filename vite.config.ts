@@ -1,16 +1,18 @@
-import fs from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
+import { defineConfig, type UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-function contentSlugs(folder: string): string[] {
-  const dir = fileURLToPath(new URL(`./src/content/${folder}`, import.meta.url))
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith('.md'))
-    .map((f) => f.replace('.md', ''))
+import { contentSlugs } from './ssg-routes'
+
+interface ViteSsgConfig extends UserConfig {
+  ssgOptions: {
+    script: string
+    formatting: string
+    includedRoutes: (paths: string[]) => string[]
+  }
 }
 
 // https://vite.dev/config/
@@ -50,7 +52,7 @@ export default defineConfig({
           if (path === '/projects/:slug') return projectSlugs.map((s) => `/projects/${s}`)
           if (path === '/writing/:slug') return writingSlugs.map((s) => `/writing/${s}`)
           return [path]
-        })
+      })
     },
   },
-} as any)
+} as ViteSsgConfig)
