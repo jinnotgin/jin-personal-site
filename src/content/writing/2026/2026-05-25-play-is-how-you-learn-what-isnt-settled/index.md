@@ -55,7 +55,7 @@ And here's what makes this more than cute: the surface underneath them never sta
 
 Play looks inefficient because it's full of mistakes. But when a subject is still shifting and changing, the mistakes aren't waste. They're the only signal you've got, because reality is the only thing that actually knows the answer.
 
-This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/) pulled on at [a recent talk on human-centred AI by Lorong AI](https://luma.com/7ni74a2k). With his experience at Fjord and Accenture Song, he could easily have talked about process or rigour. Instead, he talked about play, and his theory that the future of work will be playful.
+This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofschybergson/) pulled on at [a recent dialogue session on human-centred AI by Lorong AI](https://luma.com/7ni74a2k). With his experience at Fjord and Accenture Song, he could easily have talked about process or rigour. Instead, he talked about play, and his theory that the future of work will be playful.
 
 
 ## But play is for children
