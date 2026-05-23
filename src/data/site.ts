@@ -19,9 +19,9 @@ export const site = {
 	],
 	nowUpdated: 'May 2026',
 	contact: {
-		email: 'hey@jinn.me',
+		email: 'hey@itsjin.com',
 		links: [
-			{ label: 'Email', href: 'mailto:hey@jinn.me' },
+			{ label: 'Email', href: 'mailto:hey@itsjin.com' },
 			{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/jin-sg/' },
 			{ label: 'GitHub', href: 'https://github.com/jinnotgin' },
 		],
