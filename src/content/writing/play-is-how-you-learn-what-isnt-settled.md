@@ -73,7 +73,7 @@ Play has a requirement of its own, and that's where [Philip Man](https://www.lin
 
 Agency, the way he frames it, is the space between intent and action. It's not just permission to act. It's the room to act early, on an unfinished idea, and to be corrected by whatever happens next. Take that room away and you don't have play anymore. You've got a lesson with extra steps, where someone has already decided what the right outcome is and you're just walking toward it.
 
-![Illustration of agency as the open space between intention and action](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-2-agency.png "Agency is the space to try, notice what happens, and adjust.")
+![Illustration of agency as the open space between intention and action](/img/writing/play-is-how-you-learn-what-isnt-settled/inline-2-agency-v2.png "Agency is the space to try, notice what happens, and adjust.")
 
 So learning something genuinely new isn't really about finding the right course. It's about whether you have the agency to play your way into it.
 
