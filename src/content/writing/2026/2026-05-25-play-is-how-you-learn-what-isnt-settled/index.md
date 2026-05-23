@@ -43,9 +43,9 @@ So after instruction has taken you as far as it can, another teacher has to take
 
 ## The other way to learn
 
-That's what **Play** is for.
+Learning from reality has a name: **play**.
 
-I know "Play" sounds like a soft word for a serious problem. But take a few steps back, and play is just this: you try something before you fully understand it, you watch what happens, and you adjust.
+I know "play" sounds like a soft word for something this important. But take a few steps back, and play is just this: you try something before you fully understand it, you watch what happens, and you adjust.
 
 Hand a child a tablet. No one sits them down and walks them through the grid of apps, or demonstrates how swiping differs from tapping, or explains what the home button does. They just poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
 
