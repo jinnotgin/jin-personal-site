@@ -9,18 +9,18 @@ part project record, part writing system, and part working memory for ideas that
 are still developing.
 
 The README is written for people browsing the public repository and for future
-maintainers. It explains how the site is put together, which files carry the
-content, and how the build process turns those files into the published site.
+maintainers. It focuses on intent, workflow, and project-specific choices rather
+than repeating details that can be discovered from the codebase.
 
 ## AI Use
 
 This project is also a practical way to try AI-assisted development on a static
 site, from content and design to implementation.
 
-The current workflow acknowledges use of:
+The current workflow acknowledges use of tools including:
 
-- Codex, using GPT 5.5 and GPT Image 2
-- Claude Code, using Opus 4.7 and Sonnet 4.6
+- Codex
+- Claude Code
 - The [Impeccable](https://impeccable.style) skill for interface critique and
   frontend design refinement
 
@@ -42,41 +42,19 @@ patterns.
 Human review remains part of the process, especially for content voice, factual
 claims, visual taste, and what should or should not be published.
 
-## How The Site Is Built
+## How The Site Works
 
 The site is a Vue 3 application built with Vite and exported as a static site
-with `vite-ssg`. Routes are declared once in Vue Router, then expanded at build
-time so Markdown-backed writing and project pages are generated as individual
-static URLs.
+with `vite-ssg`. Most content is static and file-driven: Markdown carries the
+long-form writing and project records, while small TypeScript data modules carry
+site-level facts and curated collections.
 
-The technical shape is intentionally small:
+The important project convention is that the Markdown frontmatter is the source
+of public identity. Folder names help keep the archive organized, but published
+writing and project URLs come from each file's `slug`.
 
-- Vue 3 provides the component model for page views, layout, and interaction.
-- Vite provides the dev server, bundling pipeline, and production build.
-- `vite-ssg` turns the Vue app into static HTML for fast hosting and durable
-  public URLs.
-- Vue Router owns the site map, redirects, page titles, and static route list.
-- Markdown files hold long-form writing and project content, with parsing
-  handled in `src/lib/`.
-- Native CSS cascade layers, design tokens, and shared global styles live in
-  `src/main.css`.
-- Pinia is available for shared state if the site needs richer client-side
-  behavior, though most content is static and file-driven.
-- TypeScript, ESLint, oxlint, and Prettier form the current quality and
-  formatting toolchain. Vitest and Playwright are configured for future
-  substantive test specs.
-
-The main flow is:
-
-1. Route definitions live in `src/router/routes.ts`.
-2. Core profile, navigation, and contact details live in `src/data/site.ts`.
-3. Writing entries live as dated `index.md` files under `src/content/writing/`.
-4. Project entries live as project-folder `index.md` files under `src/content/projects/`.
-5. Shared data for journey, shelf, threads, and workbench-style content lives
-   in `src/data/`.
-6. Vue views in `src/views/` render each top-level section.
-7. `vite.config.ts` discovers Markdown slugs and tells `vite-ssg` which static
-   routes to generate.
+The build currently pre-renders the top-level site sections. Markdown-backed
+detail pages are routed by Vue and hydrated from the bundled content modules.
 
 ## Content Process
 
@@ -119,20 +97,22 @@ npm run dev
 The dev server is configured in `vite.config.ts` to use
 `http://localhost:5465` with `strictPort` enabled.
 
-The main checks during development are the static build and lint pass:
+The main checks during development are the static build, focused tests, and lint
+pass:
 
 ```sh
 npm run build
+npm run test:unit
 npm run lint
 ```
 
 `npm run build` runs TypeScript checks and the static-site build. This is the
 most important pre-publish check because it verifies both Vue compilation and
-static route generation.
+the static export.
 
-Vitest and Playwright scripts exist in `package.json`. The repository currently
-has no meaningful unit or end-to-end test files, leaving room for future
-coverage once the site has behavior that deserves automated tests.
+Vitest has focused coverage for Markdown rendering, content asset resolution,
+SEO metadata, and deployment-skew recovery. Playwright is configured for future
+end-to-end coverage once more browser behavior deserves automated checks.
 
 ## Repository Status
 
