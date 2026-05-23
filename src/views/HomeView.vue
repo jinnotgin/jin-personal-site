@@ -311,7 +311,11 @@ onBeforeUnmount(() => {
 							class="latest-link"
 							@click="trackHomePostClick(p.slug, p.title)"
 						>
-							<span class="latest-meta">{{ formatDate(p.date) }} · {{ p.category }}</span>
+							<span class="latest-meta">
+								<time :datetime="p.date">{{ formatDate(p.date) }}</time>
+								<span class="dot">·</span>
+								<span class="cat">{{ p.category }}</span>
+							</span>
 							<span class="latest-title">{{ p.title }}</span>
 							<span class="latest-excerpt">{{ p.excerpt }}</span>
 						</RouterLink>
@@ -871,9 +875,17 @@ onBeforeUnmount(() => {
 	color: var(--color-moss-deep);
 }
 .latest-meta {
-	font-size: var(--text-sm);
-	letter-spacing: 0.02em;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-size: var(--text-xs);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 	color: var(--color-ink-faint);
+}
+.latest-meta .cat {
+	color: var(--color-moss-deep);
+	font-weight: 700;
 }
 .latest-title {
 	font-size: var(--text-xl);
