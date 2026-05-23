@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { postSeo, projectSeo } from '@/lib/seo'
+import { postSeo, projectSeo, siteSeo } from '@/lib/seo'
 import type { Post, Project } from '@/data/types'
 
 function metaContent(
@@ -15,6 +15,28 @@ function metaContent(
 }
 
 describe('seo', () => {
+	it('adds deployment metadata when build information is available', () => {
+		const head = siteSeo('/', {
+			commit: 'e8f4c2a9b7d1',
+			builtAt: '2026-05-24T04:30:00.000Z',
+		})
+
+		expect(metaContent(head.meta, { name: 'app:commit' })).toBe('e8f4c2a')
+		expect(metaContent(head.meta, { name: 'app:built_at' })).toBe(
+			'2026-05-24T04:30:00.000Z',
+		)
+	})
+
+	it('omits deployment metadata when build information is unavailable', () => {
+		const head = siteSeo('/', {
+			commit: '',
+			builtAt: '',
+		})
+
+		expect(metaContent(head.meta, { name: 'app:commit' })).toBeUndefined()
+		expect(metaContent(head.meta, { name: 'app:built_at' })).toBeUndefined()
+	})
+
 	it('builds social metadata for writing posts from article data', () => {
 		const post: Post = {
 			slug: 'ai-universal-translator-still-amplifies-your-intent',

@@ -1,5 +1,6 @@
 import { site } from '@/data/site'
 import type { Post, Project, ProjectImage } from '@/data/types'
+import { buildInfo, shortCommit, type BuildInfo } from '@/lib/buildInfo'
 
 type MetaTag =
   | { name: string; content: string }
@@ -12,12 +13,20 @@ interface SeoInput {
   type?: 'website' | 'article'
   image?: ProjectImage
   publishedTime?: string
+  buildInfo?: BuildInfo
 }
 
 const absoluteUrl = (value: string) => new URL(value, site.url).toString()
 
 function titleWithSite(title: string): string {
   return title === site.name ? `${site.name} - ${site.role}` : `${title} - ${site.name}`
+}
+
+function appendBuildMeta(meta: MetaTag[], info: BuildInfo) {
+  if (info.commit) {
+    meta.push({ name: 'app:commit', content: shortCommit(info.commit) })
+  }
+  if (info.builtAt) meta.push({ name: 'app:built_at', content: info.builtAt })
 }
 
 export function seo(input: SeoInput) {
@@ -44,6 +53,8 @@ export function seo(input: SeoInput) {
     meta.push({ property: 'article:published_time', content: input.publishedTime })
   }
 
+  appendBuildMeta(meta, input.buildInfo ?? buildInfo)
+
   return {
     title,
     link: [{ rel: 'canonical' as const, href: url }],
@@ -51,12 +62,13 @@ export function seo(input: SeoInput) {
   }
 }
 
-export function siteSeo(path = '/') {
+export function siteSeo(path = '/', info = buildInfo) {
   return seo({
     title: site.name,
     description: site.description,
     path,
     image: { src: site.previewImage, alt: `${site.name} site preview` },
+    buildInfo: info,
   })
 }
 

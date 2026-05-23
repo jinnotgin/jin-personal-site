@@ -17,6 +17,10 @@ interface ViteSsgConfig extends UserConfig {
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    __APP_COMMIT__: JSON.stringify(process.env.CF_PAGES_COMMIT_SHA ?? ''),
+    __APP_BUILT_AT__: JSON.stringify(process.env.CF_PAGES_COMMIT_SHA ? new Date().toISOString() : ''),
+  },
   plugins: [
     vue(),
     vueJsx(),
