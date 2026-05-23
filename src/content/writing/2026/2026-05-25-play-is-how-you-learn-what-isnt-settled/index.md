@@ -64,6 +64,8 @@ There's an obvious objection here, and it's the gut feeling that play is somethi
 
 Look at how we act at work. We show up as "professionals". We execute tasks, follow processes, move tickets across a board, report against KPIs. All of that is lesson mode in office clothes: a known outcome, a defined path, a clear definition of done. There's no place on a performance review for "spent three weeks playing with a new tool, shipped nothing, but now actually understands it". And when play does sneak into adult work, we quietly rename it into something that sounds more responsible. We call it research, or exploration, or a pilot.
 
+To be fair, some workplaces already invest in this. Hackathons and innovation sprints are proof that play works, and the people who join them come away sharper and more willing to experiment. But the people who show up tend to be the ones already comfortable with uncertainty. The people who most need to play are often the ones the format never reaches.
+
 So the exact mode a shifting subject demands is the one professional life has trained us to suppress. We didn't lose the ability to play. We were taught, gently and constantly, that it isn't what serious people do.
 
 
@@ -112,3 +114,5 @@ Our entire learning setup (courses, certificates, KPIs, credits) was designed fo
 ![Illustration of institutional learning frames with an empty space for play](./inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
 A course can only carry you as far as someone has already mapped. Past that line, the work is no longer to deliver the right lesson. It is to design the conditions where playful learning can actually happen.
+
+We already know how to do this for machines. Every digital system gets a sandbox, a staging environment, a place where it can fail without consequence. We would never skip that step for software. But for people learning something new, we skip it all the time. We hand them a course and expect them to come back production-ready. The work ahead is giving people what we already give our software: somewhere safe to fail.
