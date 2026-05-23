@@ -34,7 +34,7 @@ In other words, courses are great for stable, slow-moving, well-understood thing
 
 For something like AI, this field isn't a settled subject, and the advice keeps shifting. Not long ago, the standard tip to squeeze better answers out of an AI model was to add "Let's think step by step" to your prompt, or by opening with a persona like "You are a world-class expert in...". Both were taught as essential prompting know-how, yet newer AI models these days can now reason on their own and no longer need such "techniques".
 
-Things move even faster in the space of AI tools. There's a constant churn of new ways to work: [Figma Make](https://www.figma.com/blog/figma-make-general-availability/), then [Claude Design](https://www.anthropic.com/news/claude-design-anthropic-labs), then [Figma Agents](https://www.figma.com/blog/the-figma-agent-is-here/), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begins.
+Things move even faster in the space of AI tools. There's a constant churn of new ways to work: [ChatGPT](https://chatgpt.com/), then [OpenClaw](https://openclaw.ai/), then [Claude Cowork](https://www.anthropic.com/product/claude-cowork), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begins.
 
 This isn't the fault of the course, or of whoever wrote it. The course may still be useful as a starting point. The problem is mistaking the starting point for the whole journey. There's no settled answer to package up, because the timeless understanding doesn't exist yet in a form anyone could hand you.
 
