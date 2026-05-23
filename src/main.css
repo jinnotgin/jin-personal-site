@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@layer theme, reset, base, components, utilities;
 
 /* ============================================================
    Jin — design system
@@ -6,55 +6,147 @@
    Braun / Nomos restraint: precise hierarchy, calm surfaces.
    ============================================================ */
 
-@theme {
-  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Bricolage Grotesque', 'Hanken Grotesk', ui-sans-serif, sans-serif;
-  --font-serif: 'Source Serif 4', Iowan Old Style, Georgia, serif;
+@layer theme {
+  :root {
+    --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Bricolage Grotesque', 'Hanken Grotesk', ui-sans-serif, sans-serif;
+    --font-serif: 'Source Serif 4', Iowan Old Style, Georgia, serif;
 
-  /* Ground & ink — never pure white, never pure black */
-  --color-paper: oklch(0.968 0.013 95);
-  --color-paper-raised: oklch(0.948 0.017 118);
-  --color-sage: oklch(0.922 0.022 135);
-  --color-sage-deep: oklch(0.886 0.026 138);
-  --color-hairline: oklch(0.852 0.02 132);
+    /* Ground & ink — never pure white, never pure black */
+    --color-paper: oklch(0.968 0.013 95);
+    --color-paper-raised: oklch(0.948 0.017 118);
+    --color-sage: oklch(0.922 0.022 135);
+    --color-sage-deep: oklch(0.886 0.026 138);
+    --color-hairline: oklch(0.852 0.02 132);
 
-  --color-ink: oklch(0.3 0.022 155);
-  --color-ink-soft: oklch(0.452 0.021 154);
-  --color-ink-faint: oklch(0.572 0.019 150);
+    --color-ink: oklch(0.3 0.022 155);
+    --color-ink-soft: oklch(0.452 0.021 154);
+    --color-ink-faint: oklch(0.572 0.019 150);
 
-  /* Committed greens */
-  --color-moss: oklch(0.52 0.087 150);
-  --color-moss-deep: oklch(0.424 0.078 152);
-  --color-forest: oklch(0.302 0.038 158);
-  --color-forest-ink: oklch(0.93 0.016 100);
-  --color-forest-soft: oklch(0.74 0.03 130);
+    /* Committed greens */
+    --color-moss: oklch(0.52 0.087 150);
+    --color-moss-deep: oklch(0.424 0.078 152);
+    --color-forest: oklch(0.302 0.038 158);
+    --color-forest-ink: oklch(0.93 0.016 100);
+    --color-forest-soft: oklch(0.74 0.03 130);
 
-  /* Signals */
-  --color-river: oklch(0.52 0.078 222);
-  --color-river-deep: oklch(0.438 0.072 224);
-  --color-signal: oklch(0.7 0.088 122);
-  --color-clay: oklch(0.582 0.082 52);
+    /* Signals */
+    --color-river: oklch(0.52 0.078 222);
+    --color-river-deep: oklch(0.438 0.072 224);
+    --color-signal: oklch(0.7 0.088 122);
+    --color-clay: oklch(0.582 0.082 52);
 
-  /* Fluid type scale — ratio ≥ 1.25 */
-  --text-xs: 0.8rem;
-  --text-sm: 0.92rem;
-  --text-base: 1.02rem;
-  --text-lg: clamp(1.16rem, 1.08rem + 0.34vw, 1.32rem);
-  --text-xl: clamp(1.45rem, 1.28rem + 0.72vw, 1.82rem);
-  --text-2xl: clamp(1.82rem, 1.5rem + 1.35vw, 2.45rem);
-  --text-3xl: clamp(2.28rem, 1.72rem + 2.4vw, 3.55rem);
-  --text-4xl: clamp(2.85rem, 1.95rem + 4vw, 5rem);
-  --text-5xl: clamp(3.55rem, 2.2rem + 6vw, 7.1rem);
+    /* Fluid type scale — ratio ≥ 1.25 */
+    --text-xs: 0.8rem;
+    --text-sm: 0.92rem;
+    --text-base: 1.02rem;
+    --text-lg: clamp(1.16rem, 1.08rem + 0.34vw, 1.32rem);
+    --text-xl: clamp(1.45rem, 1.28rem + 0.72vw, 1.82rem);
+    --text-2xl: clamp(1.82rem, 1.5rem + 1.35vw, 2.45rem);
+    --text-3xl: clamp(2.28rem, 1.72rem + 2.4vw, 3.55rem);
+    --text-4xl: clamp(2.85rem, 1.95rem + 4vw, 5rem);
+    --text-5xl: clamp(3.55rem, 2.2rem + 6vw, 7.1rem);
 
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+    --radius-sm: 3px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
 
-  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --shadow-lift: 0 1px 2px oklch(0.302 0.038 158 / 0.05),
-    0 8px 26px oklch(0.302 0.038 158 / 0.07);
+    --shadow-lift: 0 1px 2px oklch(0.302 0.038 158 / 0.05),
+      0 8px 26px oklch(0.302 0.038 158 / 0.07);
+  }
+}
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+    tab-size: 4;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  b,
+  strong {
+    font-weight: bolder;
+  }
+
+  ol,
+  ul,
+  menu {
+    list-style: none;
+  }
+
+  img,
+  svg,
+  video,
+  canvas,
+  audio,
+  iframe,
+  embed,
+  object {
+    display: block;
+    vertical-align: middle;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  optgroup,
+  textarea {
+    margin: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  button,
+  input:where([type='button'], [type='reset'], [type='submit']) {
+    appearance: button;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  [hidden]:where(:not([hidden='until-found'])) {
+    display: none !important;
+  }
 }
 
 @layer base {
