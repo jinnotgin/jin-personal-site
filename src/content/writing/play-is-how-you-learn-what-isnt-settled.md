@@ -100,7 +100,7 @@ Like spec-driven development, this is reassuring precisely because it's legible,
 
 Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, but the play is where the real judgment forms. Yet everyone keeps reaching for the contained path and is puzzled when the training doesn't stick.
 
-True learning and development, for a world that keeps moving, would mean widening agency instead of narrowing it. Giving people real problems, real stakes, and real permission to be wrong. Letting reality do some of the teaching. The uncomfortable part is that this is much harder to package. You can't fully spec it, you can't cleanly certify it, and you can't point at a syllabus afterward to prove it happened.
+True learning and development, for a world that keeps moving, would mean widening agency instead of narrowing it. Giving people real problems, real stakes, and real permission to be wrong. Letting reality do some of the teaching. The difficult part is that play resists the logic of the adult world: it is hard to budget for, hard to manage, and hard to justify before anyone knows what it will reveal.
 
 
 ## The space that isn't there yet
