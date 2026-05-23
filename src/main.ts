@@ -4,6 +4,7 @@ import posthog from 'posthog-js'
 
 import './main.css'
 import App from './App.vue'
+import { createChunkLoadRecovery } from './lib/deploymentSkew'
 import { installScrollPositionStore, routes, scrollBehavior } from './router/routes'
 
 export const createApp = ViteSSG(
@@ -13,6 +14,10 @@ export const createApp = ViteSSG(
 		app.use(createPinia())
 
 		if (isClient) {
+			const chunkLoadRecovery = createChunkLoadRecovery({
+				assign: (path) => window.location.assign(path),
+				sessionStorage: window.sessionStorage,
+			})
 			const isLocalhost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
 			const posthogToken = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN
 
@@ -28,8 +33,10 @@ export const createApp = ViteSSG(
 			}
 
 			router.afterEach((to) => {
+				chunkLoadRecovery.clearRefreshAttempt()
 				document.title = (to.meta.title as string) ?? 'Jin'
 			})
+			router.onError(chunkLoadRecovery.handleRouterError)
 
 			installScrollPositionStore(router)
 		}
