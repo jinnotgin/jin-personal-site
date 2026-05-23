@@ -27,7 +27,7 @@ When I moused over certain UI elements of Claude Design, I caught fragments of t
 
 ![Claude Design generated prototype and prompt panel](/img/writing/code-first-design-ai-dlc-claude-design/image-20260518-030452.png)
 
-When experimenting with Claude Design, I mainly relied on [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7), one of the strongest models for frontend visual generation right now. But Claude Design's quality isn't just Opus 4.7 being good at design. It's the *harness* around the model: the system prompts, the UI scaffolding, the preset components, the output structure, the rules about what to generate and how to format it. Everything the user doesn't see that sits between their request and the model's response.
+When experimenting with Claude Design, I mainly relied on [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7), one of the strongest models for frontend visual generation right now. But Claude Design's quality isn't just Opus 4.7 being good at design. It's the *harness* around the model: the hidden prompts, the preset components, the rules about what to generate and how to format it. Everything the user doesn't see that sits between their request and the model's response.
 
 In other words, the harness is doing a lot of the work as well.
 
@@ -64,9 +64,9 @@ As you can see, the results were poor, compared to Claude Design.
 
 Yes I know, I changed two variables at once: the harness and the model. A proper experiment would only isolate one.
 
-But yet, the designer or developer sitting with a deadline isn't going to run controlled experiments. Most won't want to swap models or compare outputs across model providers. They want to describe what they need and get something usable back.
+But yet, the designer or developer sitting with a deadline isn't going to run controlled experiments. Most won't want to swap models or compare outputs across model providers. They just want to describe what they need and get something usable back.
 
-We already know from early adopters that [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7) and [Gemini 3.1 Pro](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/) are ahead of the pack for frontend visuals generation. But even a strong model needs good direction, and direction is where the next piece comes in.
+That made me wonder: if the difference is not just the model, but the surrounding guidance, then maybe the thing to look for is not another Claude Design clone. Maybe it is the reusable design judgment sitting around the model.
 
 
 ## And hence, my search for “skills”
@@ -106,12 +106,7 @@ Look at the amount of prompt / skill files there are! Different prompts for typo
 
 That's Anthropic's real advantage with Claude Design. The accumulated prompt engineering sitting between user and model, invisible to most users, doing most of the work. While the Opus 4.7 model matters (a lot), the very capable output I saw was also due to all these harness-related prompts and pre-made components. The harness is what separates Claude Design from say, Claude Code.
 
-
-## So yes, they both matter
-
-The prompts (Claude Design's internal system, Impeccable's vocabulary layer) and the model (Opus 4.7's raw capability) each contribute to great design. You can't get Claude Design-level polish from a weaker model, even with great prompts. And you can't get it from Opus 4.7 alone, without the harness directing it.
-
-The harness shapes what the model attempts. The model determines what it can execute. And the human in the loop, with their taste and vision, helps to shape the output.
+The model determines what is possible. The harness shapes what the model attempts.
 
 
 ## Is code-first design really it though?
