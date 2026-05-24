@@ -6,6 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 import { contentSlugs } from './ssg-routes'
+import { contentAssetFileName } from './src/lib/buildAssetNames'
 
 interface ViteSsgConfig extends UserConfig {
   ssgOptions: {
@@ -29,6 +30,13 @@ export default defineConfig({
   server: {
     port: 5465,
     strictPort: true,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: contentAssetFileName,
+      },
+    },
   },
   resolve: {
     alias: {
