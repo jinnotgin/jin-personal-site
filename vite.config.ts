@@ -33,6 +33,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@generated': fileURLToPath(new URL('./.generated', import.meta.url)),
     },
   },
   ssgOptions: {

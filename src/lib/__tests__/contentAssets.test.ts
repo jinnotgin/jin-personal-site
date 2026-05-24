@@ -46,13 +46,13 @@ describe('content asset resolution', () => {
 	it('builds responsive image data from generated asset URLs', () => {
 		const responsiveAssets = {
 			...assets,
-			'../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.avif':
+			'../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.avif':
 				'/assets/cover-640.aaa111.avif',
-			'../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.avif':
+			'../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.avif':
 				'/assets/cover-960.bbb222.avif',
-			'../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.webp':
+			'../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.webp':
 				'/assets/cover-640.ccc333.webp',
-			'../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.webp':
+			'../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.webp':
 				'/assets/cover-960.ddd444.webp',
 		}
 
@@ -67,22 +67,22 @@ describe('content asset resolution', () => {
 							{
 								format: 'avif',
 								width: 640,
-								path: '../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.avif',
+								path: '../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.avif',
 							},
 							{
 								format: 'avif',
 								width: 960,
-								path: '../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.avif',
+								path: '../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.avif',
 							},
 							{
 								format: 'webp',
 								width: 640,
-								path: '../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.webp',
+								path: '../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-640.webp',
 							},
 							{
 								format: 'webp',
 								width: 960,
-								path: '../generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.webp',
+								path: '../../.generated/media/content/writing/2026/2026-05-18-code-first-design/cover-960.webp',
 							},
 						],
 					},

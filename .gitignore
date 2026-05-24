@@ -37,7 +37,8 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
-src/generated/media/
+.generated/
+src/generated/
 
 test-results/
 playwright-report/

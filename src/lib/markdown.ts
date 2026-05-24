@@ -1,7 +1,7 @@
 import type { Post, PostMeta } from '@/data/types'
 import { buildResponsiveImageMap, resolveMarkdownAssetReferences } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
-import { imageManifest } from '@/generated/imageManifest'
+import { imageManifest } from '@generated/imageManifest'
 
 /**
  * Real Markdown infrastructure: posts live as index.md files with YAML-ish
@@ -21,7 +21,7 @@ const assets = import.meta.glob('../content/writing/**/*.{avif,gif,jpeg,jpg,pdf,
 	import: 'default',
 }) as Record<string, string>
 
-const generatedAssets = import.meta.glob('../generated/media/content/writing/**/*.{avif,webp}', {
+const generatedAssets = import.meta.glob('../../.generated/media/content/writing/**/*.{avif,webp}', {
 	eager: true,
 	query: '?url',
 	import: 'default',

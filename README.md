@@ -88,14 +88,14 @@ responsive markup. In both cases, local `jpg`, `jpeg`, and `png` files under
 `src/content` are optimized by `npm run optimize:images`.
 
 The optimizer uses Sharp to generate AVIF and WebP variants under
-`src/generated/media/`, records dimensions and variant paths in
-`src/generated/imageManifest.ts`, and the Markdown renderer turns matching
+`.generated/media/`, records dimensions and variant paths in
+`.generated/imageManifest.ts`, and the Markdown renderer turns matching
 images into `<picture>` markup with `srcset`, `sizes`, `width`, `height`,
 `loading="lazy"`, and `decoding="async"`.
 
-Generated media files are ignored by git. Run `npm run optimize:images` after
-adding or changing local content images during development. `npm run build`
-runs the optimizer automatically before type-checking and static generation.
+The `.generated/` folder is ignored by git because it is derived build input.
+`npm run dev`, `npm run test:unit`, and `npm run build` run the optimizer before
+starting their main work.
 
 For a project update, add or edit `src/content/projects/{slug}/index.md`, place
 any project assets next to that file, and reference frontmatter images with

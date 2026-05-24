@@ -8,7 +8,7 @@ import type {
 } from '@/data/types'
 import { buildResponsiveImageMap, resolveContentAsset } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
-import { imageManifest } from '@/generated/imageManifest'
+import { imageManifest } from '@generated/imageManifest'
 
 /**
  * Project content lives as index.md files with YAML-ish frontmatter under
@@ -27,7 +27,7 @@ const assets = import.meta.glob('../content/projects/**/*.{avif,gif,jpeg,jpg,pdf
 	import: 'default',
 }) as Record<string, string>
 
-const generatedAssets = import.meta.glob('../generated/media/content/projects/**/*.{avif,webp}', {
+const generatedAssets = import.meta.glob('../../.generated/media/content/projects/**/*.{avif,webp}', {
 	eager: true,
 	query: '?url',
 	import: 'default',

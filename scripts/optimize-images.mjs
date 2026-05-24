@@ -6,7 +6,7 @@ import sharp from 'sharp'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentRoot = path.join(root, 'src/content')
-const generatedRoot = path.join(root, 'src/generated')
+const generatedRoot = path.join(root, '.generated')
 const mediaRoot = path.join(generatedRoot, 'media')
 const manifestPath = path.join(generatedRoot, 'imageManifest.ts')
 
@@ -72,7 +72,7 @@ async function optimizeImage(filePath) {
 			variants.push({
 				format: format.name,
 				width,
-				path: `../generated/${toPosix(path.relative(generatedRoot, outputPath))}`,
+				path: `../../.generated/${toPosix(path.relative(generatedRoot, outputPath))}`,
 			})
 		}
 	}

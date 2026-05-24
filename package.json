@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "npm run optimize:images",
     "dev": "vite",
     "build": "run-s optimize:images && run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
+    "pretest:unit": "npm run optimize:images",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
     "optimize:images": "node scripts/optimize-images.mjs",
