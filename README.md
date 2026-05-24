@@ -97,6 +97,26 @@ The `.generated/` folder is ignored by git because it is derived build input.
 `npm run dev`, `npm run test:unit`, and `npm run build` run the optimizer before
 starting their main work.
 
+### Side-by-side Markdown Images
+
+Use the custom `:::cols` directive when exactly two Markdown images should sit
+beside each other on wider screens:
+
+```md
+:::cols
+![First image alt](./first.png "Optional caption")
+
+![Second image alt](./second.png "Optional caption")
+:::
+```
+
+The Markdown renderer expands this block to a `.cols` wrapper. The post view
+styles it as a two-column grid on desktop and a single column on smaller
+screens. Keep the images inside the directive as normal Markdown images so
+responsive image optimization and optional captions still work. Treat
+`:::cols` as a two-column directive: for three or more related images, use
+separate `:::cols` pairs or keep the images in the normal article flow.
+
 For a project update, add or edit `src/content/projects/{slug}/index.md`, place
 any project assets next to that file, and reference frontmatter images with
 relative paths such as `./screenshot.png`.

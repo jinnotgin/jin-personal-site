@@ -87,6 +87,15 @@ Handle embedded media as follows:
   - Cover images usually omit captions. Inline explanatory screenshots and illustrations usually include captions when the source provides one.
   - Use straight double quotes around Markdown title captions unless the source text forces escaping.
   - If the image is inside a comparison table, keep the existing table pattern and do not invent captions unless the source clearly supplies them.
+  - When the source clearly presents exactly two images as a side-by-side comparison or paired visual sequence, wrap the normal Markdown image entries in the custom two-column directive:
+    ```md
+    :::cols
+    ![First image alt](./first.png "Optional caption")
+
+    ![Second image alt](./second.png "Optional caption")
+    :::
+    ```
+    The site renders this as two side-by-side columns on desktop and stacked images on small screens. Do not use it for unrelated images, ordinary single-image flow, or groups of three or more images.
   - If the image is a local file in the source folder, copy it into the same folder as `index.md` and use a relative `./filename.ext` path. If it's a remote URL, keep the URL for now and flag it to the user so they can decide whether to host it locally.
 - **URLs / hyperlinks**: preserve all links exactly as `[text](url)`. Do not remove or shorten them.
 - **Videos**: YouTube (and similar) can be embedded directly using an iframe in the Markdown body:
