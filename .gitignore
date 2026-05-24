@@ -39,7 +39,6 @@ __screenshots__/
 *.timestamp-*-*.mjs
 .vite-ssg-temp/
 .generated/
-src/generated/
 
 test-results/
 playwright-report/
