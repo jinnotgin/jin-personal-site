@@ -13,8 +13,8 @@ const manifestPath = path.join(generatedRoot, 'imageManifest.ts')
 const sourcePattern = /\.(jpe?g|png)$/i
 const widths = [640, 960, 1400]
 const formats = [
-	{ name: 'avif', options: { quality: 52, effort: 3 } },
-	{ name: 'webp', options: { quality: 78, effort: 4 } },
+	{ name: 'avif', options: { quality: 50, effort: 4 } },
+	{ name: 'webp', options: { quality: 80, effort: 4 } },
 ]
 
 async function walk(dir) {
