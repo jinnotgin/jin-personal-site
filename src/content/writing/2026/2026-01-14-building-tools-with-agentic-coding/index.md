@@ -3,7 +3,7 @@ slug: building-tools-with-agentic-coding
 title: Building Tools with Agentic Coding (and saving 80% on the bill)
 date: 2026-01-14
 excerpt: When you're building with AI coding assistants, the question isn't just "can it do the job?". Instead, it's "can it do the job without costing me a small fortune"?
-tags: [ai, llm, tooling, engineering, cost, applied-ai]
+tags: [tooling, engineering, cost, applied-ai]
 status: published
 category: AI in practice
 ---

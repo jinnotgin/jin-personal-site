@@ -256,9 +256,10 @@ watch([safePage, currentPage], ([safe, current]) => {
 	margin: 0;
 }
 .post-tags {
-	font-size: var(--text-sm);
+	font-size: var(--text-xs);
+	line-height: 1.45;
 	color: var(--color-ink-faint);
-	margin-top: 0.35rem;
+	margin-top: 0.55rem;
 }
 /* ── Pagination ── */
 .pagination {

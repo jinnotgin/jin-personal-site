@@ -3,7 +3,7 @@ slug: play-is-how-you-learn-what-isnt-settled
 title: Play is how you learn what no one has figured out yet
 date: 2026-05-25
 excerpt: There are two ways to learn: from a teacher with the answer, or by playing until you work it out. Topics like AI need the second, yet we default to choosing the first.
-tags: [ai, learning, play, agency, agentic-ai, applied-ai, signals, ai-adoption, workplace-learning, experimentation, future-of-work, judgment]
+tags: [learning, judgment, play, agency, applied-ai, signals, workplace-learning, experimentation, future-of-work]
 status: published
 category: Learning and judgment
 ---

@@ -3,7 +3,7 @@ slug: code-first-design-ai-dlc-claude-design
 title: What I learnt about Code-First Design, from using Claude Design
 date: 2026-05-18
 excerpt: I've been using Claude Design to understand where code-first design fits into modern software development.
-tags: [ai, design, prototyping, engineering, ai-dlc, applied-ai]
+tags: [code-first, design, prototyping, engineering, applied-ai]
 status: published
 category: AI in practice
 ---
