@@ -52,6 +52,7 @@ jobs:
           set -euo pipefail
 
           api_base="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$CF_PAGES_PROJECT_NAME"
+          per_page=25
           page=1
           deployments_file="$(mktemp)"
           delete_file="$(mktemp)"
@@ -59,9 +60,9 @@ jobs:
           echo "[]" > "$deployments_file"
 
           while true; do
-            response="$(curl --fail-with-body --silent --show-error \
+            response="$(curl --silent --show-error \
               --header "Authorization: Bearer $CF_API_TOKEN" \
-              "$api_base/deployments?per_page=100&page=$page")"
+              "$api_base/deployments?per_page=$per_page&page=$page")"
 
             success="$(jq -r ".success" <<< "$response")"
             if [ "$success" != "true" ]; then
@@ -109,8 +110,14 @@ jobs:
 
           jq -r ".[].id" "$delete_file" | while read -r deployment_id; do
             echo "Deleting deployment $deployment_id"
-            curl --fail-with-body --silent --show-error --request DELETE \
+            response="$(curl --silent --show-error --request DELETE \
               --header "Authorization: Bearer $CF_API_TOKEN" \
-              "$api_base/deployments/$deployment_id"
+              "$api_base/deployments/$deployment_id?force=true")"
+            success="$(jq -r ".success" <<< "$response")"
+            if [ "$success" != "true" ]; then
+              echo "$response" | jq .
+              echo "::error::Failed to delete deployment $deployment_id"
+              exit 1
+            fi
             echo
           done
