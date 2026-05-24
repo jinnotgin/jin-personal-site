@@ -5,6 +5,7 @@ import posthog from 'posthog-js'
 import './main.css'
 import App from './App.vue'
 import { createChunkLoadRecovery } from './lib/deploymentSkew'
+import { installNavigationProgress, isNavigating } from './lib/navigation'
 import { installScrollPositionStore, routes, scrollBehavior } from './router/routes'
 
 export const createApp = ViteSSG(
@@ -14,9 +15,12 @@ export const createApp = ViteSSG(
 		app.use(createPinia())
 
 		if (isClient) {
+			installNavigationProgress(router)
+
 			const chunkLoadRecovery = createChunkLoadRecovery({
 				assign: (path) => window.location.assign(path),
 				sessionStorage: window.sessionStorage,
+				onBeforeAssign: () => { isNavigating.value = true },
 			})
 			const isLocalhost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname)
 			const posthogToken = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN
