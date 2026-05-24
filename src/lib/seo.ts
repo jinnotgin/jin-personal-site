@@ -89,7 +89,7 @@ export function siteSeo(path = '/', info = buildInfo) {
 export function writingIndexSeo() {
   return seo({
     title: 'Writing',
-    description: 'Working notes on applied AI, product systems, software, and organisational change.',
+    description: 'Working notes on building systems that have to keep working, showing how things were built and why.',
     path: '/writing',
     image: { src: '/img/writing-vignette-v2.webp', alt: 'Writing preview image' },
   })
@@ -109,7 +109,7 @@ export function postSeo(post: Post) {
 export function projectsIndexSeo() {
   return seo({
     title: 'Projects',
-    description: 'Projects and tools grouped by why they existed, from applied AI to public platforms and homegrown experiments.',
+    description: 'Projects and tools grouped by core threads, from active tools you can try to written case studies from work that cannot be publicly demoed.',
     path: '/projects',
     image: { src: '/img/projects-vignette.webp', alt: 'Projects preview image' },
   })
