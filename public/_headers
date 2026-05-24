@@ -1,0 +1,2 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://peer.itsjin.com; connect-src 'self' https://peer.itsjin.com https://us.i.posthog.com; img-src 'self' data: https://peer.itsjin.com; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'
