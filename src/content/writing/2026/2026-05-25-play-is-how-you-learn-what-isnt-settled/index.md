@@ -107,7 +107,7 @@ True learning and development, for a world that keeps moving, would mean widenin
 
 ## The space that isn't there yet
 
-With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice. We've just never built the infrastructure for anything else.
+With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice.
 
 Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system left little room for play, because the subjects it was built for never demanded it.
 
