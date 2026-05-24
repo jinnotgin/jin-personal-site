@@ -230,6 +230,40 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	}
 }
 
+.prose :deep(.cols) {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	width: min(68rem, calc(100vw - 4rem));
+	margin: 2rem 50%;
+	transform: translateX(-50%);
+	align-items: start;
+}
+.prose :deep(.cols > p) {
+	display: contents;
+}
+.prose :deep(.cols > p:empty) {
+	display: none;
+}
+.prose :deep(.cols img),
+.prose :deep(.cols figure) {
+	width: 100%;
+	margin: 0;
+	transform: none;
+}
+.prose :deep(.cols figure img) {
+	width: 100%;
+}
+@media (max-width: 760px) {
+	.prose :deep(.cols) {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		width: 100%;
+		margin: 1.5rem 0;
+		transform: none;
+	}
+}
+
 .prose :deep(table) {
 	width: 100%;
 	border-collapse: collapse;

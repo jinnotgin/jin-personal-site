@@ -23,9 +23,11 @@ The more I used it, the more I could see the prompt engineering underneath. For 
 
 When I moused over certain UI elements of Claude Design, I caught fragments of the prompting. Claude Design controls how the model outputs file content in a particular structure. Not just *what* to generate, but *how to organise the generation itself*.
 
+:::cols
 ![Claude Design prompt fragment tooltip](./image-20260518-030412.png)
 
 ![Claude Design generated prototype and prompt panel](./image-20260518-030452.png)
+:::
 
 When experimenting with Claude Design, I mainly relied on [Claude Opus 4.7](https://www.anthropic.com/news/claude-opus-4-7), one of the strongest models for frontend visual generation right now. But Claude Design's quality isn't just Opus 4.7 being good at design. It's the *harness* around the model: the hidden prompts, the preset components, the rules about what to generate and how to format it. Everything the user doesn't see that sits between their request and the model's response.
 
@@ -53,9 +55,11 @@ So, that pushed me to look at alternatives.
 
 So, I tried it with the same starting prompt I'd used with Claude Design, but with other models (Chinese model GLM 4.6, and OpenAI’s GPT 5.5).
 
+:::cols
 ![Open Design output with GLM 4.6](./image-20260518-031431.png "Open Design + GLM 4.6")
 
 ![Open Design output with GPT 5.5](./image-20260518-031524.png "Open Design + GPT 5.5")
+:::
 
 As you can see, the results were poor, compared to Claude Design.
 
@@ -87,9 +91,11 @@ I would imagine that most laypeople will prompt with simple language like "make 
 
 I tested this by pointing Claude Code and Codex at [my personal site](https://itsjin.com/) with Impeccable loaded as a skill. After several rounds of direction and iteration, the results were strong. Definitely not a single-prompt kind of magic, but still amazing after several back-and-forth.
 
+:::cols
 ![Personal site before redesign](./image-20260518-033136.png "Before")
 
 ![Personal site after redesign](./image-20260518-033103.png "After")
+:::
 
 This unlocks a new path forward, by pairing AI coding tools (Claude Code or Codex) with agent skills like Impeccable for design work. That's code-based design without the lock-in to Claude Design. Of course, you won’t get some of the niceties of Claude Design (e.g. being able to draw & annotate on the website), but at least there’s a way forward.
 

@@ -14,6 +14,16 @@ const escapeHtml = (value: string) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
 
+// Transforms `:::cols\n...\n:::` blocks into a `<div class="cols">` wrapper.
+// Blank lines around the inner content let marked re-enter markdown parsing
+// per CommonMark HTML block rules.
+function expandColsDirective(markdown: string): string {
+  return markdown.replace(
+    /^:::cols[ \t]*\r?\n([\s\S]*?)\r?\n:::[ \t]*$/gm,
+    (_match, inner: string) => `<div class="cols">\n\n${inner}\n\n</div>`,
+  )
+}
+
 export function renderMarkdown(markdown: string, responsiveImages: ResponsiveImageMap = {}): string {
   const renderer = new Renderer()
 
@@ -44,7 +54,7 @@ export function renderMarkdown(markdown: string, responsiveImages: ResponsiveIma
     return img
   }
 
-  return marked.parse(markdown, {
+  return marked.parse(expandColsDirective(markdown), {
     async: false,
     gfm: true,
     breaks: false,

@@ -14,6 +14,19 @@ describe('renderMarkdown', () => {
     expect(html).not.toContain('![Output preview]')
   })
 
+  it('expands a :::cols block into a side-by-side wrapper with parsed markdown inside', () => {
+    const html = renderMarkdown(
+      [':::cols', '![left](/img/a.png "A")', '', '![right](/img/b.png "B")', ':::'].join('\n'),
+    )
+
+    expect(html).toContain('<div class="cols">')
+    expect(html).toContain('<img src="/img/a.png" alt="left"')
+    expect(html).toContain('<img src="/img/b.png" alt="right"')
+    expect(html).toContain('<figcaption>A</figcaption>')
+    expect(html).toContain('<figcaption>B</figcaption>')
+    expect(html).not.toContain(':::')
+  })
+
   it('renders responsive image metadata as a picture element', () => {
     const html = renderMarkdown('![Output preview](/assets/output.abc123.jpg)', {
       '/assets/output.abc123.jpg': {
