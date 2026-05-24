@@ -71,6 +71,32 @@ images next to that file, reference them with relative Markdown paths such as
 generated post route. Public URLs still come from the frontmatter `slug`, not
 from the dated folder name.
 
+### Responsive Markdown Images
+
+Writing images can stay simple in source Markdown. Point at the colocated image
+file and let the build handle optimization:
+
+```md
+![Descriptive alt text](./cover.jpg)
+![Descriptive alt text](./inline-1.png "Optional visible caption")
+```
+
+Be aware that the optional Markdown title field changes the rendered HTML. When
+present, it is treated as a visible caption, so the image renders as `<figure>`
+plus `<figcaption>`. Without a title field, the image renders as image-only
+responsive markup. In both cases, local `jpg`, `jpeg`, and `png` files under
+`src/content` are optimized by `npm run optimize:images`.
+
+The optimizer uses Sharp to generate AVIF and WebP variants under
+`src/generated/media/`, records dimensions and variant paths in
+`src/generated/imageManifest.ts`, and the Markdown renderer turns matching
+images into `<picture>` markup with `srcset`, `sizes`, `width`, `height`,
+`loading="lazy"`, and `decoding="async"`.
+
+Generated media files are ignored by git. Run `npm run optimize:images` after
+adding or changing local content images during development. `npm run build`
+runs the optimizer automatically before type-checking and static generation.
+
 For a project update, add or edit `src/content/projects/{slug}/index.md`, place
 any project assets next to that file, and reference frontmatter images with
 relative paths such as `./screenshot.png`.

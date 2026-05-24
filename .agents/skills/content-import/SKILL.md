@@ -78,7 +78,9 @@ source: { URL if originally published elsewhere, e.g. a LinkedIn article }
 
 Handle embedded media as follows:
 
-- **Images in writing posts**: colocate local image files beside the post `index.md` and use standard Markdown image syntax with relative paths. Existing posts use the optional Markdown title field as the visible caption: `![alt text](./image.png "Caption text")`.
+- **Images in writing posts**: colocate local image files beside the post `index.md` and use standard Markdown image syntax with relative paths.
+  - The optional Markdown title field is rendered as a visible caption: `![alt text](./image.png "Caption text")`.
+  - Images with title captions appear wider than the text column and show the caption below the image. Images without title captions use the simpler image treatment.
   - Use descriptive alt text for the image itself.
   - If the source has a caption, preserve the caption text in the quoted title field exactly, except for Markdown escaping needed to keep the syntax valid.
   - If the source has no caption, omit the title field: `![alt text](./image.png)`.

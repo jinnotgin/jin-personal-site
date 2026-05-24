@@ -8,7 +8,7 @@ status: published
 category: Learning and judgment
 ---
 
-![Illustrated cover showing a contained course path ending at a closed doorway](./cover.png "Courses work best when someone has already mapped the path. The problem with AI is that the map keeps changing.")
+![Illustrated cover showing a contained course path ending at a closed doorway](./cover.png)
 
 In Singapore, whenever there's something new to learn, it seems like many of us default to a familiar pattern of behaviour: finding a training course to attend.
 

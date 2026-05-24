@@ -50,7 +50,24 @@ function trackExternalLinkClick(label: string, href: string) {
 
 		<div v-if="project.images?.length" class="project-images">
 			<figure v-for="image in project.images" :key="image.src">
-				<img :src="image.src" :alt="image.alt" loading="lazy" />
+				<picture v-if="image.responsive">
+					<source
+						v-for="source in image.responsive.sources"
+						:key="source.type"
+						:type="source.type"
+						:srcset="source.srcset"
+					/>
+					<img
+						:src="image.responsive.fallback"
+						:alt="image.alt"
+						:width="image.responsive.width"
+						:height="image.responsive.height"
+						loading="lazy"
+						decoding="async"
+						sizes="(min-width: 760px) 720px, 92vw"
+					/>
+				</picture>
+				<img v-else :src="image.src" :alt="image.alt" loading="lazy" decoding="async" />
 			</figure>
 		</div>
 

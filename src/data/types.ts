@@ -1,3 +1,5 @@
+import type { ResponsiveImage } from '@/lib/contentAssets'
+
 export type ProjectStatus = 'active' | 'archived'
 
 export interface ProjectLink {
@@ -8,6 +10,7 @@ export interface ProjectLink {
 export interface ProjectImage {
   src: string
   alt: string
+  responsive?: ResponsiveImage
 }
 
 export interface ProjectMeta {

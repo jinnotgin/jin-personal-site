@@ -1,4 +1,5 @@
 import { Renderer, marked, type Tokens } from 'marked'
+import type { ResponsiveImageMap } from '@/lib/contentAssets'
 
 const escapeAttr = (value: string) =>
   value
@@ -13,7 +14,7 @@ const escapeHtml = (value: string) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
 
-export function renderMarkdown(markdown: string): string {
+export function renderMarkdown(markdown: string, responsiveImages: ResponsiveImageMap = {}): string {
   const renderer = new Renderer()
 
   renderer.link = ({ href, title, tokens }: Tokens.Link) => {
@@ -23,7 +24,15 @@ export function renderMarkdown(markdown: string): string {
   }
 
   renderer.image = ({ href, title, text }: Tokens.Image) => {
-    const img = `<img src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" />`
+    const responsiveImage = responsiveImages[href]
+    const img = responsiveImage
+      ? `<picture>${responsiveImage.sources
+          .map(
+            (source) =>
+              `<source type="${escapeAttr(source.type)}" srcset="${escapeAttr(source.srcset)}" />`,
+          )
+          .join('')}<img src="${escapeAttr(responsiveImage.fallback)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" width="${responsiveImage.width}" height="${responsiveImage.height}" sizes="(min-width: 760px) 720px, 92vw" /></picture>`
+      : `<img src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" />`
     if (title) {
       const caption = marked.parseInline(title, {
         async: false,

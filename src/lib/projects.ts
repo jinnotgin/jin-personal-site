@@ -6,8 +6,9 @@ import type {
 	ThreadId,
 	ProjectStatus,
 } from '@/data/types'
-import { resolveContentAsset } from '@/lib/contentAssets'
+import { buildResponsiveImageMap, resolveContentAsset } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
+import { imageManifest } from '@/generated/imageManifest'
 
 /**
  * Project content lives as index.md files with YAML-ish frontmatter under
@@ -25,6 +26,17 @@ const assets = import.meta.glob('../content/projects/**/*.{avif,gif,jpeg,jpg,pdf
 	query: '?url',
 	import: 'default',
 }) as Record<string, string>
+
+const generatedAssets = import.meta.glob('../generated/media/content/projects/**/*.{avif,webp}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>
+
+const responsiveImages = buildResponsiveImageMap(imageManifest, {
+	...assets,
+	...generatedAssets,
+})
 
 function parseFrontmatter(raw: string): {
 	data: Record<string, unknown>
@@ -85,9 +97,11 @@ function parseImages(raw: unknown, markdownPath: string): ProjectImage[] | undef
 	for (const item of raw as string[]) {
 		const sep = item.indexOf('::')
 		if (sep === -1) continue
+		const src = resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assets)
 		result.push({
-			src: resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assets),
+			src,
 			alt: item.slice(sep + 2).trim(),
+			...(responsiveImages[src] ? { responsive: responsiveImages[src] } : {}),
 		})
 	}
 	return result.length ? result : undefined
@@ -111,7 +125,7 @@ function buildProject(raw: string, markdownPath: string): Project {
 		stack: Array.isArray(data.stack) ? (data.stack as string[]) : [],
 		...(links ? { links } : {}),
 		...(images ? { images } : {}),
-		html: renderMarkdown(body.trim()),
+		html: renderMarkdown(body.trim(), responsiveImages),
 	}
 }
 

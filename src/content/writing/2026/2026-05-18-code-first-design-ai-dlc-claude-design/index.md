@@ -81,7 +81,7 @@ That search led me to [Impeccable](https://impeccable.style/), a design skill fo
 
 I looked into the prompt writing behind Impeccable, and it was *impeccably thorough*. Besides being really opinionated about many aspects of UI/UX design, its additional value is in what it *forbids*. It catalogues 27 anti-patterns, the lazy defaults many models fall into: purple gradients, nested cards, low-contrast labels, etc. It names them and steers the AI to avoid them.
 
-![Impeccable website design example](./image-20260518-034815.png "An example from the Impeccable website")
+![Impeccable website design example](./image-20260518-034815.png)
 
 I would imagine that most laypeople will prompt with simple language like "make it look good and modern", because they don't have terms like *tinted neutrals*, *vertical rhythm*, or *fluid type scale with optical sizing*. Impeccable closes that vocabulary gap. The design capability was already in the model. The prompts were just too vague to reach it.
 
