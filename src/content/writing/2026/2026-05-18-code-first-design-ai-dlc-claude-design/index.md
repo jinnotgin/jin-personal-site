@@ -36,7 +36,7 @@ In other words, the harness is doing a lot of the work as well.
 
 There's a practical problem, though. Claude Design is in research preview, and the usage limits are very harsh.
 
-![Claude Design usage limit message](./image-20260518-031059.png "I can feel your pain 😥")
+![Claude Design usage limit message](./image-20260518-031059.png)
 
 That was my experience too. Within 2 hours, I’ve used up all my usage for the entire week. Yes, I only had a $20 USD Claude plan. Sure, I was using Claude Opus 4.7, the most powerful model. But that doesn’t change how painful these limits feel.
 
