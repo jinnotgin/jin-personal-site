@@ -1,2 +1,0 @@
-/*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://peer.itsjin.com https://static.cloudflareinsights.com; connect-src 'self' https://peer.itsjin.com https://us.i.posthog.com https://cloudflareinsights.com; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-src https://www.youtube-nocookie.com; worker-src 'self' blob:; media-src 'self' data: blob: https:; object-src 'none'
