@@ -63,13 +63,27 @@ export function seo(input: SeoInput) {
 }
 
 export function siteSeo(path = '/', info = buildInfo) {
-  return seo({
+  const base = seo({
     title: site.name,
     description: site.description,
     path,
     image: { src: site.previewImage, alt: `${site.name} site preview` },
     buildInfo: info,
   })
+  return {
+    ...base,
+    script: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: site.name,
+          url: site.url,
+        }),
+      },
+    ],
+  }
 }
 
 export function writingIndexSeo() {
