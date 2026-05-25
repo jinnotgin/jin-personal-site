@@ -1,4 +1,4 @@
-import { mkdir, readdir, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, rm, stat, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentRoot = path.join(root, 'src/content')
 const generatedRoot = path.join(root, '.generated')
 const mediaRoot = path.join(generatedRoot, 'media')
-const manifestPath = path.join(generatedRoot, 'imageManifest.ts')
+const legacyManifestPath = path.join(generatedRoot, 'imageManifest.ts')
 
 const sourcePattern = /\.(jpe?g|png)$/i
 const widths = [640, 960, 1400]
@@ -92,16 +92,71 @@ export const imageManifest: ResponsiveImageManifestEntry[] = ${JSON.stringify(en
 `
 }
 
+function manifestPathForSection(section) {
+	return path.join(generatedRoot, `imageManifest.${section}.ts`)
+}
+
+function sectionForEntry(entry) {
+	return entry.source.split('/')[2]
+}
+
+function manifestPathForEntry(entry) {
+	const sourceParts = entry.source.split('/')
+	const section = sourceParts[2]
+	const entryParts =
+		section === 'writing' ? sourceParts.slice(3, -1) : sourceParts.slice(3, 4)
+
+	return path.join(generatedRoot, 'imageManifest', 'content', section, ...entryParts) + '.ts'
+}
+
+async function cleanManifestOutputs() {
+	await rm(path.join(generatedRoot, 'imageManifest'), { recursive: true, force: true })
+
+	const generatedFiles = await readdir(generatedRoot).catch(() => [])
+	await Promise.all(
+		generatedFiles
+			.filter((fileName) => /^imageManifest\..+\.ts$/.test(fileName))
+			.map((fileName) => unlink(path.join(generatedRoot, fileName))),
+	)
+}
+
 await mkdir(generatedRoot, { recursive: true })
 
 try {
 	await stat(contentRoot)
+	await cleanManifestOutputs()
 
 	const files = await walk(contentRoot)
 	const entries = (await Promise.all(files.map(optimizeImage))).filter(Boolean)
 	entries.sort((a, b) => a.source.localeCompare(b.source))
 
-	await writeFile(manifestPath, renderManifest(entries))
+	const entriesBySection = new Map()
+	for (const entry of entries) {
+		const section = sectionForEntry(entry)
+		const sectionEntries = entriesBySection.get(section) ?? []
+		sectionEntries.push(entry)
+		entriesBySection.set(section, sectionEntries)
+	}
+
+	for (const [section, sectionEntries] of entriesBySection) {
+		await writeFile(manifestPathForSection(section), renderManifest(sectionEntries))
+	}
+
+	const entriesByContentEntry = new Map()
+	for (const entry of entries) {
+		const manifestPath = manifestPathForEntry(entry)
+		const contentEntry = entriesByContentEntry.get(manifestPath) ?? []
+		contentEntry.push(entry)
+		entriesByContentEntry.set(manifestPath, contentEntry)
+	}
+	for (const [manifestPath, contentEntry] of entriesByContentEntry) {
+		await mkdir(path.dirname(manifestPath), { recursive: true })
+		await writeFile(manifestPath, renderManifest(contentEntry))
+	}
+
+	await unlink(legacyManifestPath).catch((error) => {
+		if (error?.code !== 'ENOENT') throw error
+	})
 	console.log(`Optimized ${entries.length} images into ${path.relative(root, mediaRoot)}`)
 } catch (error) {
 	console.error(error)

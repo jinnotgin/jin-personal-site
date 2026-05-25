@@ -6,7 +6,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentRoot = path.join(root, 'src/content')
 const generatedRoot = path.join(root, '.generated')
 const writingIndexPath = path.join(generatedRoot, 'writingIndex.ts')
+const homeWritingPath = path.join(generatedRoot, 'homeWriting.ts')
 const writingPostsRoot = path.join(generatedRoot, 'writing/posts')
+const threadIds = ['applied-ai', 'public-platforms', 'signals', 'homegrown', 'human']
 
 async function walk(dir, matches) {
 	const entries = await readdir(dir, { withFileTypes: true })
@@ -93,6 +95,22 @@ export const postSource: WritingPostSource = ${JSON.stringify(source, null, 2)}
 `
 }
 
+function renderHomeWriting(posts) {
+	const byThread = Object.fromEntries(
+		threadIds.map((threadId) => [
+			threadId,
+			posts.filter((post) => post.tags.includes(threadId)).slice(0, 4),
+		]),
+	)
+
+	return `import type { PostMeta, ThreadId } from '@/data/types'
+
+export const homeLatestPosts: PostMeta[] = ${JSON.stringify(posts.slice(0, 3), null, 2)}
+
+export const homePostsByThread: Partial<Record<ThreadId, PostMeta[]>> = ${JSON.stringify(byThread, null, 2)}
+`
+}
+
 async function generateWritingData() {
 	const writingRoot = path.join(contentRoot, 'writing')
 	const markdownFiles = await walk(writingRoot, (fileName) => fileName.endsWith('.md'))
@@ -120,6 +138,8 @@ async function generateWritingData() {
 		writingIndexPath,
 		renderWritingIndex(sources.map((source) => source.meta)),
 	)
+
+	await writeFile(homeWritingPath, renderHomeWriting(sources.map((source) => source.meta)))
 
 	await Promise.all(
 		sources.map((source) =>

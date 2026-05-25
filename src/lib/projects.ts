@@ -8,7 +8,7 @@ import type {
 } from '@/data/types'
 import { buildResponsiveImageMap, resolveContentAsset } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
-import { imageManifest } from '@generated/imageManifest'
+import { imageManifest } from '@generated/imageManifest.projects'
 
 /**
  * Project content lives as index.md files with YAML-ish frontmatter under

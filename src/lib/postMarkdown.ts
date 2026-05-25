@@ -1,7 +1,7 @@
 import type { Post } from '@/data/types'
 import { buildResponsiveImageMap, resolveMarkdownAssetReferences } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
-import { imageManifest } from '@generated/imageManifest'
+import { imageManifest } from '@generated/imageManifest.writing'
 
 const files = import.meta.glob('../content/writing/**/*.md', {
 	eager: true,

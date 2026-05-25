@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const sourcePath = join(process.cwd(), 'src/lib/markdown.ts')
 const postSourcePath = join(process.cwd(), 'src/lib/postMarkdown.ts')
+const projectSourcePath = join(process.cwd(), 'src/lib/projects.ts')
 
 describe('writing Markdown module boundary', () => {
 	it('keeps writing asset URL imports out of the index metadata module', () => {
@@ -20,5 +21,15 @@ describe('writing Markdown module boundary', () => {
 		expect(source).toContain('query: \'?url\'')
 		expect(source).toContain('renderMarkdown')
 		expect(source).toContain('buildResponsiveImageMap')
+	})
+
+	it('keeps responsive image manifests scoped to the content section', () => {
+		const postSource = readFileSync(postSourcePath, 'utf8')
+		const projectSource = readFileSync(projectSourcePath, 'utf8')
+
+		expect(postSource).toContain('@generated/imageManifest.writing')
+		expect(postSource).not.toContain('@generated/imageManifest.projects')
+		expect(projectSource).toContain('@generated/imageManifest.projects')
+		expect(projectSource).not.toContain('@generated/imageManifest.writing')
 	})
 })
