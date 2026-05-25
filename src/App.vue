@@ -2,6 +2,7 @@
 import SiteHeader from '@/components/SiteHeader.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import NavigationProgress from '@/components/NavigationProgress.vue'
+import PageSkeleton from '@/components/PageSkeleton.vue'
 import { isNavigating } from '@/lib/navigation'
 </script>
 
@@ -14,6 +15,9 @@ import { isNavigating } from '@/lib/navigation'
       <Transition name="page" mode="out-in">
         <Suspense :timeout="0">
           <component :is="Component" :key="route.path" />
+          <template #fallback>
+            <PageSkeleton />
+          </template>
         </Suspense>
       </Transition>
     </RouterView>
