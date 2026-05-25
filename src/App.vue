@@ -3,7 +3,7 @@ import SiteHeader from '@/components/SiteHeader.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import NavigationProgress from '@/components/NavigationProgress.vue'
 import PageSkeleton from '@/components/PageSkeleton.vue'
-import { isNavigating, hasNavigated } from '@/lib/navigation'
+import { isNavigating } from '@/lib/navigation'
 </script>
 
 <template>
@@ -13,13 +13,12 @@ import { isNavigating, hasNavigated } from '@/lib/navigation'
   <main id="main" tabindex="-1" :class="{ 'is-navigating': isNavigating }">
     <RouterView v-slot="{ Component, route }">
       <Transition name="page" mode="out-in">
-        <Suspense v-if="hasNavigated" :timeout="0">
+        <Suspense :timeout="300">
           <component :is="Component" :key="route.path" />
           <template #fallback>
             <PageSkeleton />
           </template>
         </Suspense>
-        <component v-else :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
   </main>

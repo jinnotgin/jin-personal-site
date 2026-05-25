@@ -14,7 +14,7 @@ import {
 	totalsByFilter,
 } from '@/lib/markdown'
 import { writingIndexSeo } from '@/lib/seo'
-import { isNavigating, hasNavigated } from '@/lib/navigation'
+import { isNavigating } from '@/lib/navigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,7 +51,7 @@ const isLoading = ref(false)
 
 async function loadCurrentPage() {
 	isLoading.value = true
-	if (hasNavigated.value) isNavigating.value = true
+	isNavigating.value = true
 	try {
 		visible.value = await loadWritingPage(filterSlug.value, safePage.value)
 	} finally {
