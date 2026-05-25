@@ -16,7 +16,7 @@ const postManifests = import.meta.glob<{ imageManifest: ResponsiveImageManifestE
 )
 
 function firstMarkdownImage(body: string): Post['image'] {
-	const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/.exec(body)
+	const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\)/.exec(body)
 	if (!match || !match[2]) return undefined
 	return {
 		src: match[2],

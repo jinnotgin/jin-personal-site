@@ -70,7 +70,7 @@ export function resolveMarkdownAssetReferences(
 	assets: AssetMap,
 ): string {
 	return body.replace(
-		/!\[([^\]]*)\]\(([^)\s]+)(\s+["'][^"']*["'])?\)/g,
+		/!\[([^\]]*)\]\(([^)\s]+)(\s+(?:"[^"]*"|'[^']*'))?\)/g,
 		(match, alt: string, src: string, title: string = '') => {
 			const resolved = resolveContentAsset(src, markdownPath, assets)
 			if (resolved === src) return match
