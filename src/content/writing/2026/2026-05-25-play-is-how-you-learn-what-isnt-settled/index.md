@@ -76,7 +76,7 @@ Agency, the way he frames it, is the space between intent and action. It's the r
 
 So learning something genuinely new isn't really about finding the right course. It's about whether you have the agency to play your way into it.
 
-I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I'd misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction, but the permission I gave myself for the early attempts to be bad.
+I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction, but the permission I gave myself for the early attempts to be bad.
 
 
 ## The same word, aimed at machines
