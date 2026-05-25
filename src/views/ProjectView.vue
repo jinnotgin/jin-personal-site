@@ -3,21 +3,21 @@ import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
-import { projects } from '@/data/workbench'
+import { listProjects } from '@/lib/homeProjects'
 import { getProject } from '@/lib/projects'
 import { threadById } from '@/data/threads'
 import { projectSeo, projectsIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const project = computed(() => getProject(String(route.params.slug)))
-useHead(computed(() => (project.value ? projectSeo(project.value) : projectsIndexSeo())))
-const thread = computed(() => (project.value ? threadById(project.value.threads[0]!) : undefined))
+const project = await getProject(String(route.params.slug))
+useHead(computed(() => (project ? projectSeo(project) : projectsIndexSeo())))
+const thread = computed(() => (project ? threadById(project.threads[0]!) : undefined))
 const siblings = computed(() =>
-	project.value
-		? projects.filter(
+	project
+		? listProjects().filter(
 				(p) =>
-					p.threads.some((t) => project.value!.threads.includes(t)) &&
-					p.slug !== project.value!.slug,
+					p.threads.some((t) => project.threads.includes(t)) &&
+					p.slug !== project.slug,
 			)
 		: [],
 )
@@ -25,7 +25,7 @@ const siblings = computed(() =>
 function trackExternalLinkClick(label: string, href: string) {
 	posthog.capture('project_external_link_clicked', {
 		project_slug: String(route.params.slug),
-		project_name: project.value?.name,
+		project_name: project?.name,
 		link_label: label,
 		link_href: href,
 	})

@@ -92,14 +92,6 @@ export const imageManifest: ResponsiveImageManifestEntry[] = ${JSON.stringify(en
 `
 }
 
-function manifestPathForSection(section) {
-	return path.join(generatedRoot, `imageManifest.${section}.ts`)
-}
-
-function sectionForEntry(entry) {
-	return entry.source.split('/')[2]
-}
-
 function manifestPathForEntry(entry) {
 	const sourceParts = entry.source.split('/')
 	const section = sourceParts[2]
@@ -129,18 +121,6 @@ try {
 	const files = await walk(contentRoot)
 	const entries = (await Promise.all(files.map(optimizeImage))).filter(Boolean)
 	entries.sort((a, b) => a.source.localeCompare(b.source))
-
-	const entriesBySection = new Map()
-	for (const entry of entries) {
-		const section = sectionForEntry(entry)
-		const sectionEntries = entriesBySection.get(section) ?? []
-		sectionEntries.push(entry)
-		entriesBySection.set(section, sectionEntries)
-	}
-
-	for (const [section, sectionEntries] of entriesBySection) {
-		await writeFile(manifestPathForSection(section), renderManifest(sectionEntries))
-	}
 
 	const entriesByContentEntry = new Map()
 	for (const entry of entries) {

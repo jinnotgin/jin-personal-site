@@ -1,25 +1,18 @@
-import type {
-	ProjectMeta,
-	Project,
-	ProjectLink,
-	ProjectImage,
-	ThreadId,
-	ProjectStatus,
-} from '@/data/types'
-import { buildResponsiveImageMap, resolveContentAsset } from '@/lib/contentAssets'
+import type { Project, ProjectImage, ProjectLink, ProjectSource } from '@/data/types'
+import {
+	buildResponsiveImageMap,
+	resolveContentAsset,
+	type ResponsiveImageManifestEntry,
+} from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
-import { imageManifest } from '@generated/imageManifest.projects'
 
-/**
- * Project content lives as index.md files with YAML-ish frontmatter under
- * src/content/projects/{slug}. Same parser pattern as markdown.ts.
- */
+const projectSources = import.meta.glob<{ projectSource: ProjectSource }>(
+	'../../.generated/projects/*.ts',
+)
 
-const files = import.meta.glob('../content/projects/**/*.md', {
-	eager: true,
-	query: '?raw',
-	import: 'default',
-}) as Record<string, string>
+const projectManifests = import.meta.glob<{ imageManifest: ResponsiveImageManifestEntry[] }>(
+	'../../.generated/imageManifest/content/projects/*.ts',
+)
 
 const assets = import.meta.glob('../content/projects/**/*.{avif,gif,jpeg,jpg,pdf,png,svg,webp}', {
 	eager: true,
@@ -27,77 +20,47 @@ const assets = import.meta.glob('../content/projects/**/*.{avif,gif,jpeg,jpg,pdf
 	import: 'default',
 }) as Record<string, string>
 
-const generatedAssets = import.meta.glob('../../.generated/media/content/projects/**/*.{avif,webp}', {
-	eager: true,
-	query: '?url',
-	import: 'default',
-}) as Record<string, string>
+const generatedAssets = import.meta.glob(
+	'../../.generated/media/content/projects/**/*.{avif,webp}',
+	{ eager: true, query: '?url', import: 'default' },
+) as Record<string, string>
 
-const responsiveImages = buildResponsiveImageMap(imageManifest, {
-	...assets,
-	...generatedAssets,
-})
+const assetMap = { ...assets, ...generatedAssets }
 
-function parseFrontmatter(raw: string): {
-	data: Record<string, unknown>
-	body: string
-} {
-	const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(raw)
-	if (!match) return { data: {}, body: raw }
-
-	const front = match[1] ?? ''
-	const rawBody = match[2] ?? ''
-	const data: Record<string, unknown> = {}
-	for (const line of front.split(/\r?\n/)) {
-		const kv = /^([A-Za-z0-9_-]+):\s*(.*)$/.exec(line)
-		if (!kv || !kv[1]) continue
-		const key = kv[1]
-		let value: unknown = (kv[2] ?? '').trim()
-		if (typeof value === 'string') {
-			if (/^\[.*\]$/.test(value)) {
-				value = value
-					.slice(1, -1)
-					.split(',')
-					.map((s) => s.trim().replace(/^["']|["']$/g, ''))
-					.filter(Boolean)
-			} else {
-				value = value.replace(/^["']|["']$/g, '')
-			}
-		}
-		data[key] = value
+function findEntry<T>(
+	map: Record<string, () => Promise<T>>,
+	slug: string,
+): (() => Promise<T>) | undefined {
+	const suffix = `/${slug}.ts`
+	for (const key of Object.keys(map)) {
+		if (key.endsWith(suffix)) return map[key]
 	}
-	return { data, body: rawBody }
+	return undefined
 }
 
-/**
- * Parse `label::href` pairs from a string array.
- * e.g. ["Live site::https://example.com", "GitHub::https://github.com/x"]
- */
-function parseLinks(raw: unknown, markdownPath: string): ProjectLink[] | undefined {
-	if (!Array.isArray(raw)) return undefined
+function parseLinks(raw: string[], markdownPath: string): ProjectLink[] | undefined {
 	const result: ProjectLink[] = []
-	for (const item of raw as string[]) {
+	for (const item of raw) {
 		const sep = item.indexOf('::')
 		if (sep === -1) continue
 		result.push({
 			label: item.slice(0, sep).trim(),
-			href: resolveContentAsset(item.slice(sep + 2).trim(), markdownPath, assets),
+			href: resolveContentAsset(item.slice(sep + 2).trim(), markdownPath, assetMap),
 		})
 	}
 	return result.length ? result : undefined
 }
 
-/**
- * Parse `src::alt` pairs from a string array.
- * e.g. ["/img/foo.png::Alt text here"]
- */
-function parseImages(raw: unknown, markdownPath: string): ProjectImage[] | undefined {
-	if (!Array.isArray(raw)) return undefined
+function parseImages(
+	raw: string[],
+	markdownPath: string,
+	responsiveImages: ReturnType<typeof buildResponsiveImageMap>,
+): ProjectImage[] | undefined {
 	const result: ProjectImage[] = []
-	for (const item of raw as string[]) {
+	for (const item of raw) {
 		const sep = item.indexOf('::')
 		if (sep === -1) continue
-		const src = resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assets)
+		const src = resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assetMap)
 		result.push({
 			src,
 			alt: item.slice(sep + 2).trim(),
@@ -107,61 +70,22 @@ function parseImages(raw: unknown, markdownPath: string): ProjectImage[] | undef
 	return result.length ? result : undefined
 }
 
-function buildProject(raw: string, markdownPath: string): Project {
-	const { data, body } = parseFrontmatter(raw)
-	const links = parseLinks(data.links, markdownPath)
-	const images = parseImages(data.images, markdownPath)
+export async function getProject(slug: string): Promise<Project | undefined> {
+	const sourceLoader = findEntry(projectSources, slug)
+	if (!sourceLoader) return undefined
+	const { projectSource } = await sourceLoader()
+
+	const manifestLoader = findEntry(projectManifests, slug)
+	const manifest = manifestLoader ? (await manifestLoader()).imageManifest : []
+	const responsiveImages = buildResponsiveImageMap(manifest, assetMap)
+
+	const links = parseLinks(projectSource.rawLinks, projectSource.markdownPath)
+	const images = parseImages(projectSource.rawImages, projectSource.markdownPath, responsiveImages)
+
 	return {
-		slug: String(data.slug ?? ''),
-		name: String(data.name ?? ''),
-		threads: (Array.isArray(data.thread)
-			? data.thread
-			: data.thread
-				? [String(data.thread)]
-				: []) as ThreadId[],
-		year: String(data.year ?? ''),
-		status: (data.status === 'active' ? 'active' : 'archived') as ProjectStatus,
-		intent: String(data.intent ?? ''),
-		stack: Array.isArray(data.stack) ? (data.stack as string[]) : [],
+		...projectSource.meta,
 		...(links ? { links } : {}),
 		...(images ? { images } : {}),
-		html: renderMarkdown(body.trim(), responsiveImages),
+		html: renderMarkdown(projectSource.body.trim(), responsiveImages),
 	}
-}
-
-const allProjects: Project[] = Object.entries(files)
-	.map(([path, raw]) => buildProject(raw, path))
-	.filter((p) => p.slug)
-
-export function listProjects(): ProjectMeta[] {
-	return allProjects.map(({ html: _html, ...meta }) => meta)
-}
-
-const latestYear = (project: ProjectMeta) => {
-	if (project.year.toLowerCase().includes('now')) return Number.MAX_SAFE_INTEGER
-
-	const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
-	return Math.max(...years, 0)
-}
-
-const firstYear = (project: ProjectMeta) => {
-	const years = project.year.match(/\d{4}/g)?.map(Number) ?? []
-	return Math.min(...years, 0)
-}
-
-export const byMostRecentProject = (a: ProjectMeta, b: ProjectMeta) =>
-	latestYear(b) - latestYear(a) || firstYear(b) - firstYear(a)
-
-export function getProject(slug: string): Project | undefined {
-	return allProjects.find((p) => p.slug === slug)
-}
-
-export const projects: ProjectMeta[] = listProjects()
-
-export function projectBySlug(slug: string): ProjectMeta | undefined {
-	return projects.find((p) => p.slug === slug)
-}
-
-export function projectsByThread(threadId: string): ProjectMeta[] {
-	return projects.filter((p) => p.threads.includes(threadId as ThreadId))
 }

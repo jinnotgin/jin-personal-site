@@ -12,7 +12,9 @@ import { isNavigating } from '@/lib/navigation'
   <main id="main" tabindex="-1" :class="{ 'is-navigating': isNavigating }">
     <RouterView v-slot="{ Component, route }">
       <Transition name="page" mode="out-in">
-        <component :is="Component" :key="route.path" />
+        <Suspense :timeout="0">
+          <component :is="Component" :key="route.path" />
+        </Suspense>
       </Transition>
     </RouterView>
   </main>

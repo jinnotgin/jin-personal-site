@@ -10,7 +10,7 @@ describe('writing Markdown module boundary', () => {
 	it('keeps writing asset URL imports out of the index metadata module', () => {
 		const source = readFileSync(sourcePath, 'utf8')
 
-		expect(source).not.toContain('query: \'?url\'')
+		expect(source).not.toContain("query: '?url'")
 		expect(source).not.toContain('renderMarkdown')
 		expect(source).not.toContain('buildResponsiveImageMap')
 	})
@@ -18,18 +18,26 @@ describe('writing Markdown module boundary', () => {
 	it('loads writing asset URL imports only for post rendering', () => {
 		const source = readFileSync(postSourcePath, 'utf8')
 
-		expect(source).toContain('query: \'?url\'')
+		expect(source).toContain("query: '?url'")
 		expect(source).toContain('renderMarkdown')
 		expect(source).toContain('buildResponsiveImageMap')
 	})
 
-	it('keeps responsive image manifests scoped to the content section', () => {
+	it('loads writing data lazily per slug, never the bundled section manifest', () => {
 		const postSource = readFileSync(postSourcePath, 'utf8')
+
+		expect(postSource).not.toContain('@generated/imageManifest.writing')
+		expect(postSource).not.toContain('@generated/imageManifest.projects')
+		expect(postSource).toContain('.generated/writing/posts/*.ts')
+		expect(postSource).toContain('.generated/imageManifest/content/writing/')
+	})
+
+	it('loads project data lazily per slug, never the bundled section manifest', () => {
 		const projectSource = readFileSync(projectSourcePath, 'utf8')
 
-		expect(postSource).toContain('@generated/imageManifest.writing')
-		expect(postSource).not.toContain('@generated/imageManifest.projects')
-		expect(projectSource).toContain('@generated/imageManifest.projects')
+		expect(projectSource).not.toContain('@generated/imageManifest.projects')
 		expect(projectSource).not.toContain('@generated/imageManifest.writing')
+		expect(projectSource).toContain('.generated/projects/*.ts')
+		expect(projectSource).toContain('.generated/imageManifest/content/projects/')
 	})
 })

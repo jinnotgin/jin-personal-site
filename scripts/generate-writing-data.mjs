@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -9,6 +9,9 @@ const writingIndexPath = path.join(generatedRoot, 'writingIndex.ts')
 const homeWritingPath = path.join(generatedRoot, 'homeWriting.ts')
 const homeProjectsPath = path.join(generatedRoot, 'homeProjects.ts')
 const writingPostsRoot = path.join(generatedRoot, 'writing/posts')
+const projectSourcesRoot = path.join(generatedRoot, 'projects')
+const writingPagesRoot = path.join(generatedRoot, 'writing/pages')
+const legacyWritingCatalogPath = path.join(generatedRoot, 'writingCatalog.ts')
 const threadIds = ['applied-ai', 'public-platforms', 'signals', 'homegrown', 'human']
 
 async function walk(dir, matches) {
@@ -112,8 +115,7 @@ export const homePostsByThread: Partial<Record<ThreadId, PostMeta[]>> = ${JSON.s
 `
 }
 
-function buildProjectMeta(raw) {
-	const { data } = parseFrontmatter(raw)
+function buildProjectMeta(data) {
 	const thread = data.thread
 	return {
 		slug: String(data.slug ?? ''),
@@ -133,16 +135,39 @@ export const homeProjects: ProjectMeta[] = ${JSON.stringify(projects, null, 2)}
 `
 }
 
+function renderProjectSource(source) {
+	return `import type { ProjectSource } from '@/data/types'
+
+export const projectSource: ProjectSource = ${JSON.stringify(source, null, 2)}
+`
+}
+
 async function generateProjectData() {
 	const projectsRoot = path.join(contentRoot, 'projects')
 	const markdownFiles = await walk(projectsRoot, (fileName) => fileName === 'index.md')
 	const projects = []
 
+	await mkdir(projectSourcesRoot, { recursive: true })
+
 	for (const file of markdownFiles) {
 		const raw = await readFile(file, 'utf8')
-		const meta = buildProjectMeta(raw)
+		const { data, body } = parseFrontmatter(raw)
+		const meta = buildProjectMeta(data)
 		if (!meta.slug) continue
 		projects.push(meta)
+
+		const markdownPath = `../content/${toPosix(path.relative(contentRoot, file))}`
+		const source = {
+			meta,
+			body,
+			markdownPath,
+			rawLinks: Array.isArray(data.links) ? data.links : [],
+			rawImages: Array.isArray(data.images) ? data.images : [],
+		}
+		await writeFile(
+			path.join(projectSourcesRoot, `${meta.slug}.ts`),
+			renderProjectSource(source),
+		)
 	}
 
 	await writeFile(homeProjectsPath, renderHomeProjects(projects))
@@ -188,9 +213,19 @@ async function generateWritingData() {
 	return sources.length
 }
 
+async function cleanStaleOutputs() {
+	await Promise.all([
+		rm(writingPagesRoot, { recursive: true, force: true }),
+		rm(legacyWritingCatalogPath, { force: true }),
+		rm(writingPostsRoot, { recursive: true, force: true }),
+		rm(projectSourcesRoot, { recursive: true, force: true }),
+	])
+}
+
 await mkdir(generatedRoot, { recursive: true })
 
 try {
+	await cleanStaleOutputs()
 	const [postCount, projectCount] = await Promise.all([generateWritingData(), generateProjectData()])
 	console.log(`Generated writing data for ${postCount} posts, ${projectCount} projects`)
 } catch (error) {

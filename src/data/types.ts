@@ -72,17 +72,12 @@ export interface WritingPostSource {
   markdownPath: string
 }
 
-export interface WritingPageData {
-  posts: PostMeta[]
-  page: number
-  totalPages: number
-  category?: string
-}
-
-export interface WritingCategorySummary {
-  label: string
-  slug: string
-  totalPages: number
+export interface ProjectSource {
+  meta: ProjectMeta
+  body: string
+  markdownPath: string
+  rawLinks: string[]
+  rawImages: string[]
 }
 
 export interface JourneyEntry {

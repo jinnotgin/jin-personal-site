@@ -22,3 +22,7 @@ export const byMostRecentProject = (a: ProjectMeta, b: ProjectMeta) =>
 export function projectsByThread(threadId: string): ProjectMeta[] {
 	return homeProjects.filter((p) => p.threads.includes(threadId as ThreadId))
 }
+
+export function projectBySlug(slug: string): ProjectMeta | undefined {
+	return homeProjects.find((p) => p.slug === slug)
+}

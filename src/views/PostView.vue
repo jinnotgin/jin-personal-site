@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
@@ -9,22 +9,20 @@ import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
 const all = listPosts()
-const post = computed(() => getPost(String(route.params.slug)))
-useHead(computed(() => (post.value ? postSeo(post.value) : writingIndexSeo())))
+const post = await getPost(String(route.params.slug))
+useHead(post ? postSeo(post) : writingIndexSeo())
 
-const idx = computed(() => all.findIndex((p) => p.slug === route.params.slug))
-const prev = computed(() => (idx.value > 0 ? all[idx.value - 1] : null))
-const next = computed(() =>
-	idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
-)
+const idx = all.findIndex((p) => p.slug === route.params.slug)
+const prev = idx > 0 ? all[idx - 1] : null
+const next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null
 
 onMounted(() => {
-	if (post.value) {
+	if (post) {
 		posthog.capture('post_viewed', {
-			post_slug: post.value.slug,
-			post_title: post.value.title,
-			post_category: post.value.category,
-			reading_minutes: post.value.readingMinutes,
+			post_slug: post.slug,
+			post_title: post.title,
+			post_category: post.category,
+			reading_minutes: post.readingMinutes,
 		})
 	}
 })
