@@ -328,6 +328,51 @@
     background: var(--color-clay);
   }
 
+  .content-image,
+  .content-media-frame {
+    border: 1px solid var(--color-hairline);
+    background:
+      linear-gradient(
+        110deg,
+        var(--color-paper-raised) 0%,
+        var(--color-sage) 42%,
+        var(--color-paper-raised) 72%
+      );
+    background-size: 220% 100%;
+    border-radius: var(--radius-lg);
+    color: transparent;
+    overflow: hidden;
+    animation: image-loading-sheen 1.8s ease-out 3;
+  }
+
+  .content-image {
+    display: block;
+    height: auto;
+  }
+
+  .content-media-frame .content-image {
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    animation: none;
+  }
+
+  @keyframes image-loading-sheen {
+    from {
+      background-position: 140% 0;
+    }
+    to {
+      background-position: -80% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .content-image,
+    .content-media-frame {
+      animation: none;
+    }
+  }
+
   /* Long-form Markdown article styling */
   .prose {
     color: var(--color-ink);

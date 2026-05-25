@@ -49,7 +49,7 @@ function trackExternalLinkClick(label: string, href: string) {
 		</header>
 
 		<div v-if="project.images?.length" class="project-images">
-			<figure v-for="image in project.images" :key="image.src">
+			<figure v-for="image in project.images" :key="image.src" class="content-media-frame">
 				<picture v-if="image.responsive">
 					<source
 						v-for="source in image.responsive.sources"
@@ -173,27 +173,11 @@ function trackExternalLinkClick(label: string, href: string) {
 }
 .project-images figure {
 	margin: 0;
-	border: 1px solid var(--color-hairline);
-	background:
-		linear-gradient(
-			110deg,
-			var(--color-paper-raised) 0%,
-			var(--color-sage) 42%,
-			var(--color-paper-raised) 72%
-		);
-	background-size: 220% 100%;
-	border-radius: var(--radius-lg);
-	color: transparent;
-	overflow: hidden;
-}
-.project-images figure:has(img.content-image) {
-	animation: image-loading-sheen 1.8s ease-out 3;
 }
 .project-images img {
 	display: block;
 	width: 100%;
 	height: auto;
-	color: transparent;
 }
 
 @media (max-width: 760px) {
@@ -231,23 +215,6 @@ function trackExternalLinkClick(label: string, href: string) {
 	margin: 2rem 50%;
 	transform: translateX(-50%);
 }
-.prose :deep(img) {
-	border: 1px solid var(--color-hairline);
-	background:
-		linear-gradient(
-			110deg,
-			var(--color-paper-raised) 0%,
-			var(--color-sage) 42%,
-			var(--color-paper-raised) 72%
-		);
-	background-size: 220% 100%;
-	border-radius: var(--radius-lg);
-	color: transparent;
-	overflow: hidden;
-}
-.prose :deep(img.content-image) {
-	animation: image-loading-sheen 1.8s ease-out 3;
-}
 .prose :deep(figure) {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
@@ -258,18 +225,6 @@ function trackExternalLinkClick(label: string, href: string) {
 	height: auto;
 	margin: 0;
 	transform: none;
-	border: 1px solid var(--color-hairline);
-	background:
-		linear-gradient(
-			110deg,
-			var(--color-paper-raised) 0%,
-			var(--color-sage) 42%,
-			var(--color-paper-raised) 72%
-		);
-	background-size: 220% 100%;
-	border-radius: var(--radius-lg);
-	color: transparent;
-	overflow: hidden;
 }
 .prose :deep(figcaption) {
 	margin-top: 0.65rem;
@@ -300,23 +255,6 @@ function trackExternalLinkClick(label: string, href: string) {
 	}
 }
 
-@keyframes image-loading-sheen {
-	from {
-		background-position: 140% 0;
-	}
-	to {
-		background-position: -80% 0;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.prose :deep(img.content-image) {
-		animation: none;
-	}
-	.project-images figure:has(img.content-image) {
-		animation: none;
-	}
-}
 .meta {
 	margin-top: 3.5rem;
 	padding-top: 2rem;
