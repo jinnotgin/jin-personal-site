@@ -7,6 +7,7 @@ const contentRoot = path.join(root, 'src/content')
 const generatedRoot = path.join(root, '.generated')
 const writingIndexPath = path.join(generatedRoot, 'writingIndex.ts')
 const homeWritingPath = path.join(generatedRoot, 'homeWriting.ts')
+const homeProjectsPath = path.join(generatedRoot, 'homeProjects.ts')
 const writingPostsRoot = path.join(generatedRoot, 'writing/posts')
 const threadIds = ['applied-ai', 'public-platforms', 'signals', 'homegrown', 'human']
 
@@ -111,6 +112,43 @@ export const homePostsByThread: Partial<Record<ThreadId, PostMeta[]>> = ${JSON.s
 `
 }
 
+function buildProjectMeta(raw) {
+	const { data } = parseFrontmatter(raw)
+	const thread = data.thread
+	return {
+		slug: String(data.slug ?? ''),
+		name: String(data.name ?? ''),
+		threads: Array.isArray(thread) ? thread : thread ? [String(thread)] : [],
+		year: String(data.year ?? ''),
+		status: data.status === 'active' ? 'active' : 'archived',
+		intent: String(data.intent ?? ''),
+		stack: Array.isArray(data.stack) ? data.stack : [],
+	}
+}
+
+function renderHomeProjects(projects) {
+	return `import type { ProjectMeta } from '@/data/types'
+
+export const homeProjects: ProjectMeta[] = ${JSON.stringify(projects, null, 2)}
+`
+}
+
+async function generateProjectData() {
+	const projectsRoot = path.join(contentRoot, 'projects')
+	const markdownFiles = await walk(projectsRoot, (fileName) => fileName === 'index.md')
+	const projects = []
+
+	for (const file of markdownFiles) {
+		const raw = await readFile(file, 'utf8')
+		const meta = buildProjectMeta(raw)
+		if (!meta.slug) continue
+		projects.push(meta)
+	}
+
+	await writeFile(homeProjectsPath, renderHomeProjects(projects))
+	return projects.length
+}
+
 async function generateWritingData() {
 	const writingRoot = path.join(contentRoot, 'writing')
 	const markdownFiles = await walk(writingRoot, (fileName) => fileName.endsWith('.md'))
@@ -153,8 +191,8 @@ async function generateWritingData() {
 await mkdir(generatedRoot, { recursive: true })
 
 try {
-	const count = await generateWritingData()
-	console.log(`Generated writing data for ${count} posts`)
+	const [postCount, projectCount] = await Promise.all([generateWritingData(), generateProjectData()])
+	console.log(`Generated writing data for ${postCount} posts, ${projectCount} projects`)
 } catch (error) {
 	console.error(error)
 	process.exitCode = 1
