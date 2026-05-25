@@ -48,6 +48,8 @@ Place supporting images next to the relevant `index.md` and reference them with 
 
 For profile, navigation, and site-level facts, start with `src/data/site.ts`. Only change Vue components when the content model cannot express the intended result.
 
+For SSG route hydration and lazy content loading, see [docs/ssg-hydration.md](docs/ssg-hydration.md).
+
 ## Markdown Images
 
 Writing images should stay simple in source Markdown:
