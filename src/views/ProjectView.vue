@@ -58,6 +58,7 @@ function trackExternalLinkClick(label: string, href: string) {
 						:srcset="source.srcset"
 					/>
 					<img
+						class="content-image"
 						:src="image.responsive.fallback"
 						:alt="image.alt"
 						:width="image.responsive.width"
@@ -67,7 +68,14 @@ function trackExternalLinkClick(label: string, href: string) {
 						sizes="(min-width: 760px) 720px, 92vw"
 					/>
 				</picture>
-				<img v-else :src="image.src" :alt="image.alt" loading="lazy" decoding="async" />
+				<img
+					v-else
+					class="content-image"
+					:src="image.src"
+					:alt="image.alt"
+					loading="lazy"
+					decoding="async"
+				/>
 			</figure>
 		</div>
 
@@ -166,14 +174,26 @@ function trackExternalLinkClick(label: string, href: string) {
 .project-images figure {
 	margin: 0;
 	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
+	background:
+		linear-gradient(
+			110deg,
+			var(--color-paper-raised) 0%,
+			var(--color-sage) 42%,
+			var(--color-paper-raised) 72%
+		);
+	background-size: 220% 100%;
 	border-radius: var(--radius-lg);
+	color: transparent;
 	overflow: hidden;
+}
+.project-images figure:has(img.content-image) {
+	animation: image-loading-sheen 1.8s ease-out 3;
 }
 .project-images img {
 	display: block;
 	width: 100%;
 	height: auto;
+	color: transparent;
 }
 
 @media (max-width: 760px) {
@@ -213,9 +233,20 @@ function trackExternalLinkClick(label: string, href: string) {
 }
 .prose :deep(img) {
 	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
+	background:
+		linear-gradient(
+			110deg,
+			var(--color-paper-raised) 0%,
+			var(--color-sage) 42%,
+			var(--color-paper-raised) 72%
+		);
+	background-size: 220% 100%;
 	border-radius: var(--radius-lg);
+	color: transparent;
 	overflow: hidden;
+}
+.prose :deep(img.content-image) {
+	animation: image-loading-sheen 1.8s ease-out 3;
 }
 .prose :deep(figure) {
 	margin-top: 2.5rem;
@@ -228,8 +259,16 @@ function trackExternalLinkClick(label: string, href: string) {
 	margin: 0;
 	transform: none;
 	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
+	background:
+		linear-gradient(
+			110deg,
+			var(--color-paper-raised) 0%,
+			var(--color-sage) 42%,
+			var(--color-paper-raised) 72%
+		);
+	background-size: 220% 100%;
 	border-radius: var(--radius-lg);
+	color: transparent;
 	overflow: hidden;
 }
 .prose :deep(figcaption) {
@@ -258,6 +297,24 @@ function trackExternalLinkClick(label: string, href: string) {
 		width: 100%;
 		margin: 1.5rem 0;
 		transform: none;
+	}
+}
+
+@keyframes image-loading-sheen {
+	from {
+		background-position: 140% 0;
+	}
+	to {
+		background-position: -80% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.prose :deep(img.content-image) {
+		animation: none;
+	}
+	.project-images figure:has(img.content-image) {
+		animation: none;
 	}
 }
 .meta {

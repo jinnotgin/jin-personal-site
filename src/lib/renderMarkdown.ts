@@ -35,14 +35,15 @@ export function renderMarkdown(markdown: string, responsiveImages: ResponsiveIma
 
   renderer.image = ({ href, title, text }: Tokens.Image) => {
     const responsiveImage = responsiveImages[href]
+    const imageClass = ' class="content-image"'
     const img = responsiveImage
       ? `<picture>${responsiveImage.sources
           .map(
             (source) =>
               `<source type="${escapeAttr(source.type)}" srcset="${escapeAttr(source.srcset)}" />`,
           )
-          .join('')}<img src="${escapeAttr(responsiveImage.fallback)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" width="${responsiveImage.width}" height="${responsiveImage.height}" sizes="(min-width: 760px) 720px, 92vw" /></picture>`
-      : `<img src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" />`
+          .join('')}<img${imageClass} src="${escapeAttr(responsiveImage.fallback)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" width="${responsiveImage.width}" height="${responsiveImage.height}" sizes="(min-width: 760px) 720px, 92vw" /></picture>`
+      : `<img${imageClass} src="${escapeAttr(href)}" alt="${escapeAttr(text)}" loading="lazy" decoding="async" />`
     if (title) {
       const caption = marked.parseInline(title, {
         async: false,

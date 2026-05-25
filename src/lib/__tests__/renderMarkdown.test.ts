@@ -9,7 +9,7 @@ describe('renderMarkdown', () => {
     )
 
     expect(html).toContain('<figure>')
-    expect(html).toContain('<img src="/img/output.png" alt="Output preview"')
+    expect(html).toContain('<img class="content-image" src="/img/output.png" alt="Output preview"')
     expect(html).toContain('<figcaption>How the converted output looks</figcaption>')
     expect(html).not.toContain('![Output preview]')
   })
@@ -20,8 +20,8 @@ describe('renderMarkdown', () => {
     )
 
     expect(html).toContain('<div class="cols">')
-    expect(html).toContain('<img src="/img/a.png" alt="left"')
-    expect(html).toContain('<img src="/img/b.png" alt="right"')
+    expect(html).toContain('<img class="content-image" src="/img/a.png" alt="left"')
+    expect(html).toContain('<img class="content-image" src="/img/b.png" alt="right"')
     expect(html).toContain('<figcaption>A</figcaption>')
     expect(html).toContain('<figcaption>B</figcaption>')
     expect(html).not.toContain(':::')
@@ -51,7 +51,7 @@ describe('renderMarkdown', () => {
       '<source type="image/avif" srcset="/assets/output-640.aaa111.avif 640w, /assets/output-960.bbb222.avif 960w" />',
     )
     expect(html).toContain(
-      '<img src="/assets/output-960.def456.webp" alt="Output preview" loading="lazy" decoding="async" width="1200" height="800" sizes="(min-width: 760px) 720px, 92vw" />',
+      '<img class="content-image" src="/assets/output-960.def456.webp" alt="Output preview" loading="lazy" decoding="async" width="1200" height="800" sizes="(min-width: 760px) 720px, 92vw" />',
     )
   })
 })
