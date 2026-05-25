@@ -66,6 +66,25 @@ export interface Post extends PostMeta {
   readingMinutes: number
 }
 
+export interface WritingPostSource {
+  meta: PostMeta
+  body: string
+  markdownPath: string
+}
+
+export interface WritingPageData {
+  posts: PostMeta[]
+  page: number
+  totalPages: number
+  category?: string
+}
+
+export interface WritingCategorySummary {
+  label: string
+  slug: string
+  totalPages: number
+}
+
 export interface JourneyEntry {
   id: string
   period: string

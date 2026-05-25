@@ -1,0 +1,141 @@
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const contentRoot = path.join(root, 'src/content')
+const generatedRoot = path.join(root, '.generated')
+const writingIndexPath = path.join(generatedRoot, 'writingIndex.ts')
+const writingPostsRoot = path.join(generatedRoot, 'writing/posts')
+
+async function walk(dir, matches) {
+	const entries = await readdir(dir, { withFileTypes: true })
+	const files = []
+
+	for (const entry of entries) {
+		const fullPath = path.join(dir, entry.name)
+		if (entry.isDirectory()) {
+			files.push(...(await walk(fullPath, matches)))
+		} else if (entry.isFile() && matches(entry.name)) {
+			files.push(fullPath)
+		}
+	}
+
+	return files
+}
+
+function toPosix(value) {
+	return value.split(path.sep).join('/')
+}
+
+function parseFrontmatter(raw) {
+	const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(raw)
+	if (!match) return { data: {}, body: raw }
+
+	const front = match[1] ?? ''
+	const body = match[2] ?? ''
+	const data = {}
+	for (const line of front.split(/\r?\n/)) {
+		const kv = /^([A-Za-z0-9_-]+):\s*(.*)$/.exec(line)
+		if (!kv?.[1]) continue
+		const key = kv[1]
+		let value = (kv[2] ?? '').trim()
+		if (/^\[.*\]$/.test(value)) {
+			value = value
+				.slice(1, -1)
+				.split(',')
+				.map((item) => item.trim().replace(/^["']|["']$/g, ''))
+				.filter(Boolean)
+		} else {
+			value = value.replace(/^["']|["']$/g, '')
+		}
+		data[key] = value
+	}
+
+	return { data, body }
+}
+
+function firstMarkdownImage(body) {
+	const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/.exec(body)
+	if (!match?.[2]) return undefined
+	return {
+		src: match[2],
+		alt: match[1] || 'Writing preview image',
+	}
+}
+
+function buildWritingMeta(raw) {
+	const { data, body } = parseFrontmatter(raw)
+	const image = firstMarkdownImage(body)
+	return {
+		slug: String(data.slug ?? ''),
+		title: String(data.title ?? 'Untitled'),
+		date: String(data.date ?? ''),
+		excerpt: String(data.excerpt ?? ''),
+		tags: Array.isArray(data.tags) ? data.tags : [],
+		status: data.status === 'draft' ? 'draft' : 'published',
+		category: String(data.category ?? 'Notes'),
+		...(image ? { image } : {}),
+	}
+}
+
+function renderWritingIndex(posts) {
+	return `import type { PostMeta } from '@/data/types'
+
+export const writingIndex: PostMeta[] = ${JSON.stringify(posts, null, 2)}
+`
+}
+
+function renderWritingPostSource(source) {
+	return `import type { WritingPostSource } from '@/data/types'
+
+export const postSource: WritingPostSource = ${JSON.stringify(source, null, 2)}
+`
+}
+
+async function generateWritingData() {
+	const writingRoot = path.join(contentRoot, 'writing')
+	const markdownFiles = await walk(writingRoot, (fileName) => fileName.endsWith('.md'))
+	const sources = []
+
+	await mkdir(writingPostsRoot, { recursive: true })
+
+	for (const file of markdownFiles) {
+		const raw = await readFile(file, 'utf8')
+		const meta = buildWritingMeta(raw)
+		if (!meta.slug || meta.status === 'draft') continue
+
+		const { body } = parseFrontmatter(raw)
+		const markdownPath = `../content/${toPosix(path.relative(contentRoot, file))}`
+		sources.push({
+			meta,
+			body,
+			markdownPath,
+		})
+	}
+
+	sources.sort((a, b) => (a.meta.date < b.meta.date ? 1 : -1))
+
+	await writeFile(
+		writingIndexPath,
+		renderWritingIndex(sources.map((source) => source.meta)),
+	)
+
+	await Promise.all(
+		sources.map((source) =>
+			writeFile(path.join(writingPostsRoot, `${source.meta.slug}.ts`), renderWritingPostSource(source)),
+		),
+	)
+
+	return sources.length
+}
+
+await mkdir(generatedRoot, { recursive: true })
+
+try {
+	const count = await generateWritingData()
+	console.log(`Generated writing data for ${count} posts`)
+} catch (error) {
+	console.error(error)
+	process.exitCode = 1
+}

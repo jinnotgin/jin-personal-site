@@ -3,7 +3,8 @@ import { computed, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
-import { getPost, listPosts, formatDate } from '@/lib/markdown'
+import { listPosts, formatDate } from '@/lib/markdown'
+import { getPost } from '@/lib/postMarkdown'
 import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
