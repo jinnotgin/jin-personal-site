@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { isNavigating } from '@/lib/navigation'
-
-onMounted(() => { isNavigating.value = true })
-onUnmounted(() => { isNavigating.value = false })
 </script>
 
 <template>

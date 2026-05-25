@@ -13,12 +13,13 @@ import { isNavigating, hasNavigated } from '@/lib/navigation'
   <main id="main" tabindex="-1" :class="{ 'is-navigating': isNavigating }">
     <RouterView v-slot="{ Component, route }">
       <Transition name="page" mode="out-in">
-        <Suspense :timeout="0">
+        <Suspense v-if="hasNavigated" :timeout="0">
           <component :is="Component" :key="route.path" />
           <template #fallback>
-            <PageSkeleton v-if="hasNavigated" />
+            <PageSkeleton />
           </template>
         </Suspense>
+        <component v-else :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
   </main>
