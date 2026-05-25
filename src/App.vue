@@ -10,9 +10,9 @@ import { isNavigating } from '@/lib/navigation'
   <NavigationProgress />
   <SiteHeader />
   <main id="main" tabindex="-1" :class="{ 'is-navigating': isNavigating }">
-    <RouterView v-slot="{ Component }">
+    <RouterView v-slot="{ Component, route }">
       <Transition name="page" mode="out-in">
-        <component :is="Component" />
+        <component :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
   </main>
