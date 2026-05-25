@@ -1,21 +1,17 @@
 import type { PostMeta } from '@/data/types'
-import { writingIndex } from '@generated/writingIndex'
+import {
+	categories as generatedCategories,
+	pageSize as generatedPageSize,
+	totalsByFilter as generatedTotalsByFilter,
+} from '@generated/writing/pagesIndex'
 
-const allPosts: PostMeta[] = writingIndex
+const pageLoaders = import.meta.glob<{ items: PostMeta[] }>(
+	'../../.generated/writing/pages/*.ts',
+)
 
-export function listPosts(): PostMeta[] {
-	return allPosts
-}
-
-export function postsBySlugs(slugs: string[]): PostMeta[] {
-	return slugs.map((s) => allPosts.find((p) => p.slug === s)).filter((p): p is PostMeta => Boolean(p))
-}
-
-export function postsByThread(threadId: string): PostMeta[] {
-	return allPosts.filter((p) => p.tags.includes(threadId))
-}
-
-export const categories = Array.from(new Set(allPosts.map((p) => p.category)))
+export const pageSize = generatedPageSize
+export const totalsByFilter = generatedTotalsByFilter
+export const categories = generatedCategories.map((c) => c.label)
 
 export function slugifyCategory(cat: string): string {
 	return cat
@@ -25,7 +21,18 @@ export function slugifyCategory(cat: string): string {
 }
 
 export function deslugifyCategory(slug: string): string | undefined {
-	return categories.find((c) => slugifyCategory(c) === slug)
+	return generatedCategories.find((c) => c.slug === slug)?.label
+}
+
+export async function loadWritingPage(filterSlug: string, page: number): Promise<PostMeta[]> {
+	const suffix = `/${filterSlug}-${page}.ts`
+	for (const [key, loader] of Object.entries(pageLoaders)) {
+		if (key.endsWith(suffix)) {
+			const mod = await loader()
+			return mod.items
+		}
+	}
+	return []
 }
 
 export function formatDate(iso: string): string {

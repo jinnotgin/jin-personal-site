@@ -5,14 +5,14 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contentRoot = path.join(root, 'src/content')
 const generatedRoot = path.join(root, '.generated')
-const writingIndexPath = path.join(generatedRoot, 'writingIndex.ts')
 const homeWritingPath = path.join(generatedRoot, 'homeWriting.ts')
-const homeProjectsPath = path.join(generatedRoot, 'homeProjects.ts')
+const projectsIndexPath = path.join(generatedRoot, 'projectsIndex.ts')
 const writingPostsRoot = path.join(generatedRoot, 'writing/posts')
-const projectSourcesRoot = path.join(generatedRoot, 'projects')
 const writingPagesRoot = path.join(generatedRoot, 'writing/pages')
-const legacyWritingCatalogPath = path.join(generatedRoot, 'writingCatalog.ts')
+const writingPagesIndexPath = path.join(generatedRoot, 'writing/pagesIndex.ts')
+const projectSourcesRoot = path.join(generatedRoot, 'projects')
 const threadIds = ['applied-ai', 'public-platforms', 'signals', 'homegrown', 'human']
+const WRITING_PAGE_SIZE = 8
 
 async function walk(dir, matches) {
 	const entries = await readdir(dir, { withFileTypes: true })
@@ -85,15 +85,59 @@ function buildWritingMeta(raw) {
 	}
 }
 
-function renderWritingIndex(posts) {
+function slugifyCategory(cat) {
+	return cat
+		.toLowerCase()
+		.replace(/\s+/g, '-')
+		.replace(/[^a-z0-9-]/g, '')
+}
+
+function renderWritingPage(items) {
 	return `import type { PostMeta } from '@/data/types'
 
-export const writingIndex: PostMeta[] = ${JSON.stringify(posts, null, 2)}
+export const items: PostMeta[] = ${JSON.stringify(items, null, 2)}
 `
 }
 
-function renderWritingPostSource(source) {
+function renderWritingPagesIndex({ pageSize, categories, totalsByFilter }) {
+	return `export const pageSize = ${pageSize}
+
+export const categories: { slug: string; label: string }[] = ${JSON.stringify(categories, null, 2)}
+
+export const totalsByFilter: Record<string, number> = ${JSON.stringify(totalsByFilter, null, 2)}
+`
+}
+
+const SOURCE_GLOB_EXT = '{avif,gif,jpeg,jpg,pdf,png,svg,webp}'
+const MEDIA_GLOB_EXT = '{avif,webp}'
+
+function renderWritingPostSource(source, { contentDir }) {
+	const sourceGlob = `../../../src/content/writing/${contentDir}/**/*.${SOURCE_GLOB_EXT}`
+	const mediaGlob = `../../../.generated/media/content/writing/${contentDir}/**/*.${MEDIA_GLOB_EXT}`
 	return `import type { WritingPostSource } from '@/data/types'
+
+const sourceAssets = import.meta.glob('${sourceGlob}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>
+
+const mediaAssets = import.meta.glob('${mediaGlob}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>
+
+function rekey(map: Record<string, string>, from: string, to: string): Record<string, string> {
+	const out: Record<string, string> = {}
+	for (const [k, v] of Object.entries(map)) out[k.replace(from, to)] = v
+	return out
+}
+
+export const assets: Record<string, string> = {
+	...rekey(sourceAssets, '../../../src/', '../'),
+	...rekey(mediaAssets, '../../../.generated/', '../../.generated/'),
+}
 
 export const postSource: WritingPostSource = ${JSON.stringify(source, null, 2)}
 `
@@ -128,15 +172,40 @@ function buildProjectMeta(data) {
 	}
 }
 
-function renderHomeProjects(projects) {
+function renderProjectsIndex(projects) {
 	return `import type { ProjectMeta } from '@/data/types'
 
-export const homeProjects: ProjectMeta[] = ${JSON.stringify(projects, null, 2)}
+export const projectsIndex: ProjectMeta[] = ${JSON.stringify(projects, null, 2)}
 `
 }
 
-function renderProjectSource(source) {
+function renderProjectSource(source, { slug }) {
+	const sourceGlob = `../../src/content/projects/${slug}/**/*.${SOURCE_GLOB_EXT}`
+	const mediaGlob = `../../.generated/media/content/projects/${slug}/**/*.${MEDIA_GLOB_EXT}`
 	return `import type { ProjectSource } from '@/data/types'
+
+const sourceAssets = import.meta.glob('${sourceGlob}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>
+
+const mediaAssets = import.meta.glob('${mediaGlob}', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+}) as Record<string, string>
+
+function rekey(map: Record<string, string>, from: string, to: string): Record<string, string> {
+	const out: Record<string, string> = {}
+	for (const [k, v] of Object.entries(map)) out[k.replace(from, to)] = v
+	return out
+}
+
+export const assets: Record<string, string> = {
+	...rekey(sourceAssets, '../../src/', '../'),
+	...rekey(mediaAssets, '../../.generated/', '../../.generated/'),
+}
 
 export const projectSource: ProjectSource = ${JSON.stringify(source, null, 2)}
 `
@@ -164,13 +233,15 @@ async function generateProjectData() {
 			rawLinks: Array.isArray(data.links) ? data.links : [],
 			rawImages: Array.isArray(data.images) ? data.images : [],
 		}
+		const projectsRel = path.relative(projectsRoot, path.dirname(file))
+		const projectDir = toPosix(projectsRel)
 		await writeFile(
 			path.join(projectSourcesRoot, `${meta.slug}.ts`),
-			renderProjectSource(source),
+			renderProjectSource(source, { slug: projectDir }),
 		)
 	}
 
-	await writeFile(homeProjectsPath, renderHomeProjects(projects))
+	await writeFile(projectsIndexPath, renderProjectsIndex(projects))
 	return projects.length
 }
 
@@ -188,26 +259,76 @@ async function generateWritingData() {
 
 		const { body } = parseFrontmatter(raw)
 		const markdownPath = `../content/${toPosix(path.relative(contentRoot, file))}`
+		const writingRel = path.relative(writingRoot, file)
+		const writingRelNoExt = writingRel.slice(0, -path.extname(writingRel).length)
+		const isIndex = path.basename(writingRelNoExt) === 'index'
+		const contentDir = toPosix(isIndex ? path.dirname(writingRelNoExt) : writingRelNoExt)
 		sources.push({
 			meta,
 			body,
 			markdownPath,
+			contentDir,
 		})
 	}
 
 	sources.sort((a, b) => (a.meta.date < b.meta.date ? 1 : -1))
 
+	const allMetas = sources.map((source) => source.meta)
+
+	await mkdir(writingPagesRoot, { recursive: true })
+
+	const categoryLabels = []
+	for (const meta of allMetas) {
+		if (!categoryLabels.includes(meta.category)) categoryLabels.push(meta.category)
+	}
+	const categories = categoryLabels.map((label) => ({ slug: slugifyCategory(label), label }))
+
+	const filterGroups = [
+		{ slug: 'all', items: allMetas },
+		...categories.map(({ slug, label }) => ({
+			slug,
+			items: allMetas.filter((m) => m.category === label),
+		})),
+	]
+
+	const totalsByFilter = {}
+	const pageWrites = []
+	for (const { slug, items } of filterGroups) {
+		totalsByFilter[slug] = items.length
+		const totalPages = Math.max(1, Math.ceil(items.length / WRITING_PAGE_SIZE))
+		for (let page = 1; page <= totalPages; page++) {
+			const start = (page - 1) * WRITING_PAGE_SIZE
+			const chunk = items.slice(start, start + WRITING_PAGE_SIZE)
+			pageWrites.push(
+				writeFile(path.join(writingPagesRoot, `${slug}-${page}.ts`), renderWritingPage(chunk)),
+			)
+		}
+	}
+	await Promise.all(pageWrites)
+
 	await writeFile(
-		writingIndexPath,
-		renderWritingIndex(sources.map((source) => source.meta)),
+		writingPagesIndexPath,
+		renderWritingPagesIndex({ pageSize: WRITING_PAGE_SIZE, categories, totalsByFilter }),
 	)
 
-	await writeFile(homeWritingPath, renderHomeWriting(sources.map((source) => source.meta)))
+	await writeFile(homeWritingPath, renderHomeWriting(allMetas))
 
+	const neighbor = (source) => ({ slug: source.meta.slug, title: source.meta.title })
 	await Promise.all(
-		sources.map((source) =>
-			writeFile(path.join(writingPostsRoot, `${source.meta.slug}.ts`), renderWritingPostSource(source)),
-		),
+		sources.map((source, index) => {
+			const prevSource = index > 0 ? sources[index - 1] : undefined
+			const nextSource = index < sources.length - 1 ? sources[index + 1] : undefined
+			const { contentDir, ...rest } = source
+			const withNeighbors = {
+				...rest,
+				...(prevSource ? { prev: neighbor(prevSource) } : {}),
+				...(nextSource ? { next: neighbor(nextSource) } : {}),
+			}
+			return writeFile(
+				path.join(writingPostsRoot, `${source.meta.slug}.ts`),
+				renderWritingPostSource(withNeighbors, { contentDir }),
+			)
+		}),
 	)
 
 	return sources.length
@@ -215,10 +336,10 @@ async function generateWritingData() {
 
 async function cleanStaleOutputs() {
 	await Promise.all([
-		rm(writingPagesRoot, { recursive: true, force: true }),
-		rm(legacyWritingCatalogPath, { force: true }),
 		rm(writingPostsRoot, { recursive: true, force: true }),
+		rm(writingPagesRoot, { recursive: true, force: true }),
 		rm(projectSourcesRoot, { recursive: true, force: true }),
+		rm(path.join(generatedRoot, 'writingIndex.ts'), { force: true }),
 	])
 }
 

@@ -15,10 +15,10 @@ describe('writing Markdown module boundary', () => {
 		expect(source).not.toContain('buildResponsiveImageMap')
 	})
 
-	it('loads writing asset URL imports only for post rendering', () => {
+	it('keeps section-wide asset URL globs out of post rendering', () => {
 		const source = readFileSync(postSourcePath, 'utf8')
 
-		expect(source).toContain("query: '?url'")
+		expect(source).not.toContain("query: '?url'")
 		expect(source).toContain('renderMarkdown')
 		expect(source).toContain('buildResponsiveImageMap')
 	})
@@ -35,6 +35,7 @@ describe('writing Markdown module boundary', () => {
 	it('loads project data lazily per slug, never the bundled section manifest', () => {
 		const projectSource = readFileSync(projectSourcePath, 'utf8')
 
+		expect(projectSource).not.toContain("query: '?url'")
 		expect(projectSource).not.toContain('@generated/imageManifest.projects')
 		expect(projectSource).not.toContain('@generated/imageManifest.writing')
 		expect(projectSource).toContain('.generated/projects/*.ts')

@@ -6,26 +6,14 @@ import {
 } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
 
-const projectSources = import.meta.glob<{ projectSource: ProjectSource }>(
-	'../../.generated/projects/*.ts',
-)
+const projectSources = import.meta.glob<{
+	projectSource: ProjectSource
+	assets: Record<string, string>
+}>('../../.generated/projects/*.ts')
 
 const projectManifests = import.meta.glob<{ imageManifest: ResponsiveImageManifestEntry[] }>(
 	'../../.generated/imageManifest/content/projects/*.ts',
 )
-
-const assets = import.meta.glob('../content/projects/**/*.{avif,gif,jpeg,jpg,pdf,png,svg,webp}', {
-	eager: true,
-	query: '?url',
-	import: 'default',
-}) as Record<string, string>
-
-const generatedAssets = import.meta.glob(
-	'../../.generated/media/content/projects/**/*.{avif,webp}',
-	{ eager: true, query: '?url', import: 'default' },
-) as Record<string, string>
-
-const assetMap = { ...assets, ...generatedAssets }
 
 function findEntry<T>(
 	map: Record<string, () => Promise<T>>,
@@ -38,14 +26,14 @@ function findEntry<T>(
 	return undefined
 }
 
-function parseLinks(raw: string[], markdownPath: string): ProjectLink[] | undefined {
+function parseLinks(raw: string[], markdownPath: string, assets: Record<string, string>): ProjectLink[] | undefined {
 	const result: ProjectLink[] = []
 	for (const item of raw) {
 		const sep = item.indexOf('::')
 		if (sep === -1) continue
 		result.push({
 			label: item.slice(0, sep).trim(),
-			href: resolveContentAsset(item.slice(sep + 2).trim(), markdownPath, assetMap),
+			href: resolveContentAsset(item.slice(sep + 2).trim(), markdownPath, assets),
 		})
 	}
 	return result.length ? result : undefined
@@ -54,13 +42,14 @@ function parseLinks(raw: string[], markdownPath: string): ProjectLink[] | undefi
 function parseImages(
 	raw: string[],
 	markdownPath: string,
+	assets: Record<string, string>,
 	responsiveImages: ReturnType<typeof buildResponsiveImageMap>,
 ): ProjectImage[] | undefined {
 	const result: ProjectImage[] = []
 	for (const item of raw) {
 		const sep = item.indexOf('::')
 		if (sep === -1) continue
-		const src = resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assetMap)
+		const src = resolveContentAsset(item.slice(0, sep).trim(), markdownPath, assets)
 		result.push({
 			src,
 			alt: item.slice(sep + 2).trim(),
@@ -73,14 +62,14 @@ function parseImages(
 export async function getProject(slug: string): Promise<Project | undefined> {
 	const sourceLoader = findEntry(projectSources, slug)
 	if (!sourceLoader) return undefined
-	const { projectSource } = await sourceLoader()
+	const { projectSource, assets } = await sourceLoader()
 
 	const manifestLoader = findEntry(projectManifests, slug)
 	const manifest = manifestLoader ? (await manifestLoader()).imageManifest : []
-	const responsiveImages = buildResponsiveImageMap(manifest, assetMap)
+	const responsiveImages = buildResponsiveImageMap(manifest, assets)
 
-	const links = parseLinks(projectSource.rawLinks, projectSource.markdownPath)
-	const images = parseImages(projectSource.rawImages, projectSource.markdownPath, responsiveImages)
+	const links = parseLinks(projectSource.rawLinks, projectSource.markdownPath, assets)
+	const images = parseImages(projectSource.rawImages, projectSource.markdownPath, assets, responsiveImages)
 
 	return {
 		...projectSource.meta,

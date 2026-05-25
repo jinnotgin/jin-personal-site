@@ -6,26 +6,14 @@ import {
 } from '@/lib/contentAssets'
 import { renderMarkdown } from '@/lib/renderMarkdown'
 
-const postSources = import.meta.glob<{ postSource: WritingPostSource }>(
-	'../../.generated/writing/posts/*.ts',
-)
+const postSources = import.meta.glob<{
+	postSource: WritingPostSource
+	assets: Record<string, string>
+}>('../../.generated/writing/posts/*.ts')
 
 const postManifests = import.meta.glob<{ imageManifest: ResponsiveImageManifestEntry[] }>(
 	'../../.generated/imageManifest/content/writing/**/*.ts',
 )
-
-const assets = import.meta.glob('../content/writing/**/*.{avif,gif,jpeg,jpg,pdf,png,svg,webp}', {
-	eager: true,
-	query: '?url',
-	import: 'default',
-}) as Record<string, string>
-
-const generatedAssets = import.meta.glob(
-	'../../.generated/media/content/writing/**/*.{avif,webp}',
-	{ eager: true, query: '?url', import: 'default' },
-) as Record<string, string>
-
-const assetMap = { ...assets, ...generatedAssets }
 
 function firstMarkdownImage(body: string): Post['image'] {
 	const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/.exec(body)
@@ -50,20 +38,22 @@ function findEntry<T>(
 export async function getPost(slug: string): Promise<Post | undefined> {
 	const sourceLoader = findEntry(postSources, slug)
 	if (!sourceLoader) return undefined
-	const { postSource } = await sourceLoader()
+	const { postSource, assets } = await sourceLoader()
 	if (postSource.meta.status !== 'published') return undefined
 
 	const manifestLoader = findEntry(postManifests, slug)
 	const manifest = manifestLoader ? (await manifestLoader()).imageManifest : []
-	const responsiveImages = buildResponsiveImageMap(manifest, assetMap)
+	const responsiveImages = buildResponsiveImageMap(manifest, assets)
 
-	const resolvedBody = resolveMarkdownAssetReferences(postSource.body, postSource.markdownPath, assetMap)
+	const resolvedBody = resolveMarkdownAssetReferences(postSource.body, postSource.markdownPath, assets)
 	const words = resolvedBody.trim().split(/\s+/).filter(Boolean).length
 	const image = firstMarkdownImage(resolvedBody)
 
 	return {
 		...postSource.meta,
 		...(image ? { image } : {}),
+		...(postSource.prev ? { prev: postSource.prev } : {}),
+		...(postSource.next ? { next: postSource.next } : {}),
 		html: renderMarkdown(resolvedBody, responsiveImages),
 		readingMinutes: Math.max(1, Math.round(words / 200)),
 	}

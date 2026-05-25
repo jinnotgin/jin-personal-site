@@ -3,18 +3,16 @@ import { onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
-import { listPosts, formatDate } from '@/lib/markdown'
+import { formatDate } from '@/lib/markdown'
 import { getPost } from '@/lib/postMarkdown'
 import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const all = listPosts()
 const post = await getPost(String(route.params.slug))
 useHead(post ? postSeo(post) : writingIndexSeo())
 
-const idx = all.findIndex((p) => p.slug === route.params.slug)
-const prev = idx > 0 ? all[idx - 1] : null
-const next = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null
+const prev = post?.prev ?? null
+const next = post?.next ?? null
 
 onMounted(() => {
 	if (post) {

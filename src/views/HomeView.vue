@@ -4,7 +4,7 @@ import { useHead } from '@unhead/vue'
 import posthog from 'posthog-js'
 import ConstellationMap from '@/components/ConstellationMap.vue'
 import { homeLatestPosts, formatDate } from '@/lib/homeWriting'
-import { listProjects, byMostRecentProject } from '@/lib/homeProjects'
+import { listProjects, byMostRecentProject } from '@/lib/projectsIndex'
 import { siteSeo } from '@/lib/seo'
 
 useHead(siteSeo())

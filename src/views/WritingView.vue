@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import posthog from 'posthog-js'
+import type { PostMeta } from '@/data/types'
 import {
-	listPosts,
 	categories,
 	formatDate,
 	deslugifyCategory,
+	loadWritingPage,
+	pageSize,
 	slugifyCategory,
+	totalsByFilter,
 } from '@/lib/markdown'
 import { writingIndexSeo } from '@/lib/seo'
 
@@ -16,9 +19,7 @@ const route = useRoute()
 const router = useRouter()
 useHead(writingIndexSeo())
 
-const posts = listPosts()
 const filters = ['All', ...categories]
-const PAGE_SIZE = 8
 
 /* ── Derive state from URL query params ── */
 
@@ -29,25 +30,29 @@ const filter = computed(() => {
 	return deslugifyCategory(qStr) ?? (categories.includes(qStr) ? qStr : 'All')
 })
 
+const filterSlug = computed(() => (filter.value === 'All' ? 'all' : slugifyCategory(filter.value)))
+
 const currentPage = computed(() => {
 	const p = route.query.page
 	const n = Number(Array.isArray(p) ? p[0] : p)
 	return Number.isFinite(n) && n >= 1 ? Math.floor(n) : 1
 })
 
-const shown = computed(() =>
-	filter.value === 'All' ? posts : posts.filter((p) => p.category === filter.value),
+const totalPages = computed(() =>
+	Math.max(1, Math.ceil((totalsByFilter[filterSlug.value] ?? 0) / pageSize)),
 )
-
-const totalPages = computed(() => Math.max(1, Math.ceil(shown.value.length / PAGE_SIZE)))
 
 // Clamp page to valid range (handles stale URLs)
 const safePage = computed(() => Math.min(currentPage.value, totalPages.value))
 
-const visible = computed(() => {
-	const start = (safePage.value - 1) * PAGE_SIZE
-	return shown.value.slice(start, start + PAGE_SIZE)
-})
+const visible = ref<PostMeta[]>([])
+
+async function loadCurrentPage() {
+	visible.value = await loadWritingPage(filterSlug.value, safePage.value)
+}
+
+await loadCurrentPage()
+watch([filterSlug, safePage], loadCurrentPage)
 
 const listTransitionKey = computed(() => `${filter.value}:${safePage.value}`)
 

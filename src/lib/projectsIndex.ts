@@ -1,8 +1,8 @@
 import type { ProjectMeta, ThreadId } from '@/data/types'
-import { homeProjects } from '@generated/homeProjects'
+import { projectsIndex } from '@generated/projectsIndex'
 
 export function listProjects(): ProjectMeta[] {
-	return homeProjects
+	return projectsIndex
 }
 
 const latestYear = (project: ProjectMeta) => {
@@ -20,9 +20,9 @@ export const byMostRecentProject = (a: ProjectMeta, b: ProjectMeta) =>
 	latestYear(b) - latestYear(a) || firstYear(b) - firstYear(a)
 
 export function projectsByThread(threadId: string): ProjectMeta[] {
-	return homeProjects.filter((p) => p.threads.includes(threadId as ThreadId))
+	return projectsIndex.filter((p) => p.threads.includes(threadId as ThreadId))
 }
 
 export function projectBySlug(slug: string): ProjectMeta | undefined {
-	return homeProjects.find((p) => p.slug === slug)
+	return projectsIndex.find((p) => p.slug === slug)
 }

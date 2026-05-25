@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import posthog from 'posthog-js'
 import { threads } from '@/data/threads'
-import { listProjects, byMostRecentProject, projectsByThread } from '@/lib/homeProjects'
+import { listProjects, byMostRecentProject, projectsByThread } from '@/lib/projectsIndex'
 import { projectsIndexSeo } from '@/lib/seo'
 
 function trackProjectClick(slug: string, name: string, status: string, thread: string) {
