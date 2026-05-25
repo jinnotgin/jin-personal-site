@@ -14,6 +14,7 @@ import {
 	totalsByFilter,
 } from '@/lib/markdown'
 import { writingIndexSeo } from '@/lib/seo'
+import { isNavigating } from '@/lib/navigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -46,9 +47,17 @@ const totalPages = computed(() =>
 const safePage = computed(() => Math.min(currentPage.value, totalPages.value))
 
 const visible = ref<PostMeta[]>([])
+const isLoading = ref(false)
 
 async function loadCurrentPage() {
-	visible.value = await loadWritingPage(filterSlug.value, safePage.value)
+	isLoading.value = true
+	isNavigating.value = true
+	try {
+		visible.value = await loadWritingPage(filterSlug.value, safePage.value)
+	} finally {
+		isLoading.value = false
+		isNavigating.value = false
+	}
 }
 
 await loadCurrentPage()
@@ -108,7 +117,19 @@ watch([safePage, currentPage], ([safe, current]) => {
 		</div>
 
 		<Transition name="writing-list" mode="out-in">
-			<ul :key="listTransitionKey" class="posts">
+			<ul v-if="isLoading" key="skeleton" class="posts" aria-hidden="true">
+				<li v-for="n in pageSize" :key="n" class="sk-post">
+					<div class="sk-post-inner">
+						<div class="sk-bar sk-meta-bar" />
+						<div class="sk-bar sk-title-bar" />
+						<div class="sk-bar sk-title-bar sk-title-bar--short" />
+						<div class="sk-bar sk-excerpt-bar" />
+						<div class="sk-bar sk-excerpt-bar sk-excerpt-bar--short" />
+						<div class="sk-bar sk-tags-bar" />
+					</div>
+				</li>
+			</ul>
+			<ul v-else :key="listTransitionKey" class="posts">
 				<li v-for="p in visible" :key="p.slug">
 					<RouterLink :to="`/writing/${p.slug}`" class="post">
 						<span class="post-meta">
@@ -226,6 +247,56 @@ watch([safePage, currentPage], ([safe, current]) => {
 }
 .posts li:last-child {
 	border-bottom: 1px solid var(--color-hairline);
+}
+
+/* ── Pagination skeleton ── */
+.sk-post {
+	border-top: 1px solid var(--color-hairline);
+}
+.sk-post:last-child {
+	border-bottom: 1px solid var(--color-hairline);
+}
+.sk-post-inner {
+	display: grid;
+	gap: 0.55rem;
+	padding: 2rem 0.25rem;
+}
+.sk-bar {
+	border-radius: var(--radius-sm);
+	background: color-mix(in oklab, var(--color-hairline) 80%, var(--color-paper));
+	animation: sk-pulse 1.6s ease-in-out infinite;
+}
+.sk-meta-bar {
+	height: 0.65rem;
+	width: 12rem;
+}
+.sk-title-bar {
+	height: 1.6rem;
+}
+.sk-title-bar--short {
+	width: 58%;
+}
+.sk-excerpt-bar {
+	height: 1rem;
+	width: 95%;
+}
+.sk-excerpt-bar--short {
+	width: 72%;
+}
+.sk-tags-bar {
+	height: 0.65rem;
+	width: 40%;
+	margin-top: 0.3rem;
+}
+@keyframes sk-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.sk-bar {
+		animation: none;
+		opacity: 0.6;
+	}
 }
 .post {
 	display: grid;
