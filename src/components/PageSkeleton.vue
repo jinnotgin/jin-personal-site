@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <div class="shell shell--reading skeleton" aria-hidden="true">
     <div class="sk-back" />
