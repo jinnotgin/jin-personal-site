@@ -23,6 +23,7 @@ import { isNavigating } from '@/lib/navigation'
 main {
   outline: none;
   flex: 1 0 auto;
+  overflow-x: clip;
   transition: opacity 0.2s var(--ease-out-quint);
 }
 
