@@ -349,7 +349,9 @@
 
   .content-image {
     display: block;
+    width: 100%;
     height: auto;
+    aspect-ratio: auto 16 / 9;
   }
 
   .content-media-frame .content-image {
