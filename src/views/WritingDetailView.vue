@@ -193,19 +193,19 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	}
 }
 
-.prose :deep(img),
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
 	height: auto;
 	margin: 2rem 50%;
 	transform: translateX(-50%);
 }
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
 }
-.prose :deep(figure img) {
+.prose :deep(.content-figure img),
+.prose :deep(.content-figure .content-picture) {
 	display: block;
 	width: 100%;
 	height: auto;
@@ -222,8 +222,7 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 }
 
 @media (max-width: 760px) {
-	.prose :deep(img),
-	.prose :deep(figure) {
+	.prose :deep(.content-figure) {
 		width: 100%;
 		margin: 1.5rem 0;
 		transform: none;
@@ -246,12 +245,14 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	display: none;
 }
 .prose :deep(.cols img),
-.prose :deep(.cols figure) {
+.prose :deep(.cols .content-picture),
+.prose :deep(.cols .content-figure) {
 	width: 100%;
 	margin: 0;
 	transform: none;
 }
-.prose :deep(.cols figure img) {
+.prose :deep(.cols .content-figure img),
+.prose :deep(.cols .content-figure .content-picture) {
 	width: 100%;
 }
 @media (max-width: 760px) {

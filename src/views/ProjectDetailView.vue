@@ -213,19 +213,19 @@ function trackExternalLinkClick(label: string, href: string) {
 .prose :deep(p + p) {
 	margin-top: 1em;
 }
-.prose :deep(img),
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
 	height: auto;
 	margin: 2rem 50%;
 	transform: translateX(-50%);
 }
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
 }
-.prose :deep(figure img) {
+.prose :deep(.content-figure img),
+.prose :deep(.content-figure .content-picture) {
 	display: block;
 	width: 100%;
 	height: auto;
@@ -252,8 +252,7 @@ function trackExternalLinkClick(label: string, href: string) {
 	border-radius: var(--radius-lg);
 }
 @media (max-width: 760px) {
-	.prose :deep(img),
-	.prose :deep(figure),
+	.prose :deep(.content-figure),
 	.prose :deep(iframe) {
 		width: 100%;
 		margin: 1.5rem 0;

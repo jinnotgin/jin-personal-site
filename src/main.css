@@ -354,6 +354,10 @@
     aspect-ratio: auto 16 / 9;
   }
 
+  .content-picture {
+    display: block;
+  }
+
   .content-media-frame .content-image {
     border: 0;
     background: transparent;
@@ -464,29 +468,10 @@
   .prose img {
     border: 1px solid var(--color-hairline);
   }
-  .prose > p:has(> img:only-child) {
-    width: min(50rem, calc(100vw - 5rem));
-    margin-left: 50%;
-    transform: translateX(-50%);
-  }
-  .prose > p:has(> img:only-child) img {
-    display: block;
-    width: 100%;
-    max-width: none;
-    height: auto;
-  }
   .prose hr {
     border: 0;
     border-top: 1px solid var(--color-hairline);
     margin: 2.4em 0;
-  }
-
-  @media (max-width: 760px) {
-    .prose > p:has(> img:only-child) {
-      width: 100%;
-      margin-left: 0;
-      transform: none;
-    }
   }
 
   /* The serif italic is reserved for human / reflective notes only */

@@ -8,7 +8,7 @@ describe('renderMarkdown', () => {
       '![Output preview](/img/output.png "How the converted output looks")',
     )
 
-    expect(html).toContain('<figure>')
+    expect(html).toContain('<figure class="content-figure">')
     expect(html).toContain('<img class="content-image" src="/img/output.png" alt="Output preview"')
     expect(html).toContain('<figcaption>How the converted output looks</figcaption>')
     expect(html).not.toContain('![Output preview]')
@@ -46,7 +46,7 @@ describe('renderMarkdown', () => {
       },
     })
 
-    expect(html).toContain('<picture>')
+    expect(html).toContain('<picture class="content-picture">')
     expect(html).toContain(
       '<source type="image/avif" srcset="/assets/output-640.aaa111.avif 640w, /assets/output-960.bbb222.avif 960w" />',
     )

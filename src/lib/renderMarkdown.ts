@@ -37,7 +37,7 @@ export function renderMarkdown(markdown: string, responsiveImages: ResponsiveIma
     const responsiveImage = responsiveImages[href]
     const imageClass = ' class="content-image"'
     const img = responsiveImage
-      ? `<picture>${responsiveImage.sources
+      ? `<picture class="content-picture">${responsiveImage.sources
           .map(
             (source) =>
               `<source type="${escapeAttr(source.type)}" srcset="${escapeAttr(source.srcset)}" />`,
@@ -50,7 +50,7 @@ export function renderMarkdown(markdown: string, responsiveImages: ResponsiveIma
         gfm: true,
         renderer,
       }) as string
-      return `<figure>${img}<figcaption>${caption}</figcaption></figure>`
+      return `<figure class="content-figure">${img}<figcaption>${caption}</figcaption></figure>`
     }
     return img
   }
