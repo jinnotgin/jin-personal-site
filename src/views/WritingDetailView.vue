@@ -61,22 +61,22 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 
 			<nav class="pager" aria-label="More writing">
 				<RouterLink
-					v-if="prev"
-					:to="`/writing/${prev.slug}`"
-					class="pager-link"
-					@click="trackPagerClick('newer', prev.slug, prev.title)"
-				>
-					<span class="pager-dir">Newer</span>
-					<span class="pager-title">{{ prev.title }}</span>
-				</RouterLink>
-				<RouterLink
 					v-if="next"
 					:to="`/writing/${next.slug}`"
-					class="pager-link next"
+					class="pager-link older"
 					@click="trackPagerClick('older', next.slug, next.title)"
 				>
 					<span class="pager-dir">Older</span>
 					<span class="pager-title">{{ next.title }}</span>
+				</RouterLink>
+				<RouterLink
+					v-if="prev"
+					:to="`/writing/${prev.slug}`"
+					class="pager-link newer"
+					@click="trackPagerClick('newer', prev.slug, prev.title)"
+				>
+					<span class="pager-dir">Newer</span>
+					<span class="pager-title">{{ prev.title }}</span>
 				</RouterLink>
 			</nav>
 		</footer>
@@ -155,8 +155,9 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	text-decoration: none;
 	color: var(--color-ink);
 }
-.pager-link.next {
+.pager-link.newer {
 	text-align: right;
+	grid-column: 2;
 }
 .pager-dir {
 	font-size: var(--text-xs);
@@ -175,7 +176,8 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	.pager {
 		grid-template-columns: 1fr;
 	}
-	.pager-link.next {
+	.pager-link.newer {
+		grid-column: auto;
 		text-align: left;
 	}
 }

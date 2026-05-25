@@ -152,12 +152,9 @@ watch([safePage, currentPage], ([safe, current]) => {
 				class="page-link prev"
 			>
 				<span class="page-arrow" aria-hidden="true">←</span>
-				Newer
+				Previous
 			</RouterLink>
-			<span v-else class="page-link prev disabled" aria-hidden="true">
-				<span class="page-arrow">←</span>
-				Newer
-			</span>
+			<span v-else class="page-link prev hidden" aria-hidden="true"></span>
 
 			<span class="page-pos">{{ safePage }}<span class="page-sep">/</span>{{ totalPages }}</span>
 
@@ -166,13 +163,10 @@ watch([safePage, currentPage], ([safe, current]) => {
 				:to="{ path: '/writing', query: buildQuery(safePage + 1) }"
 				class="page-link next"
 			>
-				Older
+				Next
 				<span class="page-arrow" aria-hidden="true">→</span>
 			</RouterLink>
-			<span v-else class="page-link next disabled" aria-hidden="true">
-				Older
-				<span class="page-arrow">→</span>
-			</span>
+			<span v-else class="page-link next hidden" aria-hidden="true"></span>
 		</nav>
 	</div>
 </template>
@@ -363,20 +357,17 @@ watch([safePage, currentPage], ([safe, current]) => {
 		background 0.16s var(--ease-out-quint);
 	min-width: 6.5rem;
 }
-.page-link.prev {
-	justify-content: flex-start;
-}
+.page-link.prev,
 .page-link.next {
-	justify-content: flex-end;
+	justify-content: center;
 }
 .page-link:not(.disabled):hover {
 	color: var(--color-ink);
 	border-color: var(--color-moss);
 	background: var(--color-sage);
 }
-.page-link.disabled {
-	opacity: 0.35;
-	cursor: default;
+.page-link.hidden {
+	visibility: hidden;
 	pointer-events: none;
 }
 .page-arrow {
