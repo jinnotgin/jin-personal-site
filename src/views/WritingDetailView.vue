@@ -1,29 +1,38 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
+import PageSkeleton from '@/components/PageSkeleton.vue'
+import { useCachedAsyncResource } from '@/composables/useCachedAsyncResource'
 import { formatDate } from '@/lib/markdown'
-import { getPost } from '@/lib/postMarkdown'
+import { getPost, readPostCache } from '@/lib/postMarkdown'
 import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const post = await getPost(String(route.params.slug))
-useHead(post ? postSeo(post) : writingIndexSeo())
+const postSlug = computed(() => String(route.params.slug))
+const { data: post, isLoading } = useCachedAsyncResource(postSlug, readPostCache, getPost)
 
-const prev = post?.prev ?? null
-const next = post?.next ?? null
+useHead(computed(() => (post.value ? postSeo(post.value) : writingIndexSeo())))
 
-onMounted(() => {
-	if (post) {
-		posthog.capture('post_viewed', {
-			post_slug: post.slug,
-			post_title: post.title,
-			post_category: post.category,
-			reading_minutes: post.readingMinutes,
-		})
-	}
-})
+const prev = computed(() => post.value?.prev ?? null)
+const next = computed(() => post.value?.next ?? null)
+
+if (typeof window !== 'undefined') {
+	watch(
+		post,
+		(p) => {
+			if (!p) return
+			posthog.capture('post_viewed', {
+				post_slug: p.slug,
+				post_title: p.title,
+				post_category: p.category,
+				reading_minutes: p.readingMinutes,
+			})
+		},
+		{ immediate: true },
+	)
+}
 
 function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targetTitle: string) {
 	posthog.capture('post_pager_navigated', {
@@ -36,7 +45,9 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 </script>
 
 <template>
-	<article class="shell shell--reading post" v-if="post">
+	<PageSkeleton v-if="isLoading" />
+
+	<article class="shell shell--reading post" v-else-if="post">
 		<RouterLink to="/writing" class="back">← Writing</RouterLink>
 
 		<header class="head">

@@ -8,6 +8,7 @@ import {
 const pageLoaders = import.meta.glob<{ items: PostMeta[] }>(
 	'../../.generated/writing/pages/*.ts',
 )
+const pageCache = new Map<string, PostMeta[]>()
 
 export const pageSize = generatedPageSize
 export const totalsByFilter = generatedTotalsByFilter
@@ -24,14 +25,34 @@ export function deslugifyCategory(slug: string): string | undefined {
 	return generatedCategories.find((c) => c.slug === slug)?.label
 }
 
+function pageCacheKey(filterSlug: string, page: number): string {
+	return `${filterSlug}:${page}`
+}
+
+export function readWritingPageCache(filterSlug: string, page: number) {
+	const key = pageCacheKey(filterSlug, page)
+	return pageCache.has(key)
+		? ({ hit: true, value: pageCache.get(key) } as const)
+		: ({ hit: false } as const)
+}
+
+export function seedWritingPageCache(filterSlug: string, page: number, items: PostMeta[]) {
+	pageCache.set(pageCacheKey(filterSlug, page), items)
+}
+
 export async function loadWritingPage(filterSlug: string, page: number): Promise<PostMeta[]> {
+	const cached = readWritingPageCache(filterSlug, page)
+	if (cached.hit) return cached.value ?? []
+
 	const suffix = `/${filterSlug}-${page}.ts`
 	for (const [key, loader] of Object.entries(pageLoaders)) {
 		if (key.endsWith(suffix)) {
 			const mod = await loader()
+			seedWritingPageCache(filterSlug, page, mod.items)
 			return mod.items
 		}
 	}
+	seedWritingPageCache(filterSlug, page, [])
 	return []
 }
 

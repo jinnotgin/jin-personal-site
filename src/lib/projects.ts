@@ -15,6 +15,8 @@ const projectManifests = import.meta.glob<{ imageManifest: ResponsiveImageManife
 	'../../.generated/imageManifest/content/projects/*.ts',
 )
 
+const projectCache = new Map<string, Project | undefined>()
+
 function findEntry<T>(
 	map: Record<string, () => Promise<T>>,
 	slug: string,
@@ -59,9 +61,28 @@ function parseImages(
 	return result.length ? result : undefined
 }
 
+export function getCachedProject(slug: string): Project | undefined {
+	return projectCache.get(slug)
+}
+
+export function readProjectCache(slug: string) {
+	return projectCache.has(slug)
+		? ({ hit: true, value: projectCache.get(slug) } as const)
+		: ({ hit: false } as const)
+}
+
+export function seedProjectCache(project: Project) {
+	projectCache.set(project.slug, project)
+}
+
 export async function getProject(slug: string): Promise<Project | undefined> {
+	if (projectCache.has(slug)) return projectCache.get(slug)
+
 	const sourceLoader = findEntry(projectSources, slug)
-	if (!sourceLoader) return undefined
+	if (!sourceLoader) {
+		projectCache.set(slug, undefined)
+		return undefined
+	}
 	const { projectSource, assets } = await sourceLoader()
 
 	const manifestLoader = findEntry(projectManifests, slug)
@@ -71,10 +92,12 @@ export async function getProject(slug: string): Promise<Project | undefined> {
 	const links = parseLinks(projectSource.rawLinks, projectSource.markdownPath, assets)
 	const images = parseImages(projectSource.rawImages, projectSource.markdownPath, assets, responsiveImages)
 
-	return {
+	const project = {
 		...projectSource.meta,
 		...(links ? { links } : {}),
 		...(images ? { images } : {}),
 		html: renderMarkdown(projectSource.body.trim(), responsiveImages),
 	}
+	projectCache.set(slug, project)
+	return project
 }

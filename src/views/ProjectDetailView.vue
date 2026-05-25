@@ -3,21 +3,25 @@ import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
+import PageSkeleton from '@/components/PageSkeleton.vue'
+import { useCachedAsyncResource } from '@/composables/useCachedAsyncResource'
 import { listProjects } from '@/lib/projectsIndex'
-import { getProject } from '@/lib/projects'
+import { getProject, readProjectCache } from '@/lib/projects'
 import { threadById } from '@/data/threads'
 import { projectSeo, projectsIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const project = await getProject(String(route.params.slug))
-useHead(computed(() => (project ? projectSeo(project) : projectsIndexSeo())))
-const thread = computed(() => (project ? threadById(project.threads[0]!) : undefined))
+const projectSlug = computed(() => String(route.params.slug))
+const { data: project, isLoading } = useCachedAsyncResource(projectSlug, readProjectCache, getProject)
+
+useHead(computed(() => (project.value ? projectSeo(project.value) : projectsIndexSeo())))
+const thread = computed(() => (project.value ? threadById(project.value.threads[0]!) : undefined))
 const siblings = computed(() =>
-	project
+	project.value
 		? listProjects().filter(
 				(p) =>
-					p.threads.some((t) => project.threads.includes(t)) &&
-					p.slug !== project.slug,
+					p.threads.some((t) => project.value!.threads.includes(t)) &&
+					p.slug !== project.value!.slug,
 			)
 		: [],
 )
@@ -25,7 +29,7 @@ const siblings = computed(() =>
 function trackExternalLinkClick(label: string, href: string) {
 	posthog.capture('project_external_link_clicked', {
 		project_slug: String(route.params.slug),
-		project_name: project?.name,
+		project_name: project.value?.name,
 		link_label: label,
 		link_href: href,
 	})
@@ -33,7 +37,9 @@ function trackExternalLinkClick(label: string, href: string) {
 </script>
 
 <template>
-	<div class="shell shell--reading" v-if="project">
+	<PageSkeleton v-if="isLoading" />
+
+	<div class="shell shell--reading" v-else-if="project">
 		<RouterLink to="/projects" class="back">← Projects</RouterLink>
 
 		<header class="head">

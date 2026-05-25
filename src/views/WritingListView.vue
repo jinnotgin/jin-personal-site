@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import posthog from 'posthog-js'
 import type { PostMeta } from '@/data/types'
+import { useCachedAsyncResource } from '@/composables/useCachedAsyncResource'
 import {
 	categories,
 	formatDate,
 	deslugifyCategory,
 	loadWritingPage,
 	pageSize,
+	readWritingPageCache,
 	slugifyCategory,
 	totalsByFilter,
 } from '@/lib/markdown'
@@ -46,22 +48,30 @@ const totalPages = computed(() =>
 // Clamp page to valid range (handles stale URLs)
 const safePage = computed(() => Math.min(currentPage.value, totalPages.value))
 
-const visible = ref<PostMeta[]>([])
-const isLoading = ref(false)
+const pageKey = computed(() => `${filterSlug.value}:${safePage.value}`)
 
-async function loadCurrentPage() {
-	isLoading.value = true
+function parsePageKey(key: string): [string, number] {
+	const [slug = 'all', page = '1'] = key.split(':')
+	return [slug, Number(page)]
+}
+
+function readPageCache(key: string) {
+	const [slug, page] = parsePageKey(key)
+	return readWritingPageCache(slug, page)
+}
+
+async function loadPage(key: string): Promise<PostMeta[]> {
+	const [slug, page] = parsePageKey(key)
 	isNavigating.value = true
 	try {
-		visible.value = await loadWritingPage(filterSlug.value, safePage.value)
+		return await loadWritingPage(slug, page)
 	} finally {
-		isLoading.value = false
 		isNavigating.value = false
 	}
 }
 
-await loadCurrentPage()
-watch([filterSlug, safePage], loadCurrentPage)
+const { data: visible, isLoading } = useCachedAsyncResource(pageKey, readPageCache, loadPage)
+const visiblePosts = computed(() => visible.value ?? [])
 
 const listTransitionKey = computed(() => `${filter.value}:${safePage.value}`)
 
@@ -130,7 +140,7 @@ watch([safePage, currentPage], ([safe, current]) => {
 				</li>
 			</ul>
 			<ul v-else :key="listTransitionKey" class="posts">
-				<li v-for="p in visible" :key="p.slug">
+						<li v-for="p in visiblePosts" :key="p.slug">
 					<RouterLink :to="`/writing/${p.slug}`" class="post">
 						<span class="post-meta">
 							<time :datetime="p.date">{{ formatDate(p.date) }}</time>
