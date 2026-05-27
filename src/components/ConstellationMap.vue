@@ -627,6 +627,7 @@ onBeforeUnmount(() => {
 
 				<div class="centre" :style="{ left: currentCX + '%', top: currentCY + '%' }" aria-hidden="true">
 					<img class="centre-avatar" src="/img/jin-portrait-square-800.jpg" alt="" loading="lazy" />
+					<span class="centre-mark"></span>
 				</div>
 
 				<div class="node-layer">
@@ -884,6 +885,9 @@ onBeforeUnmount(() => {
 	object-position: 50% 42%;
 	scale: 1.15;
 	filter: saturate(0.92) brightness(1.02) contrast(0.98);
+}
+.centre-mark {
+	display: none;
 }
 
 .node-layer {
@@ -1159,7 +1163,24 @@ onBeforeUnmount(() => {
 	}
 
 	.centre {
-		width: 4.8rem;
+		width: 1.3rem;
+		padding: 0.12rem;
+		background: var(--color-sage-deep);
+		box-shadow:
+			0 0 0 1px var(--color-hairline),
+			0 0 0 0.22rem oklch(0.968 0.013 95 / 0.78);
+	}
+
+	.centre-avatar {
+		display: none;
+	}
+
+	.centre-mark {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border-radius: inherit;
+		background: var(--color-paper);
 	}
 
 	.node {
