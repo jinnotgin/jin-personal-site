@@ -17,7 +17,8 @@ import { threadById } from '@/data/threads'
     </header>
 
     <ol class="timeline">
-      <li v-for="j in journey" :key="j.id" :id="j.id">
+      <li v-for="j in journey" :key="j.id" class="timeline-item">
+        <span :id="j.id" class="anchor"></span>
         <div class="when">
           <span class="period">{{ j.period }}</span>
         </div>
@@ -68,11 +69,18 @@ import { threadById } from '@/data/threads'
   gap: 0;
 }
 .timeline > li {
+  position: relative;
   display: grid;
   grid-template-columns: 10.75rem minmax(0, 1fr);
   gap: 2rem;
   padding: 2.25rem 0;
   border-top: 1px solid var(--color-hairline);
+}
+.anchor {
+  position: absolute;
+  top: -80px;
+  visibility: hidden;
+  pointer-events: none;
 }
 .timeline > li:last-child {
   border-bottom: 1px solid var(--color-hairline);

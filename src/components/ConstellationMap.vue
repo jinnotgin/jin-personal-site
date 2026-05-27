@@ -741,7 +741,7 @@ onBeforeUnmount(() => {
 					<p class="col-title">In the Journey</p>
 					<ul>
 						<li v-for="j in trail.journey" :key="j.id">
-							<RouterLink to="/journey" class="trail-link">{{ j.role }}</RouterLink>
+							<RouterLink :to="`/journey#${j.id}`" class="trail-link">{{ j.role }}</RouterLink>
 							<span class="trail-note">{{ j.period }} · {{ j.org }}</span>
 						</li>
 					</ul>
