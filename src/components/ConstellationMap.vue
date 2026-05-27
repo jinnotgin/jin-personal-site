@@ -55,6 +55,8 @@ const railVisible = computed(() => pastSwitcher.value && !pastTrail.value)
 const railTop = ref(0)
 const railHeight = ref(56)
 const railOverflowing = ref(false)
+const railCanScrollBack = ref(false)
+const railCanScrollForward = ref(false)
 const railEl = ref<HTMLElement | null>(null)
 
 // How many px of the switcher should still be on screen at the moment the
@@ -68,7 +70,8 @@ const RAIL_REVEAL_REMAINING = 120
 const RAIL_HIDE_OFFSET = 120
 const RAIL_TRAIL_SCROLL_DURATION_MS = 280
 const RAIL_TOP_GAP = 12
-const TRAIL_HEAD_SCROLL_GAP = 28
+const DESKTOP_TRAIL_HEAD_SCROLL_GAP = 28
+const MOBILE_TRAIL_HEAD_SCROLL_GAP = 18
 const DESKTOP_NODE_SCROLL_GAP = 12
 const DESKTOP_DETAIL_VISIBLE_LINES = 3
 
@@ -92,7 +95,34 @@ function measureRailHeight() {
 
 function measureRailOverflow() {
 	const list = railListEl.value
-	railOverflowing.value = !!list && list.scrollWidth - list.clientWidth > 1
+	if (!list) {
+		railOverflowing.value = false
+		railCanScrollBack.value = false
+		railCanScrollForward.value = false
+		return
+	}
+
+	const maxScroll = list.scrollWidth - list.clientWidth
+	railOverflowing.value = maxScroll > 1
+	railCanScrollBack.value = list.scrollLeft > 1
+	railCanScrollForward.value = list.scrollLeft < maxScroll - 1
+}
+
+function onRailScroll() {
+	measureRailOverflow()
+}
+
+function scrollRail(direction: 'back' | 'forward') {
+	const list = railListEl.value
+	if (!list) return
+
+	const distance = Math.max(list.clientWidth * 0.62, 160)
+	list.scrollBy({
+		left: direction === 'back' ? -distance : distance,
+		behavior: reduceMotion ? 'auto' : 'smooth',
+	})
+
+	window.requestAnimationFrame(measureRailOverflow)
 }
 
 function updateRailVisibilityFromLayout() {
@@ -226,11 +256,14 @@ function commitFromRail(id: ThreadId) {
 function trailHeadScrollTarget() {
 	const trailHead = trailHeadEl.value
 	if (!trailHead) return null
+	const trailHeadGap = isDesktopLayout()
+		? DESKTOP_TRAIL_HEAD_SCROLL_GAP
+		: MOBILE_TRAIL_HEAD_SCROLL_GAP
 
 	return (
 		trailHead.getBoundingClientRect().top +
 		window.scrollY -
-		(railTop.value + railHeight.value + TRAIL_HEAD_SCROLL_GAP)
+		(railTop.value + railHeight.value + trailHeadGap)
 	)
 }
 
@@ -624,7 +657,27 @@ onBeforeUnmount(() => {
 			:aria-hidden="!railVisible"
 		>
 			<div class="thread-rail-inner">
-				<div ref="railListEl" class="thread-rail-list" :class="{ overflowing: railOverflowing }">
+				<button
+					class="rail-scroll-button rail-scroll-button--back"
+					:class="{ 'is-visible': railCanScrollBack }"
+					type="button"
+					aria-label="Show previous threads"
+					:aria-hidden="!railCanScrollBack"
+					:tabindex="railVisible && railCanScrollBack ? 0 : -1"
+					@click="scrollRail('back')"
+				>
+					<span class="rail-scroll-icon" aria-hidden="true"></span>
+				</button>
+				<div
+					ref="railListEl"
+					class="thread-rail-list"
+					:class="{
+						overflowing: railOverflowing,
+						'can-scroll-back': railCanScrollBack,
+						'can-scroll-forward': railCanScrollForward,
+					}"
+					@scroll.passive="onRailScroll"
+				>
 					<button
 						v-for="t in threads"
 						:key="t.id"
@@ -638,6 +691,17 @@ onBeforeUnmount(() => {
 						{{ t.label }}
 					</button>
 				</div>
+				<button
+					class="rail-scroll-button rail-scroll-button--forward"
+					:class="{ 'is-visible': railCanScrollForward }"
+					type="button"
+					aria-label="Show more threads"
+					:aria-hidden="!railCanScrollForward"
+					:tabindex="railVisible && railCanScrollForward ? 0 : -1"
+					@click="scrollRail('forward')"
+				>
+					<span class="rail-scroll-icon" aria-hidden="true"></span>
+				</button>
 			</div>
 		</nav>
 
@@ -654,10 +718,6 @@ onBeforeUnmount(() => {
 				class="trail-head"
 				:style="{ scrollMarginTop: railTop + railHeight + 42 + 'px' }"
 			>
-				<p class="trail-cue">
-					<span class="trail-cue-mark" aria-hidden="true"></span>
-					Tracing this thread
-				</p>
 				<h3>{{ active.label }}</h3>
 				<p ref="trailBlurbEl" class="trail-blurb measure">{{ active.blurb }}</p>
 			</header>
@@ -986,32 +1046,15 @@ onBeforeUnmount(() => {
 /* ---------- trail (all sizes) ---------- */
 .trail {
 	margin-top: clamp(0.45rem, 1.5vw, 1rem);
-	padding-top: clamp(0.9rem, 2vw, 1.35rem);
+	padding-top: clamp(1.25rem, 2.8vw, 2rem);
 	position: relative;
 }
 .trail::before {
 	content: none;
 }
-.trail-cue {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	margin: 0;
-	font-size: var(--text-base);
-	font-weight: 600;
-	letter-spacing: 0;
-	color: var(--color-moss-deep);
-}
-.trail-cue-mark {
-	width: 0.95rem;
-	height: 0.95rem;
-	border: 2px solid var(--color-moss);
-	border-radius: 99px;
-	background: var(--color-moss);
-}
 .trail-head h3 {
 	font-size: var(--text-xl);
-	margin: 0.7rem 0 0;
+	margin: 0;
 }
 .trail-blurb {
 	margin: 1.1rem 0 0;
@@ -1159,6 +1202,7 @@ onBeforeUnmount(() => {
 	background: oklch(0.968 0.013 95 / 0.96);
 	border: 1px solid var(--color-hairline);
 	border-radius: 999px;
+	overflow: hidden;
 	box-shadow: 0 0 0 oklch(0.302 0.038 158 / 0);
 	opacity: 0;
 	visibility: hidden;
@@ -1185,6 +1229,7 @@ onBeforeUnmount(() => {
 		visibility 0s;
 }
 .thread-rail-inner {
+	position: relative;
 	display: flex;
 	align-items: center;
 	min-width: 0;
@@ -1206,23 +1251,113 @@ onBeforeUnmount(() => {
 	scroll-snap-type: x proximity;
 }
 .thread-rail-list.overflowing {
+	-webkit-mask-image: linear-gradient(to right, #000 0, #000 100%);
+	mask-image: linear-gradient(to right, #000 0, #000 100%);
+}
+.thread-rail-list.can-scroll-back {
+	-webkit-mask-image: linear-gradient(to right, transparent 0, transparent 1.55rem, #000 2.45rem, #000 100%);
+	mask-image: linear-gradient(to right, transparent 0, transparent 1.55rem, #000 2.45rem, #000 100%);
+}
+.thread-rail-list.can-scroll-forward {
+	-webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.45rem), transparent calc(100% - 1.55rem), transparent 100%);
+	mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.45rem), transparent calc(100% - 1.55rem), transparent 100%);
+}
+.thread-rail-list.can-scroll-back.can-scroll-forward {
 	-webkit-mask-image: linear-gradient(
 		to right,
 		transparent 0,
-		#000 1.1rem,
-		#000 calc(100% - 1.6rem),
+		transparent 1.55rem,
+		#000 2.45rem,
+		#000 calc(100% - 2.45rem),
+		transparent calc(100% - 1.55rem),
 		transparent 100%
 	);
 	mask-image: linear-gradient(
 		to right,
 		transparent 0,
-		#000 1.1rem,
-		#000 calc(100% - 1.6rem),
+		transparent 1.55rem,
+		#000 2.45rem,
+		#000 calc(100% - 2.45rem),
+		transparent calc(100% - 1.55rem),
 		transparent 100%
 	);
 }
 .thread-rail-list::-webkit-scrollbar {
 	display: none;
+}
+.rail-scroll-button {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: inline-grid;
+	place-items: center;
+	width: 2.25rem;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: var(--color-moss-deep);
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition:
+		color 0.18s var(--ease-out-quint),
+		opacity 0.18s var(--ease-out-quint),
+		transform 0.18s var(--ease-out-quint),
+		visibility 0s linear 0.18s;
+}
+.rail-scroll-button--back {
+	left: 0;
+	transform: translate(0.12rem, -50%);
+}
+.rail-scroll-button--forward {
+	right: 0;
+	transform: translate(-0.12rem, -50%);
+}
+.rail-scroll-button.is-visible {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transition:
+		color 0.18s var(--ease-out-quint),
+		opacity 0.18s var(--ease-out-quint),
+		transform 0.18s var(--ease-out-quint),
+		visibility 0s;
+}
+.rail-scroll-button--back.is-visible {
+	transform: translate(0.12rem, -50%);
+}
+.rail-scroll-button--forward.is-visible {
+	transform: translate(-0.12rem, -50%);
+}
+.rail-scroll-button.is-visible:hover {
+	color: var(--color-ink);
+	transform: translate(calc(-0.12rem + 1px), -50%);
+}
+.rail-scroll-button--back.is-visible:hover {
+	transform: translate(calc(0.12rem - 1px), -50%);
+}
+.rail-scroll-icon {
+	position: relative;
+	display: block;
+	width: 1rem;
+	height: 1rem;
+}
+.rail-scroll-icon::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0.42rem;
+	height: 0.42rem;
+	border-top: 1.5px solid currentColor;
+	border-right: 1.5px solid currentColor;
+	transform: translate(-57%, -48%) rotate(45deg);
+}
+.rail-scroll-button--back .rail-scroll-icon::before {
+	transform: translate(-43%, -48%) rotate(-135deg);
 }
 .rail-item {
 	position: relative;
@@ -1295,8 +1430,7 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* Receipts re-animate on each thread change so the cause is felt */
-/* trail-cue stays instant — title, blurb, and grid animate as one block */
+/* Receipts re-animate on each thread change so the cause is felt. */
 .trail-head h3,
 .trail-blurb {
 	animation: trail-head-in 0.68s 0.06s var(--ease-out-expo) both;
