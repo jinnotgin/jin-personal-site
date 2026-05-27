@@ -1,17 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'Hanken Grotesk', system-ui, sans-serif">
-  <rect width="1200" height="630" fill="#f4f0e2" />
-  <rect y="560" width="1200" height="70" fill="#2f3d31" />
-  <g stroke="#5b7a52" stroke-width="2" fill="none" opacity="0.5">
-    <path d="M870 250 L1010 150 M870 250 L1040 300 M870 250 L960 420 M870 250 L770 380" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'Bricolage Grotesque', 'Hanken Grotesk', system-ui, sans-serif">
+  <rect width="1200" height="630" fill="#2f3d31" />
+
+  <defs>
+    <radialGradient id="glow" cx="0.85" cy="0.2" r="0.55">
+      <stop offset="0" stop-color="#4a7351" stop-opacity="0.32" />
+      <stop offset="1" stop-color="#2f3d31" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#glow)" />
+
+  <!-- Constellation confined to upper-right (y < 320, x > 900) so text below has room -->
+  <g stroke="#a8b39a" stroke-width="1.4" fill="none" opacity="0.32">
+    <path d="M1010 175 L1135 90 M1010 175 L1160 225 M1010 175 L1080 305 M1010 175 L925 240 M1010 175 L935 95 M1135 90 L1160 225 M925 240 L1080 305" />
+  </g>
+  <g stroke="#ece8d4" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.78">
+    <path d="M1010 175 L1135 90 M1010 175 L1160 225 M1010 175 L925 240 M1010 175 L935 95 M1010 175 L1080 305" />
   </g>
   <g>
-    <circle cx="870" cy="250" r="15" fill="#3b4f3a" />
-    <circle cx="1010" cy="150" r="7" fill="#436b6f" />
-    <circle cx="1040" cy="300" r="7" fill="#436b6f" />
-    <circle cx="960" cy="420" r="7" fill="#436b6f" />
-    <circle cx="770" cy="380" r="7" fill="#a9763f" />
+    <circle cx="1010" cy="175" r="14" fill="#ece8d4" />
+    <circle cx="1135" cy="90" r="8" fill="#ece8d4" />
+    <circle cx="1160" cy="225" r="8" fill="#ece8d4" />
+    <circle cx="935" cy="95" r="8" fill="#ece8d4" />
+    <circle cx="925" cy="240" r="8" fill="#ece8d4" />
+    <!-- Warm accent: a single signal worth tracking -->
+    <circle cx="1080" cy="305" r="10" fill="#b07546" />
   </g>
-  <text x="90" y="250" font-size="128" font-weight="800" fill="#2f3d31" letter-spacing="-3">Jin</text>
-  <text x="94" y="320" font-size="34" font-weight="600" fill="#3f5240">Applied innovation · shaping digital and human systems</text>
-  <text x="94" y="372" font-size="25" font-weight="400" fill="#5d6b58" font-style="italic" font-family="'Source Serif 4', Georgia, serif">A personal systems map with evidence trails.</text>
+
+  <!-- Typography: shifted lower so the headline sits beneath the constellation -->
+  <text x="90" y="370" font-size="170" font-weight="800" fill="#ece8d4" letter-spacing="-4">Jin</text>
+
+  <text x="94" y="450" font-size="34" font-weight="600" fill="#cfd6c2" letter-spacing="-0.2"
+        font-family="'Hanken Grotesk', system-ui, sans-serif">
+    Applied innovation, shaping digital and human systems.
+  </text>
+
+  <text x="94" y="505" font-size="25" font-weight="400" fill="#a8b39a" font-style="italic"
+        font-family="'Source Serif 4', 'Iowan Old Style', Georgia, serif">
+    Where I track early signals, build tools, and figure out what they change.
+  </text>
+
+  <text x="90" y="595" font-size="20" font-weight="500" fill="#7d8b78" letter-spacing="2"
+        font-family="'Hanken Grotesk', system-ui, sans-serif">
+    ITSJIN.COM
+  </text>
 </svg>

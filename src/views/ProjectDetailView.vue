@@ -3,18 +3,22 @@ import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
-import { projects } from '@/data/workbench'
-import { getProject } from '@/lib/projects'
+import PageSkeleton from '@/components/PageSkeleton.vue'
+import { useCachedAsyncResource } from '@/composables/useCachedAsyncResource'
+import { listProjects } from '@/lib/projectsIndex'
+import { getProject, readProjectCache } from '@/lib/projects'
 import { threadById } from '@/data/threads'
 import { projectSeo, projectsIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const project = computed(() => getProject(String(route.params.slug)))
+const projectSlug = computed(() => String(route.params.slug))
+const { data: project, isLoading } = useCachedAsyncResource(projectSlug, readProjectCache, getProject)
+
 useHead(computed(() => (project.value ? projectSeo(project.value) : projectsIndexSeo())))
 const thread = computed(() => (project.value ? threadById(project.value.threads[0]!) : undefined))
 const siblings = computed(() =>
 	project.value
-		? projects.filter(
+		? listProjects().filter(
 				(p) =>
 					p.threads.some((t) => project.value!.threads.includes(t)) &&
 					p.slug !== project.value!.slug,
@@ -33,7 +37,9 @@ function trackExternalLinkClick(label: string, href: string) {
 </script>
 
 <template>
-	<div class="shell shell--reading" v-if="project">
+	<PageSkeleton v-if="isLoading" />
+
+	<div class="shell shell--reading" v-else-if="project">
 		<RouterLink to="/projects" class="back">← Projects</RouterLink>
 
 		<header class="head">
@@ -49,7 +55,7 @@ function trackExternalLinkClick(label: string, href: string) {
 		</header>
 
 		<div v-if="project.images?.length" class="project-images">
-			<figure v-for="image in project.images" :key="image.src">
+			<figure v-for="image in project.images" :key="image.src" class="content-media-frame">
 				<picture v-if="image.responsive">
 					<source
 						v-for="source in image.responsive.sources"
@@ -58,6 +64,7 @@ function trackExternalLinkClick(label: string, href: string) {
 						:srcset="source.srcset"
 					/>
 					<img
+						class="content-image"
 						:src="image.responsive.fallback"
 						:alt="image.alt"
 						:width="image.responsive.width"
@@ -67,7 +74,14 @@ function trackExternalLinkClick(label: string, href: string) {
 						sizes="(min-width: 760px) 720px, 92vw"
 					/>
 				</picture>
-				<img v-else :src="image.src" :alt="image.alt" loading="lazy" decoding="async" />
+				<img
+					v-else
+					class="content-image"
+					:src="image.src"
+					:alt="image.alt"
+					loading="lazy"
+					decoding="async"
+				/>
 			</figure>
 		</div>
 
@@ -165,10 +179,6 @@ function trackExternalLinkClick(label: string, href: string) {
 }
 .project-images figure {
 	margin: 0;
-	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
 }
 .project-images img {
 	display: block;
@@ -203,34 +213,24 @@ function trackExternalLinkClick(label: string, href: string) {
 .prose :deep(p + p) {
 	margin-top: 1em;
 }
-.prose :deep(img),
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
 	height: auto;
 	margin: 2rem 50%;
 	transform: translateX(-50%);
 }
-.prose :deep(img) {
-	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
-}
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
 }
-.prose :deep(figure img) {
+.prose :deep(.content-figure img),
+.prose :deep(.content-figure .content-picture) {
 	display: block;
 	width: 100%;
 	height: auto;
 	margin: 0;
 	transform: none;
-	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
 }
 .prose :deep(figcaption) {
 	margin-top: 0.65rem;
@@ -252,14 +252,14 @@ function trackExternalLinkClick(label: string, href: string) {
 	border-radius: var(--radius-lg);
 }
 @media (max-width: 760px) {
-	.prose :deep(img),
-	.prose :deep(figure),
+	.prose :deep(.content-figure),
 	.prose :deep(iframe) {
 		width: 100%;
 		margin: 1.5rem 0;
 		transform: none;
 	}
 }
+
 .meta {
 	margin-top: 3.5rem;
 	padding-top: 2rem;

@@ -2,9 +2,8 @@
 import { computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import posthog from 'posthog-js'
-import { projects } from '@/data/workbench'
 import { threads } from '@/data/threads'
-import { byMostRecentProject, projectsByThread } from '@/lib/projects'
+import { listProjects, byMostRecentProject, projectsByThread } from '@/lib/projectsIndex'
 import { projectsIndexSeo } from '@/lib/seo'
 
 function trackProjectClick(slug: string, name: string, status: string, thread: string) {
@@ -28,8 +27,8 @@ const groups = computed(() =>
 )
 
 const counts = computed(() => {
-	const active = projects.filter((p) => p.status === 'active').length
-	return { total: projects.length, active }
+	const all = listProjects()
+	return { total: all.length, active: all.filter((p) => p.status === 'active').length }
 })
 </script>
 

@@ -2,8 +2,8 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import posthog from 'posthog-js'
 import { threads } from '@/data/threads'
-import { byMostRecentProject, projectsByThread } from '@/lib/projects'
-import { postsByThread, slugifyCategory } from '@/lib/markdown'
+import { byMostRecentProject, projectsByThread } from '@/lib/projectsIndex'
+import { homePostsByThread, slugifyCategory } from '@/lib/homeWriting'
 import { journey } from '@/data/journey'
 import type { ThreadId } from '@/data/types'
 
@@ -365,7 +365,7 @@ const trail = computed(() => {
 	const t = active.value
 	return {
 		projects: projectsByThread(t.id).sort(byMostRecentProject),
-		writing: postsByThread(t.id),
+		writing: homePostsByThread(t.id),
 		journey: journey.filter((j) => t.journey.includes(j.id)),
 		external: t.external ?? [],
 	}

@@ -23,16 +23,13 @@ For me, a lot of this felt oddly hollow. I think I finally understand why, and i
 
 A course works by packaging someone else's understanding into a form they can hand to you. That's useful because it saves you from slowly, painfully rediscovering what someone already knows.
 
-But it only works on one condition: the subject being taught has to be timeless enough.
+But it only works when the subject is stable enough. Newton's Laws of Motion can be taught well because the answers it provides will remain true across time. The syllabus written this year is still right next year, and the examiner knows what a "correct answer" looks like.
 
-Newton's Laws of Motion can be taught well because many share the same understanding on this topic, and the answers it provide will remain true across time. The syllabus written this year is still right next year, and the examiner knows what a "correct answer" looks like. 
-
-In other words, courses are great for stable, slow-moving, well-understood things, which, until pretty recently, covered most of what a person needed to learn.
-
+In other words, courses are great for slow-moving, well-understood things, which, until pretty recently, covered most of what a person needed to learn.
 
 ## But topics like AI are evolving quickly
 
-For something like AI, this field isn't a settled subject, and the advice keeps shifting. Not long ago, the standard tip to squeeze better answers out of an AI model was to add "Let's think step by step" to your prompt, or by opening with a persona like "You are a world-class expert in...". Both were taught as essential prompting know-how, yet newer AI models these days can now reason on their own and no longer need such "techniques".
+For something like AI, the advice keeps shifting. Not long ago, people were taught to add "Let's think step by step" to a prompt, or open with a persona like "You are a world-class expert in...". Newer AI models can now reason on their own and no longer need such "techniques".
 
 Things move even faster in the space of AI tools. There's a constant churn of new ways to work: [ChatGPT](https://chatgpt.com/), then [OpenClaw](https://openclaw.ai/), then [Claude Cowork](https://www.anthropic.com/product/claude-cowork), each one quietly redefining what "knowing how to use AI" even means. A course built on tools made 3 months ago might already be half out of date before its first class even begins.
 
@@ -45,9 +42,9 @@ So after instruction has taken you as far as it can, another teacher has to take
 
 Learning from reality has a name: **play**.
 
-I know "play" sounds like a soft word for something this important. But take a few steps back, and play is just this: you try something before you fully understand it, you watch what happens, and you adjust.
+I know "play" sounds like a soft word for something this important. But play is just this: you try something before you fully understand it, you watch what happens, and you adjust.
 
-Hand a child a tablet. No one sits them down and walks them through the grid of apps, or demonstrates how swiping differs from tapping, or explains what the home button does. They just poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
+Hand a child a tablet. No one walks them through the grid of apps, or demonstrates how swiping differs from tapping. They poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
 
 And here's what makes this more than cute: the surface underneath them never stays still. Apps update, layouts change, new ones appear, old ones vanish. The thing they mastered last week might look different today. There is no settled version of the user interface to be taught, and yet the child doesn't care. They just play again. They've learned something deeper than any single interface: how to feel their way through an unfamiliar one.
 
@@ -71,45 +68,31 @@ So the exact mode a shifting subject demands is the one professional life has tr
 
 ## Play runs on agency
 
-Play has a requirement of its own, and that's where [Philip Man](https://www.linkedin.com/in/philkcman/?utm_source=luma) comes in. Also speaking at the same talk, Philip heads GovTech's newly formed Innovation Office, focused on prototyping the next generation of public services. He kept coming back to two ideas: intention and agency.
+Play has a requirement of its own, and that's where [Philip Man](https://www.linkedin.com/in/philkcman/?utm_source=luma) comes in. Also speaking at the same talk, Philip heads GovTech's newly formed Innovation Office. He kept coming back to two ideas: intention and agency.
 
-Agency, the way he frames it, is the space between intent and action. It's not just permission to act. It's the room to act early, on an unfinished idea, and to be corrected by whatever happens next. Take that room away and you don't have play anymore. You've got a lesson with extra steps, where someone has already decided what the right outcome is and you're just walking toward it.
+Agency, the way he frames it, is the space between intent and action. It's the room to act early, on an unfinished idea, and to be corrected by whatever happens next. Take that room away and you don't have play anymore. You've got a lesson with extra steps.
 
 ![Illustration of agency as the open space between intention and action](./inline-2-agency-v2.png "Agency is the space to try, notice what happens, and adjust.")
 
 So learning something genuinely new isn't really about finding the right course. It's about whether you have the agency to play your way into it.
 
-I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I'd misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction, but the permission I gave myself for the early attempts to be bad.
+I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction, but the permission I gave myself for the early attempts to be bad.
 
 
 ## The same word, aimed at machines
 
-Here's a strange echo. Agency is also the word the AI industry has landed on for its most capable systems. An [agentic AI system](https://www.ibm.com/think/topics/agentic-ai) is software given room to act toward a goal, to take steps and make choices instead of waiting for instruction at every turn.
+Here's a strange echo. Agency is also the word the AI industry has landed on for its most capable systems. An [agentic AI system](https://www.ibm.com/think/topics/agentic-ai) is software given room to act toward a goal instead of waiting for instruction at every turn.
 
-And a lot of the careful work happening right now is to "contain" that agency. [Spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), for example, asks you to define the inputs, outputs, constraints, and edge cases up front, so the model builds against something close to a finished blueprint. One effect of that is to shrink the model's room to wander. Less agency, fewer surprises.
+And a lot of the careful work happening right now is to contain that agency. [Spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), for example, defines the inputs, outputs, constraints, and edge cases up front, shrinking the model's room to wander. Less agency, fewer surprises. For an AI system running in production, that trade-off is often sensible.
 
-We do this for good reasons. The more room a system has to act, the more room it has to be wrong and "hallucinate", and someone has to answer for what it did. Containing agency buys us safety and accountability. For an AI system running in production, that trade-off is often a sensible one.
-
-I just want to point out that we use the same word for our people. And we tend to treat it the same way.
-
-
-## Developing people, or containing them?
-
-
-Look again at what "development" usually means for adults at work: a defined curriculum, an approved course, a certificate at the end. From Coursera to corporate learning vendors to national upskilling programmes, the whole training industry shares one assumption: that the thing worth learning can be packaged into a syllabus with a measurable outcome.
-
-Like spec-driven development, this is reassuring precisely because it's legible, plannable, and accountable. You can point at the syllabus and say, *look, this is what we're doing for them*.
-
-Again, that's fine when the learning subject is well understood. But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, but the play is where the real judgment forms. Yet everyone keeps reaching for the contained path and is puzzled when the training doesn't stick.
-
-True learning and development, for a world that keeps moving, would mean widening agency instead of narrowing it. Giving people real problems, real stakes, and real permission to be wrong. Letting reality do some of the teaching. The difficult part is that play resists the logic of the adult world: it is hard to budget for, hard to manage, and hard to justify before anyone knows what it will reveal.
+Look again at what "development" usually means for adults at work: a defined curriculum, an approved course, a certificate at the end. Like spec-driven development, this is reassuring because it is legible, plannable, and accountable. You can point at the syllabus and say, *look, this is what we're doing for them*. But the same containment that reduces surprise also removes the space where people learn to notice, try, misread, recover, and form judgment of their own.
 
 
 ## The space that isn't there yet
 
-With our AI systems, we've decided, sensibly, to contain agency for the sake of safety and accountability. With people, we haven't quite made the same deliberate choice.
+Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. It left little room for play, because the subjects it was built for never demanded it.
 
-Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. The system left little room for play, because the subjects it was built for never demanded it.
+But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, and the play is where the real judgment forms.
 
 ![Illustration of institutional learning frames with an empty space for play](./inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 

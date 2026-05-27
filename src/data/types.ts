@@ -64,6 +64,29 @@ export interface PostMeta {
 export interface Post extends PostMeta {
   html: string
   readingMinutes: number
+  prev?: WritingPostNeighbor
+  next?: WritingPostNeighbor
+}
+
+export interface WritingPostNeighbor {
+  slug: string
+  title: string
+}
+
+export interface WritingPostSource {
+  meta: PostMeta
+  body: string
+  markdownPath: string
+  prev?: WritingPostNeighbor
+  next?: WritingPostNeighbor
+}
+
+export interface ProjectSource {
+  meta: ProjectMeta
+  body: string
+  markdownPath: string
+  rawLinks: string[]
+  rawImages: string[]
 }
 
 export interface JourneyEntry {

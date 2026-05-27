@@ -3,13 +3,13 @@ import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useHead } from '@unhead/vue'
 import posthog from 'posthog-js'
 import ConstellationMap from '@/components/ConstellationMap.vue'
-import { listPosts, formatDate } from '@/lib/markdown'
-import { listProjects, byMostRecentProject } from '@/lib/projects'
+import { homeLatestPosts, formatDate } from '@/lib/homeWriting'
+import { listProjects, byMostRecentProject } from '@/lib/projectsIndex'
 import { siteSeo } from '@/lib/seo'
 
 useHead(siteSeo())
 
-const latest = listPosts().slice(0, 3)
+const latest = homeLatestPosts
 
 /**
  * Currently-building pointer. Set BUILDING to:

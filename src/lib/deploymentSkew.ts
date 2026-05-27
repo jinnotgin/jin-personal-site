@@ -10,6 +10,7 @@ type StorageLike = Pick<Storage, 'getItem' | 'removeItem' | 'setItem'>
 interface ChunkLoadRecoveryOptions {
 	assign: (path: string) => void
 	sessionStorage: StorageLike
+	onBeforeAssign?: () => void
 }
 
 interface FailedRoute {
@@ -21,11 +22,12 @@ function isChunkLoadError(error: unknown) {
 	return CHUNK_LOAD_ERROR_PATTERNS.some((pattern) => error.message.includes(pattern))
 }
 
-export function createChunkLoadRecovery({ assign, sessionStorage }: ChunkLoadRecoveryOptions) {
+export function createChunkLoadRecovery({ assign, sessionStorage, onBeforeAssign }: ChunkLoadRecoveryOptions) {
 	function freshNavigate(path: string) {
 		if (sessionStorage.getItem(REFRESH_ATTEMPT_KEY)) return
 
 		sessionStorage.setItem(REFRESH_ATTEMPT_KEY, 'true')
+		onBeforeAssign?.()
 		assign(path)
 	}
 

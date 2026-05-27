@@ -1,32 +1,38 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import posthog from 'posthog-js'
-import { getPost, listPosts, formatDate } from '@/lib/markdown'
+import PageSkeleton from '@/components/PageSkeleton.vue'
+import { useCachedAsyncResource } from '@/composables/useCachedAsyncResource'
+import { formatDate } from '@/lib/markdown'
+import { getPost, readPostCache } from '@/lib/postMarkdown'
 import { postSeo, writingIndexSeo } from '@/lib/seo'
 
 const route = useRoute()
-const all = listPosts()
-const post = computed(() => getPost(String(route.params.slug)))
+const postSlug = computed(() => String(route.params.slug))
+const { data: post, isLoading } = useCachedAsyncResource(postSlug, readPostCache, getPost)
+
 useHead(computed(() => (post.value ? postSeo(post.value) : writingIndexSeo())))
 
-const idx = computed(() => all.findIndex((p) => p.slug === route.params.slug))
-const prev = computed(() => (idx.value > 0 ? all[idx.value - 1] : null))
-const next = computed(() =>
-	idx.value >= 0 && idx.value < all.length - 1 ? all[idx.value + 1] : null,
-)
+const prev = computed(() => post.value?.prev ?? null)
+const next = computed(() => post.value?.next ?? null)
 
-onMounted(() => {
-	if (post.value) {
-		posthog.capture('post_viewed', {
-			post_slug: post.value.slug,
-			post_title: post.value.title,
-			post_category: post.value.category,
-			reading_minutes: post.value.readingMinutes,
-		})
-	}
-})
+if (typeof window !== 'undefined') {
+	watch(
+		post,
+		(p) => {
+			if (!p) return
+			posthog.capture('post_viewed', {
+				post_slug: p.slug,
+				post_title: p.title,
+				post_category: p.category,
+				reading_minutes: p.readingMinutes,
+			})
+		},
+		{ immediate: true },
+	)
+}
 
 function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targetTitle: string) {
 	posthog.capture('post_pager_navigated', {
@@ -39,7 +45,9 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 </script>
 
 <template>
-	<article class="shell shell--reading post" v-if="post">
+	<PageSkeleton v-if="isLoading" />
+
+	<article class="shell shell--reading post" v-else-if="post">
 		<RouterLink to="/writing" class="back">← Writing</RouterLink>
 
 		<header class="head">
@@ -64,22 +72,22 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 
 			<nav class="pager" aria-label="More writing">
 				<RouterLink
-					v-if="prev"
-					:to="`/writing/${prev.slug}`"
-					class="pager-link"
-					@click="trackPagerClick('newer', prev.slug, prev.title)"
-				>
-					<span class="pager-dir">Newer</span>
-					<span class="pager-title">{{ prev.title }}</span>
-				</RouterLink>
-				<RouterLink
 					v-if="next"
 					:to="`/writing/${next.slug}`"
-					class="pager-link next"
+					class="pager-link older"
 					@click="trackPagerClick('older', next.slug, next.title)"
 				>
 					<span class="pager-dir">Older</span>
 					<span class="pager-title">{{ next.title }}</span>
+				</RouterLink>
+				<RouterLink
+					v-if="prev"
+					:to="`/writing/${prev.slug}`"
+					class="pager-link newer"
+					@click="trackPagerClick('newer', prev.slug, prev.title)"
+				>
+					<span class="pager-dir">Newer</span>
+					<span class="pager-title">{{ prev.title }}</span>
 				</RouterLink>
 			</nav>
 		</footer>
@@ -158,8 +166,9 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	text-decoration: none;
 	color: var(--color-ink);
 }
-.pager-link.next {
+.pager-link.newer {
 	text-align: right;
+	grid-column: 2;
 }
 .pager-dir {
 	font-size: var(--text-xs);
@@ -178,39 +187,30 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 	.pager {
 		grid-template-columns: 1fr;
 	}
-	.pager-link.next {
+	.pager-link.newer {
+		grid-column: auto;
 		text-align: left;
 	}
 }
 
-.prose :deep(img),
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
 	height: auto;
 	margin: 2rem 50%;
 	transform: translateX(-50%);
 }
-.prose :deep(img) {
-	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
-}
-.prose :deep(figure) {
+.prose :deep(.content-figure) {
 	margin-top: 2.5rem;
 	margin-bottom: 2.5rem;
 }
-.prose :deep(figure img) {
+.prose :deep(.content-figure img),
+.prose :deep(.content-figure .content-picture) {
 	display: block;
 	width: 100%;
 	height: auto;
 	margin: 0;
 	transform: none;
-	border: 1px solid var(--color-hairline);
-	background: var(--color-paper-raised);
-	border-radius: var(--radius-lg);
-	overflow: hidden;
 }
 .prose :deep(figcaption) {
 	margin-top: 0.65rem;
@@ -222,8 +222,43 @@ function trackPagerClick(direction: 'newer' | 'older', targetSlug: string, targe
 }
 
 @media (max-width: 760px) {
-	.prose :deep(img),
-	.prose :deep(figure) {
+	.prose :deep(.content-figure) {
+		width: 100%;
+		margin: 1.5rem 0;
+		transform: none;
+	}
+}
+
+.prose :deep(.cols) {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	width: min(68rem, calc(100vw - 4rem));
+	margin: 2rem 50%;
+	transform: translateX(-50%);
+	align-items: start;
+}
+.prose :deep(.cols > p) {
+	display: contents;
+}
+.prose :deep(.cols > p:empty) {
+	display: none;
+}
+.prose :deep(.cols img),
+.prose :deep(.cols .content-picture),
+.prose :deep(.cols .content-figure) {
+	width: 100%;
+	margin: 0;
+	transform: none;
+}
+.prose :deep(.cols .content-figure img),
+.prose :deep(.cols .content-figure .content-picture) {
+	width: 100%;
+}
+@media (max-width: 760px) {
+	.prose :deep(.cols) {
+		grid-template-columns: 1fr;
+		gap: 1rem;
 		width: 100%;
 		margin: 1.5rem 0;
 		transform: none;

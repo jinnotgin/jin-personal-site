@@ -43,13 +43,13 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/projects',
 		name: 'projects',
-		component: () => import('@/views/ProjectsView.vue'),
+		component: () => import('@/views/ProjectListView.vue'),
 		meta: { title: 'Projects - Jin' },
 	},
 	{
 		path: '/projects/:slug',
 		name: 'project',
-		component: () => import('@/views/ProjectView.vue'),
+		component: () => import('@/views/ProjectDetailView.vue'),
 		meta: { title: 'Projects - Jin' },
 	},
 	{
@@ -71,13 +71,13 @@ export const routes: RouteRecordRaw[] = [
 	{
 		path: '/writing',
 		name: 'writing',
-		component: () => import('@/views/WritingView.vue'),
+		component: () => import('@/views/WritingListView.vue'),
 		meta: { title: 'Writing - Jin' },
 	},
 	{
 		path: '/writing/:slug',
 		name: 'post',
-		component: () => import('@/views/PostView.vue'),
+		component: () => import('@/views/WritingDetailView.vue'),
 		meta: { title: 'Writing - Jin' },
 	},
 	{
