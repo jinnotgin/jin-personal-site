@@ -54,10 +54,14 @@ const pastTrail = ref(false)
 const railVisible = computed(() => pastSwitcher.value && !pastTrail.value)
 const railTop = ref(0)
 const railHeight = ref(56)
+const railBlockerActive = ref(false)
 const railOverflowing = ref(false)
 const railCanScrollBack = ref(false)
 const railCanScrollForward = ref(false)
 const railEl = ref<HTMLElement | null>(null)
+const railBlockerTop = computed(() => Math.max(0, railTop.value - RAIL_TOP_GAP))
+const railBlockerHeight = computed(() => Math.max(0, railTop.value - railBlockerTop.value))
+const railBlockerVisible = computed(() => railVisible.value && railBlockerActive.value)
 
 // How many px of the switcher should still be on screen at the moment the
 // rail appears, i.e. the rail kicks in once (switcherHeight - REMAINING) has
@@ -70,8 +74,7 @@ const RAIL_REVEAL_REMAINING = 120
 const RAIL_HIDE_OFFSET = 120
 const RAIL_TRAIL_SCROLL_DURATION_MS = 280
 const RAIL_TOP_GAP = 12
-const DESKTOP_TRAIL_HEAD_SCROLL_GAP = 28
-const MOBILE_TRAIL_HEAD_SCROLL_GAP = 18
+const TRAIL_HEAD_SCROLL_GAP = 28
 const DESKTOP_NODE_SCROLL_GAP = 12
 const DESKTOP_DETAIL_VISIBLE_LINES = 3
 
@@ -131,6 +134,14 @@ function updateRailVisibilityFromLayout() {
 	const mapStartTop = mapStartEl.value?.getBoundingClientRect().top
 	if (mapStartTop !== undefined) {
 		pastSwitcher.value = mapStartTop < revealLine
+	}
+
+	const switcherRect = switcherEl.value?.getBoundingClientRect()
+	if (switcherRect) {
+		const blockerTop = railBlockerTop.value
+		const blockerBottom = railBlockerTop.value + railBlockerHeight.value
+		railBlockerActive.value =
+			switcherRect.top < blockerBottom && switcherRect.bottom > blockerTop
 	}
 
 	const hideLine = railTop.value + RAIL_HIDE_OFFSET
@@ -256,14 +267,11 @@ function commitFromRail(id: ThreadId) {
 function trailHeadScrollTarget() {
 	const trailHead = trailHeadEl.value
 	if (!trailHead) return null
-	const trailHeadGap = isDesktopLayout()
-		? DESKTOP_TRAIL_HEAD_SCROLL_GAP
-		: MOBILE_TRAIL_HEAD_SCROLL_GAP
 
 	return (
 		trailHead.getBoundingClientRect().top +
 		window.scrollY -
-		(railTop.value + railHeight.value + trailHeadGap)
+		(railTop.value + railHeight.value + TRAIL_HEAD_SCROLL_GAP)
 	)
 }
 
@@ -648,6 +656,12 @@ onBeforeUnmount(() => {
 		</div>
 
 		<!-- Sticky rail: takes over once the switcher above is out of view -->
+		<span
+			class="rail-paper-blocker"
+			:class="{ 'is-visible': railBlockerVisible }"
+			:style="{ top: railBlockerTop + 'px', height: railBlockerHeight + 'px' }"
+			aria-hidden="true"
+		></span>
 		<nav
 			ref="railEl"
 			class="thread-rail"
@@ -1130,10 +1144,6 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 879px) {
-	.trail {
-		padding-top: clamp(2.25rem, 7vw, 3rem);
-	}
-
 	.trail-list-footer {
 		justify-content: flex-end;
 	}
@@ -1192,6 +1202,28 @@ onBeforeUnmount(() => {
 }
 
 /* ---------- sticky thread rail ---------- */
+.rail-paper-blocker {
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 29;
+	pointer-events: none;
+	background-color: var(--color-paper);
+	background-image: radial-gradient(oklch(0.302 0.038 158 / 0.0125) 1px, transparent 1px);
+	background-size: 4px 4px;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity 0.18s var(--ease-out-quint),
+		visibility 0s linear 0.18s;
+}
+.rail-paper-blocker.is-visible {
+	opacity: 1;
+	visibility: visible;
+	transition:
+		opacity 0.18s var(--ease-out-quint),
+		visibility 0s;
+}
 .thread-rail {
 	position: fixed;
 	left: 50%;
