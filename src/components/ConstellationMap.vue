@@ -67,6 +67,7 @@ const RAIL_REVEAL_REMAINING = 120
 // vanishes earlier (further from the writing section).
 const RAIL_HIDE_OFFSET = 120
 const RAIL_TRAIL_SCROLL_DURATION_MS = 280
+const RAIL_TOP_GAP = 12
 const TRAIL_HEAD_SCROLL_GAP = 28
 const DESKTOP_NODE_SCROLL_GAP = 12
 const DESKTOP_DETAIL_VISIBLE_LINES = 3
@@ -80,7 +81,8 @@ let scrollFrame = 0
 
 function measureRailTop() {
 	const header = document.querySelector<HTMLElement>('.site-header')
-	railTop.value = header ? Math.round(header.getBoundingClientRect().height) : 0
+	const headerHeight = header ? Math.round(header.getBoundingClientRect().height) : 0
+	railTop.value = headerHeight + RAIL_TOP_GAP
 }
 
 function measureRailHeight() {
@@ -622,7 +624,6 @@ onBeforeUnmount(() => {
 			:aria-hidden="!railVisible"
 		>
 			<div class="thread-rail-inner">
-				<span class="thread-rail-eyebrow" aria-hidden="true">Threads</span>
 				<div ref="railListEl" class="thread-rail-list" :class="{ overflowing: railOverflowing }">
 					<button
 						v-for="t in threads"
@@ -1150,17 +1151,18 @@ onBeforeUnmount(() => {
 /* ---------- sticky thread rail ---------- */
 .thread-rail {
 	position: fixed;
-	left: 0;
-	right: 0;
+	left: 50%;
+	width: max-content;
+	max-width: min(calc(100% - clamp(1rem, 6vw, 4rem)), 68rem);
 	z-index: 30;
-	/* A — lifted surface: same paper as the header, with the Lift Shadow
-	   doing all the figure-ground work so there is no sage tint band. */
-	background: var(--color-paper);
-	border-bottom: 1px solid var(--color-hairline);
+	/* Lifted pill: it stays close to the header but reads as its own control. */
+	background: oklch(0.968 0.013 95 / 0.96);
+	border: 1px solid var(--color-hairline);
+	border-radius: 999px;
 	box-shadow: 0 0 0 oklch(0.302 0.038 158 / 0);
 	opacity: 0;
 	visibility: hidden;
-	transform: translateY(-100%);
+	transform: translate(-50%, -0.7rem);
 	transition:
 		transform 0.42s var(--ease-out-quint),
 		opacity 0.32s var(--ease-out-quint),
@@ -1170,12 +1172,12 @@ onBeforeUnmount(() => {
 .thread-rail.is-visible {
 	opacity: 1;
 	visibility: visible;
-	transform: translateY(0);
+	transform: translate(-50%, 0);
 	/* Sanctioned Lift Shadow, present only while the rail is live, so the
 	   reveal lands as a control arriving over the content. */
 	box-shadow:
 		0 1px 2px oklch(0.302 0.038 158 / 0.05),
-		0 10px 28px oklch(0.302 0.038 158 / 0.08);
+		0 10px 30px oklch(0.302 0.038 158 / 0.1);
 	transition:
 		transform 0.42s var(--ease-out-quint),
 		opacity 0.32s var(--ease-out-quint),
@@ -1183,49 +1185,21 @@ onBeforeUnmount(() => {
 		visibility 0s;
 }
 .thread-rail-inner {
-	max-width: 78rem;
-	margin: 0 auto;
 	display: flex;
 	align-items: center;
-	gap: clamp(0.6rem, 2vw, 1.4rem);
-	padding: 0.7rem clamp(1.25rem, 4vw, 3.5rem);
+	min-width: 0;
+	max-width: 100%;
+	padding: 0.36rem clamp(0.72rem, 1.35vw, 1rem);
 }
 @media (max-width: 520px) {
 	.thread-rail-inner {
-		gap: 0.6rem;
-		padding: 0.6rem 0.75rem 0.6rem 1rem;
-	}
-}
-.thread-rail-eyebrow {
-	flex: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	font-size: var(--text-base);
-	font-weight: 700;
-	letter-spacing: 0;
-	/* The word that explains the whole control should not be the faintest
-	   thing in it. Promoted one ink step, divider dropped for breathing room. */
-	color: var(--color-ink-soft);
-	padding-right: clamp(0.4rem, 1.5vw, 0.9rem);
-}
-/* Small moss tick: ties the rail's identity to the moss trail-cue below. */
-.thread-rail-eyebrow::before {
-	content: '';
-	width: 0.55rem;
-	height: 0.55rem;
-	border-radius: 99px;
-	background: var(--color-moss);
-	flex: none;
-}
-@media (max-width: 520px) {
-	.thread-rail-eyebrow {
-		display: none;
+		padding: 0.32rem 0.6rem;
 	}
 }
 .thread-rail-list {
+	min-width: 0;
 	display: flex;
-	gap: clamp(0.6rem, 2vw, 1.4rem);
+	gap: clamp(0.34rem, 0.9vw, 0.78rem);
 	overflow-x: auto;
 	scrollbar-width: none;
 	-webkit-overflow-scrolling: touch;
@@ -1255,12 +1229,12 @@ onBeforeUnmount(() => {
 	flex: none;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	min-height: 44px;
-	padding: 0.4rem 0.7rem;
+	gap: 0.44rem;
+	min-height: 38px;
+	padding: 0.28rem 0.62rem;
 	background: none;
 	border: 0;
-	border-radius: var(--radius-md);
+	border-radius: 999px;
 	cursor: pointer;
 	font: inherit;
 	font-size: var(--text-sm);
@@ -1269,50 +1243,35 @@ onBeforeUnmount(() => {
 	color: var(--color-ink-soft);
 	transition:
 		color 0.18s var(--ease-out-quint),
-		background 0.18s var(--ease-out-quint);
+		background 0.18s var(--ease-out-quint),
+		box-shadow 0.18s var(--ease-out-quint);
 	scroll-snap-align: start;
 }
-/* Quiet rest affordance: a tappable region, not a caption. */
 .rail-item:hover {
 	color: var(--color-ink);
-	background: oklch(0.922 0.022 135 / 0.55);
+	background: transparent;
+	box-shadow: inset 0 0 0 1px oklch(0.852 0.02 132 / 0.85);
 }
-/* B — connective tab indicator: a full-width moss underline pins the rail
-   to the thread being traced, echoing the moss trail-cue below it. */
-.rail-item::after {
-	content: '';
-	position: absolute;
-	left: 0.7rem;
-	right: 0.7rem;
-	bottom: 0;
-	height: 2px;
-	border-radius: 2px;
+.rail-item:hover .rail-dot {
 	background: var(--color-moss);
-	transform: scaleX(0);
-	transform-origin: left center;
-	opacity: 0;
-	transition:
-		transform 0.32s var(--ease-out-quint),
-		opacity 0.2s var(--ease-out-quint);
+	border-color: var(--color-moss);
+	transform: scale(1.08);
 }
 .rail-dot {
-	width: 8px;
-	height: 8px;
+	width: 7px;
+	height: 7px;
 	border-radius: 99px;
 	border: 1.5px solid var(--color-sage-deep);
 	transition:
-		background 0.22s var(--ease-out-quint),
-		border-color 0.22s var(--ease-out-quint),
-		transform 0.22s var(--ease-out-quint),
-		box-shadow 0.22s var(--ease-out-quint);
+		background 0.18s var(--ease-out-quint),
+		border-color 0.18s var(--ease-out-quint),
+		transform 0.18s var(--ease-out-quint),
+		box-shadow 0.18s var(--ease-out-quint);
 }
 .rail-item.active {
+	background: oklch(0.922 0.022 135 / 0.42);
 	color: var(--color-moss-deep);
 	font-weight: 700;
-}
-.rail-item.active::after {
-	transform: scaleX(1);
-	opacity: 1;
 }
 /* C — carry the map's dot vocabulary: pre-selected default is an outlined
    moss dot, matching the constellation's hollow node ("shown, not chosen"). */
@@ -1332,7 +1291,7 @@ onBeforeUnmount(() => {
 	.thread-rail,
 	.thread-rail.is-visible {
 		transition: visibility 0s;
-		transform: none;
+		transform: translate(-50%, 0);
 	}
 }
 
