@@ -1131,7 +1131,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 879px) {
 	.trail {
-		padding-top: clamp(1.5rem, 4vw, 2rem);
+		padding-top: clamp(2.25rem, 7vw, 3rem);
 	}
 
 	.trail-list-footer {
