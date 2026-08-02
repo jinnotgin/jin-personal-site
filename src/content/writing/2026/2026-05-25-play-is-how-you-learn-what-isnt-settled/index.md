@@ -44,7 +44,7 @@ Learning from reality has a name: **play**.
 
 I know "play" sounds like a soft word for something this important. But play is just this: you try something before you fully understand it, you watch what happens, and you adjust.
 
-Hand a child a tablet. No one walks them through the grid of apps, or demonstrates how swiping differs from tapping. They poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
+Hand a child a tablet. No one walks them through the grid of apps or demonstrates how swiping differs from tapping. They poke at icons, watch what opens, drag things sideways, accidentally open the camera, close it, find it again. Within an hour they're navigating the device better than some adults.
 
 And here's what makes this more than cute: the surface underneath them never stays still. Apps update, layouts change, new ones appear, old ones vanish. The thing they mastered last week might look different today. There is no settled version of the user interface to be taught, and yet the child doesn't care. They just play again. They've learned something deeper than any single interface: how to feel their way through an unfamiliar one.
 
@@ -59,9 +59,9 @@ This was roughly the thread [Olof Schybergson](https://www.linkedin.com/in/olofs
 
 There's an obvious objection here, and it's the gut feeling that play is something we file under "childish behaviour". Adults are supposed to have grown out of it.
 
-Look at how we act at work. We show up as "professionals". We execute tasks, follow processes, move tickets across a board, report against KPIs. All of that is lesson mode in office clothes: a known outcome, a defined path, a clear definition of done. There's no place on a performance review for "spent three weeks playing with a new tool, shipped nothing, but now actually understands it". And when play does sneak into adult work, we quietly rename it into something that sounds more responsible. We call it research, or exploration, or a pilot.
+Look at how we act at work. We show up as "professionals". We execute tasks, follow processes, move tickets across a board, report against KPIs. All of that is lesson mode in office clothes: a known outcome, a defined path, a clear definition of done. There's no place in a performance review for "spent three weeks playing with a new tool, shipped nothing, but now actually understands it". And when play does sneak into adult work, we quietly rename it into something that sounds more responsible. We call it research, or exploration, or a pilot.
 
-To be fair, some workplaces already invest in this. Hackathons and innovation sprints are proof that play works, and the people who join them come away sharper and more willing to experiment. But the people who show up tend to be the ones already comfortable with uncertainty. The people who most need to play are often the ones the format never reaches.
+To be fair, some workplaces already invest in this. Hackathons and innovation sprints are proof that play works, and the people who join them come away sharper and more willing to experiment. But the people who show up tend to be the ones already comfortable with uncertainty. The people who need to play most are often the ones the format never reaches.
 
 So the exact mode a shifting subject demands is the one professional life has trained us to suppress. We didn't lose the ability to play. We were taught, gently and constantly, that it isn't what serious people do.
 
@@ -76,12 +76,12 @@ Agency, the way he frames it, is the space between intent and action. It's the r
 
 So learning something genuinely new isn't really about finding the right course. It's about whether you have the agency to play your way into it.
 
-I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction, but the permission I gave myself for the early attempts to be bad.
+I see this in my own work. I didn't learn to build software with AI from a course. I learned it by building small tools for myself, shipping things that were a bit broken, and letting each one show me what I misunderstood. No syllabus could have given me that, because the subject kept moving while I was learning it. What made it work wasn't instruction but the permission I gave myself for the early attempts to be bad.
 
 
 ## The same word, aimed at machines
 
-Here's a strange echo. Agency is also the word the AI industry has landed on for its most capable systems. An [agentic AI system](https://www.ibm.com/think/topics/agentic-ai) is software given room to act toward a goal instead of waiting for instruction at every turn.
+Here's a strange echo. Agency is also the word the AI industry has landed on for its most capable systems. An [agentic AI system](https://www.ibm.com/think/topics/agentic-ai) is software that is given room to act toward a goal instead of waiting for instruction at every turn.
 
 And a lot of the careful work happening right now is to contain that agency. [Spec-driven development](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), for example, defines the inputs, outputs, constraints, and edge cases up front, shrinking the model's room to wander. Less agency, fewer surprises. For an AI system running in production, that trade-off is often sensible.
 
@@ -92,10 +92,10 @@ Look again at what "development" usually means for adults at work: a defined cur
 
 Our entire learning setup (courses, certificates, KPIs, credits) was designed for a world where the thing worth learning could be packaged into a syllabus. It left little room for play, because the subjects it was built for never demanded it.
 
-But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play, and the play is where the real judgment forms.
+But when we ask people to figure out something genuinely shifting, training courses are not enough on their own. Such subjects need lessons and play; the play is where the real judgment forms.
 
 ![Illustration of institutional learning frames with an empty space for play](./inline-3-missing-space.png "The harder question is not which course to choose. It is what space we have to build for play.")
 
 A course can only carry you as far as someone has already mapped. Past that line, the work is no longer to deliver the right lesson. It is to design the conditions where playful learning can actually happen.
 
-We already know how to do this for machines. Every digital system gets a sandbox, a staging environment, a place where it can fail without consequence. We would never skip that step for software. But for people learning something new, we skip it all the time. We hand them a course and expect them to come back production-ready. The work ahead is giving people what we already give our software: somewhere safe to fail.
+We already know how to do this for machines. Every digital system gets a sandbox, a staging environment, a place where it can fail without consequence. We would never skip that step for software. But for people learning something new, we skip it all the time. We send them to a course and expect them to come back production-ready. The work ahead is giving people what we already give our software: somewhere safe to fail.
