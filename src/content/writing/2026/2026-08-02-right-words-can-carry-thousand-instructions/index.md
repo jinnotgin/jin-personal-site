@@ -26,7 +26,7 @@ For the second attempt, I added one short phrase:
 
 The difference was immediate.
 
-![Comparison of a general AI writing prompt and one referencing ASD-STE100](./response-comparison.png "The task stayed the same. One short reference changed the voice of the entire response.")
+![Comparison of a general AI writing prompt and one referencing ASD-STE100](./response-comparison.png "One short reference changed the voice of the entire response.")
 
 The grand opening and wide sweep across society disappeared.
 
@@ -38,7 +38,7 @@ Instead, the response used short, direct statements:
 
 > AI technology continues to develop quickly.
 
-Same model. Same task. One additional reference. A completely different voice.
+Same model, same task, but a completely different voice.
 
 
 ## The instruction hidden inside one term
