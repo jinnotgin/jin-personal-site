@@ -2,7 +2,7 @@
 slug: right-words-can-carry-thousand-instructions
 title: The right words can carry a thousand instructions
 date: 2026-08-02
-excerpt: A short reference can sometimes steer an AI better than pages of instructions. The difficult part is knowing which words carry the context you need.
+excerpt: A short reference can sometimes steer an AI better than pages of instructions.
 tags: [ai, prompting, communication, context-engineering, applied-ai, signals]
 status: published
 category: AI in practice
