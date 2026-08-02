@@ -66,9 +66,10 @@ Consider something much more ordinary: asking AI to edit an email.
 
 Without a clear boundary, the AI might rewrite the whole message. The grammar improves, but your phrasing disappears. A quick correction comes back sounding like a corporate announcement written by someone else.
 
-A few examples of trigger words:
+Ask it to make `Atomic Edits`, and those two words carry a useful constraint: make small, self-contained changes only where necessary. Preserve everything unrelated, including the writer's structure and voice.
 
-- `Atomic Edits` asks for small, self-contained changes only where necessary. It preserves everything unrelated, including the writer's structure and voice.
+Here are some other examples of trigger words:
+
 - `BLUF` asks a writer to put the conclusion first.
 - `WCAG 2.2 AA` gives a designer a clearer accessibility target than "make this accessible".
 - `Given–When–Then` tells a software team how to structure an acceptance test.
@@ -91,20 +92,18 @@ As I [wrote previously](/writing/why-ai-features-need-proving-before-ship-demos-
 
 Leave the prompt broad, and those defaults take over.
 
-That is where many "AI mannerisms" come from: the balanced introduction, the symmetrical bullet points, and the grand conclusion about navigating an evolving landscape. Words like "delve", "realm", and "underscore". When these defaults are reproduced without much judgment or originality, people call the result **AI slop**.
+That is where many "AI mannerisms" come from: the balanced introduction, the symmetrical bullet points, and the grand conclusion about navigating an evolving landscape. Words like "delve", "load-bearing", and "blast radius". When these defaults are reproduced without much judgment or originality, people call the result **AI slop**.
 
-I increasingly hear these patterns outside AI-generated writing too. More than once, I have caught the familiar "it is not just X; it is Y" construction in a work discussion, presentation, or YouTube video and wondered whether I was hearing the speaker's phrasing or an AI-assisted script.
+I increasingly hear these patterns outside AI-generated writing too. More than once, I have caught the familiar "it's not just X; it's Y" construction in a work discussion, presentation, or YouTube video and wondered whether I was hearing the speaker's phrasing or an AI-assisted script.
 
 [Research analysing hundreds of thousands of academic talks](https://arxiv.org/abs/2409.01754) found that words strongly associated with ChatGPT became more common in spoken language after its release.
 
 Whether people are absorbing the mannerisms or simply reading AI-assisted scripts aloud, the effect is similar: human communication begins converging towards the model's defaults.
 
-The more we let AI decide how an idea should sound, the more everything starts sounding like the same idea.
-
 
 ## Finding the right words requires knowledge
 
-You can only prompt with `ASD-STE100` if you know ASD-STE100 exists. You can only ask for `Atomic Edits` if you recognise that uncontrolled rewriting is the problem.
+You can only prompt with `ASD-STE100` if you know ASD-STE100 exists. You can only ask for `Atomic Edits` if you are familiar with this concept in the first place.
 
 Prompt writing therefore survives as models improve. The work is shifting away from incantations like "You are a world-class expert" and towards something more fundamental: knowing enough about the domain to name what you want precisely.
 
