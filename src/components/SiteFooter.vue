@@ -8,9 +8,9 @@ const year = new Date().getFullYear()
 		<div class="motif" aria-hidden="true"></div>
 		<div class="inner">
 			<div class="lead">
-				<p class="line">What I’ve built, written, and learnt from.</p>
+				<p class="line">What I’ve built and written, and what I’ve learnt along the way.</p>
 				<p class="sub">
-					My working archive across product management, generative AI, systems thinking, and change management.
+					A working archive of product management, generative AI, systems thinking, and change management.
 				</p>
 			</div>
 			<nav class="links" aria-label="Elsewhere">

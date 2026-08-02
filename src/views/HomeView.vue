@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
 			<header class="method-head">
 				<h2 id="method-title" class="method-title">Here’s how I do it.</h2>
 				<p class="method-lede">
-					I test ideas by putting them against real work, then watching where the tradeoffs show up.
+					I test ideas against real work, then watch where the trade-offs show up.
 				</p>
 			</header>
 
@@ -231,11 +231,11 @@ onBeforeUnmount(() => {
 						<span class="move-rule" aria-hidden="true"></span>
 					</div>
 					<div class="move-text">
-						<p class="move-line">Early signs while they are still unclear and messy.</p>
+						<p class="move-line">Early signals while they are still unclear and messy.</p>
 						<p class="move-more">
 							<span
-								>I track where new signals and technologies change what teams can make, with AI as
-								one current example, and what makes them worth adopting.</span
+								>I track how emerging technologies, including AI, change what teams can make and
+								what makes them worth adopting.</span
 							>
 						</p>
 					</div>
@@ -254,11 +254,11 @@ onBeforeUnmount(() => {
 					</div>
 					<div class="move-text">
 						<p class="move-line">
-							Real working tools and prototypes with them, to learn what they actually change.
+							Real tools and working prototypes to learn what they actually change.
 						</p>
 						<p class="move-more">
 							<span
-								>Shipping proof-of-concepts to see what those early signs do to teams,
+								>I ship proofs of concept to see how those early signals affect teams,
 								organisations, and digital systems.</span
 							>
 						</p>
@@ -281,7 +281,10 @@ onBeforeUnmount(() => {
 							Their second and third-order effects on teams and organisations.
 						</p>
 						<p class="move-more">
-							<span>Which trade-offs, unintended consequences, and strategic bets matter.</span>
+							<span
+								>I identify the trade-offs, unintended consequences, and strategic bets that
+								matter.</span
+							>
 						</p>
 					</div>
 				</li>
@@ -293,7 +296,7 @@ onBeforeUnmount(() => {
 				<h2>The threads I keep returning to</h2>
 				<p class="map-instruction">
 					<span class="map-instruction-mark" aria-hidden="true"></span>
-					Choose one to see the writing and projects behind it.
+					Choose a thread to explore the writing and projects connected to it.
 				</p>
 			</section>
 

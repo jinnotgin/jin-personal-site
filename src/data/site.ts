@@ -2,7 +2,7 @@ export const site = {
 	name: 'Jin',
 	formalName: 'Lin Jin',
 	url: import.meta.env.VITE_SITE_URL ?? 'https://itsjin.com',
-	role: 'Applied innovation, shaping digital and human systems',
+	role: 'Applied innovation that shapes digital and human systems',
 	description:
 		"Jin follows where technology and ideas are going, builds real things to test them, and writes about what it means for people and the systems they work in.",
 	previewDescription:

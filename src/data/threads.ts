@@ -20,7 +20,7 @@ export const threads: Thread[] = [
 		label: 'Public platforms',
 		line: 'Policy intent translated into services people depend on.',
 		blurb:
-			'These are large public-sector systems where policy, agency needs, delivery constraints, and user outcomes have to meet in one working service. The public artifact is only part of the story. Much of the work is deciding what not to build, keeping the platform usable at scale, and making tradeoffs explicit before they harden into defects.',
+			'These are large public-sector systems where policy, agency needs, delivery constraints, and user outcomes have to meet in one working service. The public-facing service is only part of the story. Much of the work is deciding what not to build, keeping the platform usable at scale, and making trade-offs explicit before they harden into defects.',
 		angle: 198,
 		journey: ['training-allowance-system', 'student-learning-space'],
 	},
@@ -52,7 +52,7 @@ export const threads: Thread[] = [
 		label: 'Personal builds',
 		line: 'Self-initiated tools built close to the problem.',
 		blurb:
-			'These smaller builds start from my own friction or curiosity: food decisions, hardware experiments, games, utilities, and small apps. They stay close to the problem: notice the repeated irritation, build around it, and keep enough personality in the result.',
+			'These smaller builds start from my own friction or curiosity: food decisions, hardware experiments, games, utilities, and small apps. I keep them close to the problem: noticing repeated friction, building around it, and keeping enough personality in the result.',
 		angle: 342,
 		journey: [],
 	},
