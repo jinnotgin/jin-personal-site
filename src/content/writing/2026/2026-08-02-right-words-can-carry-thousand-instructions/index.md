@@ -8,6 +8,8 @@ status: published
 category: AI in practice
 ---
 
+![Illustrated cover showing a small, precise marker opening a vast archive of instructions](./cover.png)
+
 I gave an AI model two almost identical prompts.
 
 The first was straightforward:
@@ -49,11 +51,9 @@ The standard controls vocabulary and grammar. It asks writers to use short sente
 
 I explained none of that in the prompt. I only wrote `ASD-STE100`.
 
-To be clear, I cannot prove that this exact aircraft-writing standard appeared in the model's training data. Model providers do not disclose every document their systems learn from, and I have not formally checked the response for full compliance.
+To be clear, I cannot prove that this exact aircraft-writing standard appeared in the model's training data. Model providers do not disclose every document their systems learn from, and I have not formally checked the response for full compliance. Yet, in my example above, the model responded as if the term pointed towards a particular body of writing practice.
 
-In this test, the model responded as if the term pointed towards a particular body of writing practice. Whether it encountered the standard directly, or absorbed explanations and examples of it elsewhere, the connection was available enough to change the response.
-
-The prompt acted like a better address for reaching that writing style.
+Whether it encountered the standard directly, or absorbed explanations and examples of it elsewhere, the connection was available enough to change the response.
 
 
 ## This is what a trigger word does
@@ -77,6 +77,8 @@ A few examples of trigger words:
 Those few words connect the request to patterns encountered during training and post-training.
 
 **A good trigger word shortens the explanation without skipping the thinking.**
+
+![Illustration of compact references unlocking larger bodies of established practice](./inline-trigger-words.png "A few recognised terms can carry the structure of an entire method.")
 
 
 ## The model brings its own defaults
@@ -131,6 +133,8 @@ Sometimes the answer is a carefully written skill. Sometimes it is `ASD-STE100`.
 Good communication has never been about saying everything in your head.
 
 It requires some understanding of the person receiving the message: what they already know, which terms they use, what context they are missing, and what they are likely to misunderstand.
+
+![Illustration of a sender choosing a few precise signals that connect with the recipient's existing context](./inline-communication.png "The useful message depends on what the recipient already knows.")
 
 We all know someone who talks and talks without noticing that the audience disconnected five minutes ago. More words continue to leave their mouth, but no additional meaning arrives.
 
