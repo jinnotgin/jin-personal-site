@@ -10,15 +10,17 @@ category: AI in practice
 
 ![Illustrated cover showing a small, precise marker opening a vast archive of instructions](./cover.png)
 
-I gave an AI model two almost identical prompts.
+Most prompt-writing advice tells you to add more detail: define the tone, list the constraints, and explain exactly what the model should do.
 
-The first was straightforward:
+But sometimes one precise term can do the work of an entire page of instructions.
+
+I gave an AI model two almost identical prompts. The first was straightforward:
 
 > Write 3 paragraphs for a blog post about AI.
 
-The response was exactly what you might expect from AI writing. It opened with artificial intelligence moving “from the realm of science fiction into the fabric of everyday life”. Its style carried many of the familiar signals of AI writing: flowery language, frequent em dashes, and lists of three.
+The response was exactly what you might expect from AI writing: flowery language, frequent em dashes, lists of three, just to name a few.
 
-For the second attempt, I decided to add one short phrase:
+For the second attempt, I made a small tweak, by adding one short phrase:
 
 > Using ASD-STE100, write 3 paragraphs for a blog post about AI.
 
