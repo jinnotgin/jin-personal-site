@@ -51,7 +51,7 @@ Notice that I didn't need to explain any of those rules in the prompt. I only wr
 
 To be clear, I cannot prove that this exact aircraft-writing standard appeared in the model's training data. After all, model providers generally don't disclose which documents they use to train their AI models (*\*cough\** copyright *\*cough\**).
 
-Yet, in my example above, it's clear that the model did move towards that particular body of writing practice.
+Yet, in my example above, it's clear that the one additional word had a significant impact in changing the overall writing style.
 
 ## This is what context anchors do
 
