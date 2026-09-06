@@ -28,3 +28,5 @@ PixelPress runs entirely in the browser. Files are processed locally in a Web Wo
 The browser's Origin Private File System (OPFS) handles larger files and keeps results locally. Tesseract can optionally add searchable text to pages without usable text.
 
 PixelPress chooses a compression strategy per page: preserve pages that are already efficient, and flatten clearly vector-heavy exports. A dedicated Figma preset keeps the more aggressive flattening workflow for screens and diagrams.
+
+To try the tool, [click here](https://pixelpress.jinnotgin.com/).
