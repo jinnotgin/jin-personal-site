@@ -4,7 +4,7 @@ name: PixelPress
 thread: homegrown
 year: 2026
 status: active
-intent: A browser-only PDF compressor for reducing sensitive documents without sending them to a cloud service.
+intent: Privacy-first PDF compression for sensitive documents, running entirely in your browser.
 stack: [React, TypeScript, Vite, WebAssembly, Pyodide, PyMuPDF, OPFS, Tesseract OCR]
 links: [Live tool::https://pixelpress.jinnotgin.com/, GitHub::https://github.com/jinnotgin/pixelpress-pdf-compressor]
 images: [./pixelpress-main.png::PixelPress compression queue showing an engineering blog export reduced by 59% and a research paper reduced by 1%.]
