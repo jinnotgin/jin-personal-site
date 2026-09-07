@@ -12,14 +12,14 @@ images: [./pixelpress-main.png::PixelPress compression queue showing an engineer
 
 ## Why it existed
 
-PDF compression was usually part of a cloud service or a larger paid application. That creates a problem when the document is sensitive: uploading it is not always acceptable, and I did not want another expensive subscription.
+PDF compression was usually part of a cloud service or a larger paid application. That creates a problem when the document is sensitive: uploading it to a 3rd party cloud is not acceptable, and I did not want another expensive subscription.
 
 ## The friction it answered
 
 PixelPress addresses two related gaps:
 
-- **Privacy:** sensitive PDFs should stay on the device. Government work is one example, but the same applies to any confidential material.
-- **Compression:** PDFs exported from Figma or FigJam could remain surprisingly large, especially when they contained vector-heavy screens and diagrams.
+- **Privacy:** Sensitive PDFs should stay on the device itself.
+- **Compression:** PDFs exported from Figma or FigJam (UI design tools) are surprisingly large, especially when they contained many screens and diagrams.
 
 ## What was built
 
