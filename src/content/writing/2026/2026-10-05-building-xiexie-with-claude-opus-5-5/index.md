@@ -1,7 +1,7 @@
 ---
 slug: building-xiexie-with-claude-opus-5-5
 title: Building something for myself with Claude
-date: 2026-10-03
+date: 2026-10-05
 excerpt: I wanted somewhere to practise Chinese handwriting again. Building 写写 with Claude made me feel more able to create the small, particular tools I wish existed.
 tags: [ai, agentic-coding, product, learning, applied-ai, homegrown]
 status: published
