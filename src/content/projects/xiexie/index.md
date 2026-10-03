@@ -14,7 +14,7 @@ images: [./og-image.png::写写 in two Chinese handwriting grids with the taglin
 
 Writing Chinese has always been difficult for me, even though I did relatively well in Chinese exams at school. I can speak it, but reading takes more effort, and writing is where I really struggle.
 
-My parents are from China, and I have a very Chinese-sounding, two-word full name: "Lin Jin". You might expect my Chinese to be better than it is, and so did many people I met. I wanted to practise, so I built 写写: somewhere to start again with characters I learnt in primary school.
+My parents are from China, and I have a very Chinese-sounding, two-word full name: "Lin Jin". So naturally, uou might expect my Chinese to be stellar (which it isn't), and so did many people I meet. That being said, I do find myself wanting to better at writing Chinese, so I built 写写: somewhere to start again, with characters I learnt in primary school.
 
 I developed the whole project with [Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5), which helped steer the design, implementation, and testing throughout. I supplied the direction and feedback from people trying it.
 
