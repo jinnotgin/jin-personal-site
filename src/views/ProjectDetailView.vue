@@ -240,7 +240,8 @@ function trackExternalLinkClick(label: string, href: string) {
 	font-style: italic;
 	line-height: 1.5;
 }
-.prose :deep(iframe) {
+.prose :deep(iframe),
+.prose :deep(video) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
 	aspect-ratio: 16 / 9;
@@ -253,7 +254,8 @@ function trackExternalLinkClick(label: string, href: string) {
 }
 @media (max-width: 760px) {
 	.prose :deep(.content-figure),
-	.prose :deep(iframe) {
+	.prose :deep(iframe),
+	.prose :deep(video) {
 		width: 100%;
 		margin: 1.5rem 0;
 		transform: none;
