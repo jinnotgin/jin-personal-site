@@ -244,6 +244,7 @@ function trackExternalLinkClick(label: string, href: string) {
 .prose :deep(video) {
 	display: block;
 	width: min(50rem, calc(100vw - 5rem));
+	max-width: none;
 	aspect-ratio: 16 / 9;
 	height: auto;
 	margin: 2rem 50%;
